@@ -6,7 +6,9 @@ function App() {
 
   return (
     <React.Fragment>
-      <AppLayout/>
+      <AppLayout>
+        hello word
+      </AppLayout>
     </React.Fragment>
   )
 }
