@@ -1,5 +1,6 @@
 // src/components/blog/Featured.jsx
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Tag } from "lucide-react";
 import { Card, CardContent } from "./ui";
@@ -7,7 +8,7 @@ import { Card, CardContent } from "./ui";
 export default function Featured({ post }) {
   if (!post) return null;
   return (
-    <section className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 mt-8">
+    <section className="w-full px-4 md:px-6 lg:px-8 mt-8">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -35,12 +36,12 @@ export default function Featured({ post }) {
 
           <p className="text-neutral-600 mt-2 max-w-[58ch]">{post.excerpt}</p>
           <div className="mt-5">
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-neutral-900 text-white hover:bg-neutral-800"
+            <Link
+              to={`/post/${post.id}`}
+              className="inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-neutral-900 text-white hover:bg-neutral-800 !text-white"
             >
               Đọc tiếp
-            </a>
+            </Link>
           </div>
         </div>
       </motion.div>
