@@ -10,32 +10,35 @@ export default function FeedbackModule() {
   return (
     <div>
       <h4 className="fw-bold mb-3">User Feedback</h4>
-      <table className="table table-striped align-middle">
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Comment</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {feedbacks.map((f) => (
-            <tr key={f.id}>
-              <td>{f.user}</td>
-              <td>{f.comment}</td>
-              <td>
-                <span className={`badge bg-${f.status === "Replied" ? "success" : "warning"}`}>
-                  {f.status}
-                </span>
-              </td>
-              <td>
-                <button className="btn btn-outline-primary btn-sm">Reply</button>
-              </td>
+      <div className="table-responsive shadow-sm rounded">
+        <table className="table table-striped align-middle mb-0">
+          <thead className="table-light">
+            <tr>
+              <th>User</th>
+              <th>Comment</th>
+              <th>Status</th>
+              <th className="text-end">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {feedbacks.map((f) => (
+              <tr key={f.id}>
+                <td><strong>{f.user}</strong></td>
+                <td>{f.comment}</td>
+                <td>
+                  <span
+                    className={`badge bg-${f.status === "Replied" ? "success" : "warning"} px-3`}>
+                    {f.status}
+                  </span>
+                </td>
+                <td className="text-end">
+                  <button className="btn btn-outline-primary btn-sm">Reply</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

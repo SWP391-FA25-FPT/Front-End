@@ -22,13 +22,6 @@ export default function AdminPage() {
             <i className="bi bi-people"></i>
             <i className="bi bi-gear"></i>
           </div>
-          <div className="sidebar-user">
-            <img
-              src="https://randomuser.me/api/portraits/men/32.jpg"
-              alt="Admin"
-              className="user-avatar"
-            />
-          </div>
         </aside>
 
         {/* Main Content */}

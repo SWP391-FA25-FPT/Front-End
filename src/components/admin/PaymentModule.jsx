@@ -17,6 +17,8 @@ export default function PaymentModule() {
   return (
     <div>
       <h4 className="mb-3 fw-bold">Plans & Billing</h4>
+
+      {/* Plan Cards */}
       <div className="row mb-4">
         {plans.map((p) => (
           <div key={p.name} className="col-md-3">
@@ -27,10 +29,10 @@ export default function PaymentModule() {
                 border: p.current ? "2px solid #007bff" : "1px solid #eee",
               }}
             >
-              <h5>{p.name}</h5>
-              <h2>${p.price}</h2>
-              <p>{p.desc}</p>
-              <button className={`btn ${p.current ? "btn-dark" : "btn-outline-primary"} btn-sm`}>
+              <h6 className="text-uppercase fw-bold">{p.name}</h6>
+              <h2 className="mb-1">${p.price}</h2>
+              <p className="text-muted">{p.desc}</p>
+              <button className={`btn ${p.current ? "btn-dark" : "btn-outline-primary"} btn-sm w-100`}>
                 {p.current ? "Current Plan" : "Upgrade"}
               </button>
             </div>
@@ -38,16 +40,17 @@ export default function PaymentModule() {
         ))}
       </div>
 
+      {/* Billing History */}
       <h5 className="fw-bold mb-3">Billing History</h5>
-      <div className="list-group">
+      <div className="list-group shadow-sm rounded">
         {history.map((h, i) => (
           <div key={i} className="list-group-item d-flex justify-content-between align-items-center">
             <div>
               <strong>{h.plan} Plan - USD ${h.price}</strong>
-              <div className="text-muted">{h.date}</div>
+              <div className="text-muted small">{h.date}</div>
             </div>
             <div>
-              <span className="me-3 text-muted">Card ending {h.card}</span>
+              <span className="me-3 text-muted small">Card ending {h.card}</span>
               <button className="btn btn-outline-secondary btn-sm">Download</button>
             </div>
           </div>
