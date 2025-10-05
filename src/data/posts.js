@@ -19,7 +19,7 @@ export const POSTS = [
     title: "Gợi ý thực đơn tuần: 7 món thanh đạm mà đủ chất",
     excerpt:
       "Thực đơn theo ngày với nguyên liệu dễ mua, kèm gợi ý chuẩn bị trước để bạn nhàn hơn trong tuần.",
-    content: "Nội dung chi tiết cho bài viết 2.",
+    content: "Một tuần ăn lành mạnh không chỉ giúp cơ thể nhẹ nhàng mà còn duy trì năng lượng bền bỉ suốt ngày dài. Bộ thực đơn này được thiết kế với nguyên tắc “ít dầu mỡ – nhiều dinh dưỡng – dễ chế biến”, đảm bảo cân bằng giữa đạm, tinh bột, chất xơ và vitamin.\nMỗi bữa ăn đều sử dụng nguyên liệu tự nhiên, tươi mới, ưu tiên rau củ, đậu hũ, cá, ức gà và ngũ cốc nguyên hạt.\nThực đơn phù hợp cho người ăn healthy, giảm cân hoặc cần duy trì vóc dáng, nhưng vẫn đủ năng lượng cho học tập và làm việc.\nCác món được sắp xếp theo từng ngày, giúp bạn dễ dàng lên kế hoạch mua sắm và nấu nướng.\nChỉ cần vài phút chuẩn bị, bạn sẽ có một tuần tràn đầy dinh dưỡng mà không lo ngán.\nCùng bắt đầu hành trình ăn sạch – sống khỏe ngay hôm nay nhé!",
     author: "Lan Anh",
     authorAvatar: "https://i.pravatar.cc/80?img=5",
     date: "2025-09-20",

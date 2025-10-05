@@ -38,7 +38,7 @@ export default function Featured({ post }) {
           <div className="mt-5">
             <Link
               to={`/post/${post.id}`}
-              className="inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-neutral-900 text-white hover:bg-neutral-800 !text-white"
+              className="inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-orange-500 text-white hover:bg-orange-600 !text-white"
             >
               Đọc tiếp
             </Link>

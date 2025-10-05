@@ -15,23 +15,45 @@ function storageKey(postId) {
 }
 
 export default function ReactionBar({ postId }) {
-  const [counts, setCounts] = useState(() => {
+  const [state, setState] = useState(() => {
     try {
       const raw = localStorage.getItem(storageKey(postId));
-      return raw
-        ? JSON.parse(raw)
-        : EMOTIONS.reduce((a, e) => ({ ...a, [e.key]: 0 }), {});
+      if (!raw) {
+        return {
+          counts: EMOTIONS.reduce((a, e) => ({ ...a, [e.key]: 0 }), {}),
+          user: null,
+        };
+      }
+      const parsed = JSON.parse(raw);
+      // Backward compatibility: older format stored only counts object
+      if (parsed && typeof parsed === "object" && !("counts" in parsed)) {
+        return { counts: parsed, user: null };
+      }
+      return parsed || { counts: {}, user: null };
     } catch (e) {
-      return EMOTIONS.reduce((a, e) => ({ ...a, [e.key]: 0 }), {});
+      return {
+        counts: EMOTIONS.reduce((a, e) => ({ ...a, [e.key]: 0 }), {}),
+        user: null,
+      };
     }
   });
 
   useEffect(() => {
-    localStorage.setItem(storageKey(postId), JSON.stringify(counts));
-  }, [counts, postId]);
+    localStorage.setItem(storageKey(postId), JSON.stringify(state));
+  }, [state, postId]);
 
   function react(key) {
-    setCounts((c) => ({ ...c, [key]: (c[key] || 0) + 1 }));
+    setState(() => {
+      // Reset all counts to 0, then set chosen to 1
+      const resetCounts = EMOTIONS.reduce((a, e) => ({ ...a, [e.key]: 0 }), {});
+      resetCounts[key] = 1;
+      const next = { counts: resetCounts, user: key };
+      // Notify listeners (e.g., BlogDetail overlay) without requiring refresh
+      try {
+        window.dispatchEvent(new CustomEvent('reactions:update', { detail: { postId, state: next } }));
+      } catch {}
+      return next;
+    });
   }
 
   return (
@@ -40,11 +62,11 @@ export default function ReactionBar({ postId }) {
         <button
           key={e.key}
           onClick={() => react(e.key)}
-          className="rounded-md px-3 py-1 hover:bg-neutral-100"
+          className={`px-3 py-1 bg-orange-100 hover:bg-neutral-900 ${state.user === e.key ? 'bg-orange-500 text-white' : ''}`}
           title={e.key}
+          aria-pressed={state.user === e.key}
         >
           <span className="text-lg">{e.label}</span>
-          <span className="ml-2 text-sm text-neutral-600">{counts[e.key]}</span>
         </button>
       ))}
     </div>

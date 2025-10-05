@@ -72,7 +72,7 @@ export default function Blog() {
               variant="outline" 
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(currentPage - 1)}
-              className="px-3 py-2"
+              className="px-3 py-2 border-black border-2 text-black hover:bg-orange-100"
             >
               ←
             </Button>
@@ -83,10 +83,10 @@ export default function Blog() {
                 key={page}
                 variant={currentPage === page ? "default" : "outline"}
                 onClick={() => setCurrentPage(page)}
-                className={`px-3 py-2 min-w-[40px] ${
+                className={`px-3 py-2 min-w-[40px] border-black border-2 ${
                   currentPage === page 
-                    ? "bg-neutral-900 text-white" 
-                    : "bg-white text-neutral-700 hover:bg-neutral-100"
+                    ? "bg-orange-500! text-white" 
+                    : "bg-white text-neutral-700 hover:bg-orange-100"
                 }`}
               >
                 {page}
@@ -98,7 +98,7 @@ export default function Blog() {
               variant="outline" 
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(currentPage + 1)}
-              className="px-3 py-2"
+              className="px-3 py-2 border-black border-2 text-black hover:bg-orange-100"
             >
               →
             </Button>
