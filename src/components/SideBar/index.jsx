@@ -138,7 +138,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
           </Flex>
           {collapsed && (
             <Button onClick={toggleCollapsed} type="button" className="mb-1" size="small">
-              <Icon icon="mingcute:arrows-right-line" width="16" height="16" />
+              <Icon icon="mingcute:arrows-right-line" width="24" height="24" />
             </Button>
           )}
           <Menu
