@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../Logo/Index";
+import Logo from "../Logo";
 import { Container } from "react-bootstrap";
 import { Button, ConfigProvider, Flex, Menu } from "antd";
 import { Icon } from "@iconify/react";

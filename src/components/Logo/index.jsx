@@ -6,7 +6,7 @@ const Index = ({ collapsed }) => {
   return (
     <React.Fragment>
       <Flex gap={10} align="center" justify="center">
-        <img src={Logo} className="size-10" />
+        <img src={Logo} className={collapsed ? "size-8" : "size-10"} />
         {!collapsed && (
           <>
             <p className="text-4xl font-bold ">M&M</p>
