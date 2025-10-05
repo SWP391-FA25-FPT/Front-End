@@ -1,7 +1,7 @@
 import React from "react";
-import Logo from "../Logo";
+import Logo from "../Logo/Index";
 import { Container } from "react-bootstrap";
-import { ConfigProvider, Menu } from "antd";
+import { Button, ConfigProvider, Flex, Menu } from "antd";
 import { Icon } from "@iconify/react";
 
 const items = [
@@ -104,7 +104,8 @@ const items = [
   },
 ];
 
-const index = () => {
+const Index = ({ collapsed, toggleCollapsed }) => {
+
   return (
     <React.Fragment>
       <ConfigProvider
@@ -118,21 +119,36 @@ const index = () => {
               itemSelectedColor: "#fff",
               subMenuItemBg: "#fff",
               subMenuItemSelectedColor: " #F8B602",
+              
             },
           },
           token: {
-            fontSize: 16,
+            fontSize: 18,
           },
         }}
       >
-        <Container className="p-5 flex flex-col items-center gap-5">
-          <Logo />
+        <Container className={`${collapsed ? 'p-1' : 'p-5'} flex flex-col items-center ${collapsed ? 'gap-2' : 'gap-5'}`}>
+          <Flex space="between" gap={20} align="center" justify="center">
+            <Logo collapsed={collapsed} />
+            {!collapsed && (
+              <Button onClick={toggleCollapsed} type="button">
+                <Icon icon="mingcute:arrows-left-line" width="24" height="24" />
+              </Button>
+            )}
+          </Flex>
+          {collapsed && (
+            <Button onClick={toggleCollapsed} type="button" className="mb-1" size="small">
+              <Icon icon="mingcute:arrows-right-line" width="16" height="16" />
+            </Button>
+          )}
           <Menu
             defaultSelectedKeys={"1"}
             mode="inline"
             items={items}
-            defaultOpenKeys={["6"]}
+            defaultOpenKeys={collapsed ? [] : ["6"]}
             className="font-sans font-semibold"
+            inlineCollapsed={collapsed}
+            style={{border:"none"}}
           />
         </Container>
       </ConfigProvider>
@@ -140,4 +156,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

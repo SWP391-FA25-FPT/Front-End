@@ -1,11 +1,12 @@
 import React from 'react'
 import SideBar from './components/SideBar'
+import AppLayout from './components/layout/AppLayout'
 
 function App() {
 
   return (
     <React.Fragment>
-      <SideBar />
+      <AppLayout/>
     </React.Fragment>
   )
 }

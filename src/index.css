@@ -5,3 +5,17 @@ html {
   font-size: 16px;
   background-color: #F5F5F5;
 }
+.ant-layout-sider .ant-layout-sider-children .ant-menu.ant-menu-inline-collapsed {
+  width: 4rem !important;
+}
+
+.ant-menu-inline-collapsed .ant-menu-item-icon {
+  width: 24px !important;
+  height: 24px !important;
+  margin-top: 5px !important;
+  margin-right: 5px !important;
+}
+
+
+
+
