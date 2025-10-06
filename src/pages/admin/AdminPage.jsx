@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import PaymentModule from "../../components/admin/PaymentModule";
 import FeedbackModule from "../../components/admin/FeedbackModule";
 import ReportModule from "../../components/admin/ReportModule";
@@ -13,7 +13,6 @@ export default function AdminPage() {
   return (
     <Router>
       <div className="admin-container">
-        {/* Sidebar */}
         <aside className="sidebar">
           <div className="sidebar-icons">
             <i className="bi bi-house"></i>
@@ -24,36 +23,19 @@ export default function AdminPage() {
           </div>
         </aside>
 
-        {/* Main Content */}
         <main className="main-content">
           <h2 className="page-title">Admin Settings</h2>
 
-          {/* Top Navigation */}
           <nav className="top-menu">
-            <NavLink to="payment" className={({ isActive }) => (isActive ? "active" : "")}>
-              Plans & Billing
-            </NavLink>
-            <NavLink to="feedback" className={({ isActive }) => (isActive ? "active" : "")}>
-              Feedback
-            </NavLink>
-            <NavLink to="report" className={({ isActive }) => (isActive ? "active" : "")}>
-              Report
-            </NavLink>
-            <NavLink to="content" className={({ isActive }) => (isActive ? "active" : "")}>
-              Content
-            </NavLink>
-            <NavLink to="users" className={({ isActive }) => (isActive ? "active" : "")}>
-              Users
-            </NavLink>
-            <NavLink to="ai" className={({ isActive }) => (isActive ? "active" : "")}>
-              AI Control
-            </NavLink>
-            <NavLink to="stats" className={({ isActive }) => (isActive ? "active" : "")}>
-              Statistics
-            </NavLink>
+            <NavLink to="payment" className={({ isActive }) => (isActive ? "active" : "")}>Plans & Billing</NavLink>
+            <NavLink to="feedback" className={({ isActive }) => (isActive ? "active" : "")}>Feedback</NavLink>
+            <NavLink to="report" className={({ isActive }) => (isActive ? "active" : "")}>Report</NavLink>
+            <NavLink to="content" className={({ isActive }) => (isActive ? "active" : "")}>Content</NavLink>
+            <NavLink to="users" className={({ isActive }) => (isActive ? "active" : "")}>Users</NavLink>
+            <NavLink to="ai" className={({ isActive }) => (isActive ? "active" : "")}>AI Control</NavLink>
+            <NavLink to="stats" className={({ isActive }) => (isActive ? "active" : "")}>Statistics</NavLink>
           </nav>
 
-          {/* Router View */}
           <div className="module-view">
             <Routes>
               <Route path="payment" element={<PaymentModule />} />
@@ -63,7 +45,6 @@ export default function AdminPage() {
               <Route path="users" element={<UserManagementModule />} />
               <Route path="ai" element={<AIControlModule />} />
               <Route path="stats" element={<StatisticsModule />} />
-              {/* default route */}
               <Route path="*" element={<PaymentModule />} />
             </Routes>
           </div>
