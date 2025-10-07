@@ -7,11 +7,11 @@ import { Flex } from "antd";
 const Header = () => {
   return (
     <React.Fragment>
-      <Flex justify="center"  gap={"16px"} className="" >
-        <SearchBar/>
+      <Flex justify="center" align="center" gap={"16px"}>
+        <SearchBar />
         <Flex gap="16px" align="center" justify="space-between">
           <User />
-          <CreateButton/>
+          <CreateButton />
         </Flex>
       </Flex>
     </React.Fragment>

@@ -1,16 +1,11 @@
-import React from 'react'
-import SideBar from './components/SideBar'
-import AppLayout from './components/layout/AppLayout'
-
+import React from "react";
+import HomePage from "./pages/HomePage";
 function App() {
-
   return (
     <React.Fragment>
-      <AppLayout>
-        hello word
-      </AppLayout>
+      <HomePage />
     </React.Fragment>
-  )
+  );
 }
 
-export default App
+export default App;

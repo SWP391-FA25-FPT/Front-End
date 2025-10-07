@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Layout } from "antd";
+import { Layout, Typography } from "antd";
 import SideBar from "../SideBar";
 import Head from "./Header";
 import Foot from "./Footer";
+
 const AppLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
+  const { Title } = Typography;
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleCollapsed = () => {
@@ -27,11 +29,11 @@ const AppLayout = ({ children }) => {
         <Layout>
           <Header
             style={{ backgroundColor: "white" }}
-            className="flex justify-center items-center"
+            className="tw:flex tw:justify-center tw:items-center"
           >
-            <h1 className="text-2xl font-bold text-black mr-auto">
+            <Title level={3} className=" tw:mr-auto">
               Hello, Patricia
-            </h1>
+            </Title>
             <Head />
           </Header>
           <Content
@@ -41,7 +43,7 @@ const AppLayout = ({ children }) => {
               borderRadius: "16px 0 0 16px",
             }}
           >
-            { children }
+            {children}
           </Content>
           <Footer style={{ textAlign: "start" }}>
             <Foot />

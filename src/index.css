@@ -1,11 +1,18 @@
-@import "tailwindcss";
+/* Has fixed tailwind prefix */
+@import "tailwindcss" prefix(tw);
 
 html {
   font-family: "Raleway", sans-serif;
-  font-size: 16px;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
 }
-.ant-layout-sider .ant-layout-sider-children .ant-menu.ant-menu-inline-collapsed {
+
+a {
+  text-decoration: none !important;
+}
+
+.ant-layout-sider
+  .ant-layout-sider-children
+  .ant-menu.ant-menu-inline-collapsed {
   width: 4rem !important;
 }
 
@@ -15,7 +22,3 @@ html {
   margin-top: 5px !important;
   margin-right: 5px !important;
 }
-
-
-
-

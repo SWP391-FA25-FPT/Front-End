@@ -19,7 +19,7 @@ const items = [
         height="24"
       />
     ),
-    label: <p href="#">Premium</p>,
+    label: <a href="#" style={{color:"#A098AE"}}>Premium</a>,
     children: [
       {
         key: "2-1",
@@ -67,7 +67,7 @@ const items = [
   {
     key: "6",
     icon: <Icon icon="mdi:folder-outline" width="24" height="24" />,
-    label: <p href="#">Kho Món Ngon Của Bạn</p>,
+    label: <a href="#" style={{color:"#A098AE"}}>Kho Món Ngon Của Bạn</a>,
     children: [
       {
         key: "6-1",
@@ -105,7 +105,6 @@ const items = [
 ];
 
 const Index = ({ collapsed, toggleCollapsed }) => {
-
   return (
     <React.Fragment>
       <ConfigProvider
@@ -119,7 +118,6 @@ const Index = ({ collapsed, toggleCollapsed }) => {
               itemSelectedColor: "#fff",
               subMenuItemBg: "#fff",
               subMenuItemSelectedColor: " #F8B602",
-              
             },
           },
           token: {
@@ -127,7 +125,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
           },
         }}
       >
-        <Container className={`${collapsed ? 'p-1' : 'p-5'} flex flex-col items-center ${collapsed ? 'gap-2' : 'gap-5'}`}>
+        <Container className={"tw:flex tw:flex-col tw:items-center tw:gap-4 tw:p-2"}>
           <Flex space="between" gap={20} align="center" justify="center">
             <Logo collapsed={collapsed} />
             {!collapsed && (
@@ -137,7 +135,12 @@ const Index = ({ collapsed, toggleCollapsed }) => {
             )}
           </Flex>
           {collapsed && (
-            <Button onClick={toggleCollapsed} type="button" className="mb-1" size="small">
+            <Button
+              onClick={toggleCollapsed}
+              type="button"
+              className="tw:mb-1"
+              size="small"
+            >
               <Icon icon="mingcute:arrows-right-line" width="24" height="24" />
             </Button>
           )}
@@ -146,9 +149,9 @@ const Index = ({ collapsed, toggleCollapsed }) => {
             mode="inline"
             items={items}
             defaultOpenKeys={collapsed ? [] : ["6"]}
-            className="font-sans font-semibold"
+            className="tw:font-sans tw:font-semibold"
             inlineCollapsed={collapsed}
-            style={{border:"none"}}
+            style={{ border: "none" }}
           />
         </Container>
       </ConfigProvider>
