@@ -36,66 +36,49 @@ export default function Comments({ postId }) {
   }
 
   return (
-    <div className="mt-8 p-4 border rounded-lg bg-white">
-      <h3 className="text-xl font-semibold text-black">Bình luận</h3>
-      <div className="mt-3">
+    <div className="blogdetail-comments-section">
+      <h3 className="text-xl font-semibold text-black mb-4">Bình luận</h3>
+      
+      {/* Comment Input */}
+      <div className="mb-6">
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
           rows={3}
-          className="w-full p-3 rounded text-black placeholder:text-neutral-500 outline-none"
+          className="blogdetail-comment-input"
           placeholder="Viết bình luận..."
         />
-        <div className="mt-2 flex items-center gap-2">
-          <button
-            onClick={addComment}
-            className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-neutral-900"
-          >
-            Gửi
-          </button>
-        </div>
+        <button
+          onClick={addComment}
+          className="blogdetail-comment-submit"
+        >
+          Gửi
+        </button>
       </div>
 
-      <div className="my-6 border-t border-neutral-200"></div>
-
-      <div className="p-4 border rounded-lg bg-neutral-100">
-        <div className="space-y-0 divide-y">
-          {comments.length === 0 && (
-            <div className="text-sm text-neutral-600">Chưa có bình luận nào.</div>
-          )}
-          {comments.map((c) => (
-            <div key={c.id} className="p-4 bg-white">
-              {/* Header */}
-              <div className="flex items-center gap-3">
-                <div className="avatar rounded-full bg-neutral-200 text-neutral-700 inline-flex items-center justify-center" style={{width:'2.5rem',height:'2.5rem'}}>
-                  <span className="text-sm font-semibold">{(c.text?.trim()?.[0] || 'U').toUpperCase()}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-black truncate max-w-[200px]">Người dùng</span>
-                    <span className="text-xs text-neutral-500">{new Date(c.date).toLocaleString()}</span>
-                  </div>
-                  <div className="text-orange-600 text-sm">★★★★★</div>
-                </div>
-              </div>
-              {/* Content */}
-              <div className="mt-3 text-sm text-neutral-700 whitespace-pre-line">{c.text}</div>
-              {/* Footer */}
-              <div className="mt-3 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-neutral-500 text-sm">
-                  <span>👍</span>
-                  <span>Thích</span>
-                </div>
-                <button
-                  onClick={() => remove(c.id)}
-                  className="text-white text-xs bg-red-500 px-2 py-1 rounded hover:bg-red-600"
-                >
-                  Xóa
-                </button>
-              </div>
+      {/* Comments List */}
+      <div className="blogdetail-comments-list">
+        {comments.length === 0 && (
+          <div className="blogdetail-no-comments">Chưa có bình luận nào.</div>
+        )}
+        {comments.map((c) => (
+          <div key={c.id} className="blogdetail-comment-item">
+            <div className="blogdetail-comment-author">
+              Người dùng • {new Date(c.date).toLocaleString()}
             </div>
-          ))}
-        </div>
+            <div className="blogdetail-comment-content">
+              {c.text}
+            </div>
+            <div className="blogdetail-comment-time">
+              <button
+                onClick={() => remove(c.id)}
+                className="text-red-500 hover:text-red-700 text-sm"
+              >
+                Xóa
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

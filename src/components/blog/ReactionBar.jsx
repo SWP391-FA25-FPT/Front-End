@@ -43,15 +43,44 @@ export default function ReactionBar({ postId }) {
   }, [state, postId]);
 
   function react(key) {
-    setState(() => {
-      // Reset all counts to 0, then set chosen to 1
+    setState((prevState) => {
+      // If clicking the same reaction that's already active, toggle it off
+      if (prevState.user === key) {
+        const next = { 
+          counts: EMOTIONS.reduce((a, e) => ({ ...a, [e.key]: 0 }), {}), 
+          user: null 
+        };
+        
+        // Notify listeners immediately after state update
+        setTimeout(() => {
+          try {
+            window.dispatchEvent(new CustomEvent('reactions:update', { 
+              detail: { postId, state: next } 
+            }));
+          } catch (e) {
+            console.warn('Failed to dispatch reactions:update event', e);
+          }
+        }, 0);
+        
+        return next;
+      }
+      
+      // Otherwise, set new reaction (reset all counts to 0, then set chosen to 1)
       const resetCounts = EMOTIONS.reduce((a, e) => ({ ...a, [e.key]: 0 }), {});
       resetCounts[key] = 1;
       const next = { counts: resetCounts, user: key };
-      // Notify listeners (e.g., BlogDetail overlay) without requiring refresh
-      try {
-        window.dispatchEvent(new CustomEvent('reactions:update', { detail: { postId, state: next } }));
-      } catch {}
+      
+      // Notify listeners immediately after state update
+      setTimeout(() => {
+        try {
+          window.dispatchEvent(new CustomEvent('reactions:update', { 
+            detail: { postId, state: next } 
+          }));
+        } catch (e) {
+          console.warn('Failed to dispatch reactions:update event', e);
+        }
+      }, 0);
+      
       return next;
     });
   }
@@ -62,7 +91,7 @@ export default function ReactionBar({ postId }) {
         <button
           key={e.key}
           onClick={() => react(e.key)}
-          className={`px-3 py-1 bg-orange-100 hover:bg-neutral-900 ${state.user === e.key ? 'bg-orange-500 text-white' : ''}`}
+          className={`blogdetail-reaction-btn ${state.user === e.key ? 'active' : ''}`}
           title={e.key}
           aria-pressed={state.user === e.key}
         >

@@ -9,60 +9,73 @@ export default function Rating({ postId }) {
   const [state, setState] = useState(() => {
     try {
       const raw = localStorage.getItem(storageKey(postId));
-      return raw ? JSON.parse(raw) : { total: 0, count: 0, user: 0 };
+      return raw ? JSON.parse(raw) : { user: 0, count: 0 };
     } catch (e) {
-      return { total: 0, count: 0, user: 0 };
+      return { user: 0, count: 0 };
     }
   });
+
+  const [hoverRating, setHoverRating] = useState(0);
 
   useEffect(() => {
     localStorage.setItem(storageKey(postId), JSON.stringify(state));
   }, [state, postId]);
 
   function setRating(r) {
-    // if user already rated, replace their rating
-    setState((s) => {
-      const prevUser = s.user || 0;
-      const total = s.total - prevUser + r;
-      const count = prevUser ? s.count : s.count + 1;
-      return { total, count, user: r };
+    setState((prevState) => {
+      // If clicking the same rating that's already active, toggle it off
+      if (prevState.user === r) {
+        return { user: 0, count: Math.max(0, prevState.count - 1) };
+      }
+      
+      // Otherwise, set new rating
+      const wasRated = prevState.user > 0;
+      return { 
+        user: r, 
+        count: wasRated ? prevState.count : prevState.count + 1 
+      };
     });
   }
 
   function clearRating() {
-    setState((s) => {
-      const prevUser = s.user || 0;
-      if (!prevUser) return s;
-      const total = s.total - prevUser;
-      const count = Math.max(0, s.count - 1);
-      return { total, count, user: 0 };
+    setState((prevState) => {
+      if (prevState.user === 0) return prevState;
+      return { user: 0, count: Math.max(0, prevState.count - 1) };
     });
   }
 
-  const avg = state.count ? (state.total / state.count).toFixed(1) : "—";
-
   return (
-    <div className="rating flex items-center gap-3">
-      <div className="text-sm text-neutral-600">Đánh giá:</div>
-      <div className="flex items-center gap-1">
-        {[1, 2, 3, 4, 5].map((n) => (
-          <button
-            key={n}
-            onClick={() => setRating(n)}
-            className="p-0 bg-transparent border-none"
-            title={`Đánh ${n} sao`}
-            aria-label={`Đánh ${n} sao`}
-          >
-            <span className={`star ${state.user >= n ? 'selected' : 'unselected'}`}>★</span>
-          </button>
-        ))}
+    <div className="blogdetail-rating-section">
+      <span className="blogdetail-rating-label">Đánh giá:</span>
+      <div className="blogdetail-stars-container">
+        {[1, 2, 3, 4, 5].map((n) => {
+          const isActive = state.user >= n;
+          const isHovered = hoverRating >= n;
+          const shouldHighlight = isActive || isHovered;
+          
+          return (
+            <button
+              key={n}
+              onClick={() => setRating(n)}
+              onMouseEnter={() => setHoverRating(n)}
+              onMouseLeave={() => setHoverRating(0)}
+              className="p-0 bg-transparent border-none"
+              title={`Đánh ${n} sao`}
+              aria-label={`Đánh ${n} sao`}
+            >
+              <span className={`blogdetail-star ${shouldHighlight ? 'active' : ''}`}>
+                {shouldHighlight ? '★' : '☆'}
+              </span>
+            </button>
+          );
+        })}
       </div>
-      <div className="text-sm text-neutral-600">
-        {avg} ({state.count})
-      </div>
+      <span className="blogdetail-rating-count">
+        ({state.user > 0 ? state.user : 0})
+      </span>
       <button
         onClick={clearRating}
-        className="ml-2 text-sm text-neutral-600 hover:text-orange-600 bg-transparent clear-btn"
+        className="blogdetail-rating-clear"
         title="Hủy đánh giá"
         aria-label="Hủy đánh giá"
       >
