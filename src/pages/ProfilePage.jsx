@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../components/Layout/AppLayout";
+import Layout from "../components/layout/AppLayout";
 import ProfileForm from "../components/User/ProfileForm"; 
 import "./style/ProfilePage.css"; 
 
