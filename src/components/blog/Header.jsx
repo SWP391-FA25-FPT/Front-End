@@ -1,0 +1,37 @@
+// src/components/blog/Header.jsx
+import React from "react";
+import { Menu } from "lucide-react";
+import SearchInput from "./SearchInput";
+import { Button } from "./ui";
+import { Link } from "react-router-dom";
+
+export default function Header({ onToggleNav }) {
+  return (
+    <header className="sticky top-0 z-50 backdrop-blur bg-orange-500/90 border-b border-orange-600">
+      <div className="w-full px-4 md:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-orange-500 text-white grid place-items-center font-bold">
+              M
+            </div>
+            <a href="#" className="font-semibold text-lg text-white !text-white">Meta-Meal demo UI</a>
+          </div>
+
+          <nav className="hidden md:flex items-center gap-6 text-sm">
+            <a className="text-white hover:text-orange-100 !text-white" href="#topics">Chủ đề</a>
+            <a className="text-white hover:text-orange-100 !text-white" href="#latest">Bài mới</a>
+            <a className="text-white hover:text-orange-100 !text-white" href="#about">Giới thiệu</a>
+            <Link className="text-white hover:text-orange-100 !text-white" to="/meal-plan">Meal Plan</Link>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <div className="hidden md:block"><SearchInput /></div>
+            <Button variant="outline" className="md:hidden" onClick={onToggleNav}>
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
