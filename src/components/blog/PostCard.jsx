@@ -6,30 +6,30 @@ import { Card, CardContent } from "./ui";
 
 export default function PostCard({ post, formatDate }) {
   return (
-    <Card className="overflow-hidden group h-full">
-      <div className="h-44 overflow-hidden">
-        <Link to={`/post/${post.id}`} className="block h-full">
+    <Card className="blog-post-card">
+      <div className="tw:h-48 tw:overflow-hidden">
+        <Link to={`/blog/${post.id}`} className="tw:block tw:h-full">
           <img
             src={post.image}
             alt={post.title}
-            className="h-full w-full object-cover group-hover:scale-105 transition-transform"
+            className="blog-post-image"
           />
         </Link>
       </div>
-      <CardContent className="p-5">
-        <div className="text-xs text-neutral-600 flex items-center gap-2">
-          <span className="inline-flex items-center gap-1">
-            <Tag className="h-3.5 w-3.5" /> {post.category}
+      <CardContent className="blog-post-content">
+        <div className="blog-post-meta">
+          <span className="blog-post-category">
+            <Tag className="tw:h-3 tw:w-3" /> {post.category}
           </span>
           <span>•</span>
           <span>{formatDate(post.date)}</span>
         </div>
-        <h3 className="mt-2 font-semibold text-lg leading-snug line-clamp-2 text-neutral-900">
-          <Link to={`/post/${post.id}`} className="hover:underline">
+        <h3 className="blog-post-title">
+          <Link to={`/blog/${post.id}`}>
             {post.title}
           </Link>
         </h3>
-        <p className="text-sm text-neutral-600 line-clamp-2 mt-1">
+        <p className="blog-post-excerpt">
           {post.excerpt}
         </p>
       </CardContent>

@@ -4,15 +4,17 @@ import { Container } from "react-bootstrap";
 import { Button, ConfigProvider, Flex, Menu } from "antd";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/AuthContext";
+import { useLocation } from "react-router-dom";
 
 const Index = ({ collapsed, toggleCollapsed }) => {
   const { user } = useAuth();
+  const location = useLocation();
 
   const baseItems = [
     {
       key: "1",
       icon: <Icon icon="ion:restaurant-outline" width="24" height="24" />,
-      label: <a href="#">Trang Chủ</a>,
+      label: <a href="/">Trang Chủ</a>,
     },
     {
       key: "2",
@@ -124,6 +126,16 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   const items = user && user.role === 'admin' 
     ? [...baseItems, adminItem]
     : baseItems;
+
+  // Determine selected key based on current location
+  const getSelectedKey = () => {
+    const path = location.pathname;
+    if (path === '/') return '1';
+    if (path === '/blog' || path.startsWith('/blog/')) return '4';
+    if (path === '/profile') return '6';
+    if (path === '/admin') return '8';
+    return '1'; // default to home
+  };
   return (
     <React.Fragment>
       <ConfigProvider
@@ -164,7 +176,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
             </Button>
           )}
           <Menu
-            defaultSelectedKeys={"1"}
+            selectedKeys={[getSelectedKey()]}
             mode="inline"
             items={items}
             defaultOpenKeys={collapsed ? [] : ["6"]}

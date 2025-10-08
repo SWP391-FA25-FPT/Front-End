@@ -1,14 +1,18 @@
 // src/pages/Blog.jsx
 import React, { useMemo, useState } from "react";
-import Header from "../components/blog/Header";
+import { Typography } from "antd";
+import { Container } from "react-bootstrap";
+import Layout from "../components/layout/AppLayout";
 import Featured from "../components/blog/Featured";
 import CategoryPills from "../components/blog/CategoryPills";
 import PostGrid from "../components/blog/PostGrid";
-import { Button } from "../components/blog/ui";
 import { POSTS } from "../data/posts";
+import "tailwindcss";
+import "../styles/blog.css";
+
+const { Title } = Typography;
 
 const CATEGORIES = [
-
   "Tất cả",
   "Mẹo nhà bếp",
   "Thực đơn tuần",
@@ -16,7 +20,6 @@ const CATEGORIES = [
   "Ăn theo mùa",
   "Kỹ thuật nấu",
   "Meal Prep",
-
 ];
 
 
@@ -49,62 +52,58 @@ export default function Blog() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <Header />
-      <Featured post={POSTS[1]} />
-
-      <section className="w-full px-4 md:px-6 lg:px-8 mt-12 space-y-6">
-        <div className="flex items-baseline justify-between">
-          <h2 className="text-2xl font-semibold text-black">Bài viết nổi bật & mới nhất</h2>
-        </div>
-
-        <CategoryPills current={current} categories={CATEGORIES} onPick={handleCategoryChange} />
-
-        <div className="mt-4" id="latest">
-          <PostGrid posts={currentPosts} formatDate={formatDate} />
-        </div>
-
-        {/* Pagination */}
-        {totalPages >= 1 && (
-          <div className="mt-8 flex items-center justify-center gap-2">
-            {/* Previous button */}
-            <Button 
-              variant="outline" 
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-              className="px-3 py-2 border-black border-2 text-black hover:bg-orange-100"
-            >
-              ←
-            </Button>
-            
-            {/* Page numbers */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <Button
-                key={page}
-                variant={currentPage === page ? "default" : "outline"}
-                onClick={() => setCurrentPage(page)}
-                className={`px-3 py-2 min-w-[40px] border-black border-2 ${
-                  currentPage === page 
-                    ? "bg-orange-500! text-white" 
-                    : "bg-white text-neutral-700 hover:bg-orange-100"
-                }`}
-              >
-                {page}
-              </Button>
-            ))}
-            
-            {/* Next button */}
-            <Button 
-              variant="outline" 
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
-              className="px-3 py-2 border-black border-2 text-black hover:bg-orange-100"
-            >
-              →
-            </Button>
+    <React.Fragment>
+      <Layout>
+        <Container className="tw:py-8 blog-container">
+          {/* Hero Section - Bài viết nổi bật */}
+          <div className="tw:mb-12 blog-fade-in">
+            <Featured post={POSTS[1]} />
           </div>
-        )}
-      </section>
-    </div>
+
+          {/* Phần bài viết khác */}
+          <div className="tw:mb-8">
+            <CategoryPills current={current} categories={CATEGORIES} onPick={handleCategoryChange} />
+          </div>
+
+          <div id="latest" className="blog-fade-in">
+            <PostGrid posts={currentPosts} formatDate={formatDate} />
+          </div>
+
+          {/* Pagination */}
+          {totalPages >= 1 && (
+            <div className="blog-pagination">
+              {/* Previous button */}
+              <button 
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+                className="blog-pagination-btn"
+              >
+                ←
+              </button>
+              
+              {/* Page numbers */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`blog-pagination-btn ${currentPage === page ? 'active' : ''}`}
+                >
+                  {page}
+                </button>
+              ))}
+              
+              {/* Next button */}
+              <button 
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+                className="blog-pagination-btn"
+              >
+                →
+              </button>
+            </div>
+          )}
+        </Container>
+      </Layout>
+    </React.Fragment>
   );
 }

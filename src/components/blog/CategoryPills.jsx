@@ -4,18 +4,15 @@ import { cx } from "./ui";
 
 export default function CategoryPills({ current, categories, onPick }) {
   return (
-    <div id="cat" className="flex flex-wrap gap-2">
+    <div id="cat" className="blog-category-pills">
       {categories.map((c) => (
         <button
           key={c}
           onClick={() => onPick(c)}
           className={cx(
-            "px-3 py-1.5 rounded-full text-sm transition-colors",
-            current === c
-              ? "bg-orange-500 text-white border border-orange-600 shadow-sm"
-              : "bg-neutral-100 hover:bg-orange-100 text-black border border-neutral-200"
+            "blog-category-pill",
+            current === c ? "active" : ""
           )}
-          style={{}}
         >
           {c}
         </button>

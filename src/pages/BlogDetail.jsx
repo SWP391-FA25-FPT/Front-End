@@ -50,8 +50,8 @@ export default function BlogDetail() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-semibold">Bài viết không tìm thấy</h2>
-          <Link to="/" className="text-sm text-neutral-600 mt-2 inline-block">
-            Quay về
+          <Link to="/blog" className="text-sm text-neutral-600 mt-2 inline-block">
+            Quay về danh sách bài viết
           </Link>
         </div>
       </div>
@@ -64,7 +64,7 @@ export default function BlogDetail() {
         {/* Back Button */}
         <div className="mb-6">
           <Link 
-            to="/" 
+            to="/blog" 
             className="inline-flex items-center gap-2 text-black hover:text-orange-600 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
