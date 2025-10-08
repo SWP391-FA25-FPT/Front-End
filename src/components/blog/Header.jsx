@@ -3,6 +3,7 @@ import React from "react";
 import { Menu } from "lucide-react";
 import SearchInput from "./SearchInput";
 import { Button } from "./ui";
+import { Link } from "react-router-dom";
 
 export default function Header({ onToggleNav }) {
   return (
@@ -20,6 +21,7 @@ export default function Header({ onToggleNav }) {
             <a className="text-white hover:text-orange-100 !text-white" href="#topics">Chủ đề</a>
             <a className="text-white hover:text-orange-100 !text-white" href="#latest">Bài mới</a>
             <a className="text-white hover:text-orange-100 !text-white" href="#about">Giới thiệu</a>
+            <Link className="text-white hover:text-orange-100 !text-white" to="/meal-plan">Meal Plan</Link>
           </nav>
 
           <div className="flex items-center gap-3">
