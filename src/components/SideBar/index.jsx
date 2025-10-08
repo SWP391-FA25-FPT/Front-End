@@ -41,7 +41,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         {
           key: "2-3",
           icon: <Icon icon="mdi:food-outline" width="24" height="24" />,
-          label: <a href="#">Tạo Thực Đơn Premium</a>,
+          label: <a href="/meal-plan">Tạo Thực Đơn Premium</a>,
         },
         {
           key: "2-4",
@@ -132,6 +132,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     const path = location.pathname;
     if (path === '/') return '1';
     if (path === '/blog' || path.startsWith('/blog/')) return '4';
+    if (path === '/meal-plan') return '2-3'; // Premium submenu
     if (path === '/profile') return '6';
     if (path === '/admin') return '8';
     return '1'; // default to home
@@ -179,7 +180,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
             selectedKeys={[getSelectedKey()]}
             mode="inline"
             items={items}
-            defaultOpenKeys={collapsed ? [] : ["6"]}
+            defaultOpenKeys={collapsed ? [] : getSelectedKey().startsWith('2-') ? ["2"] : ["6"]}
             className="tw:font-sans tw:font-semibold"
             inlineCollapsed={collapsed}
             style={{ border: "none" }}

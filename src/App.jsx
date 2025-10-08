@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import AdminPage from "./pages/admin/AdminPage";
+import MealPlan from "./pages/MealPlan";
 
 function App() {
   return (
@@ -70,6 +71,14 @@ function App() {
               <AdminProtectedRoute>
                 <AdminPage />
               </AdminProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/meal-plan" 
+            element={
+              <ProtectedRoute>
+                <MealPlan />
+              </ProtectedRoute>
             } 
           />
            

@@ -5,6 +5,8 @@ import Header from './component/Header'
 import MealSection from './component/MealSection'
 import TotalsFooter from './component/TotalsFooter'
 import { DEFAULT_MEALS } from './data/mealData'
+import Layout from '../components/layout/AppLayout'
+import './style/MealPlan.css'
 
 
 function multiplyByGrams(baseValue, grams) {
@@ -66,34 +68,30 @@ export default function MealPlan() {
   }
 
   return (
-    <div style={styles.page}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-        <button
-          onClick={() => navigate(-1)}
-          style={{ padding: '0.5rem 1rem', background: '#f97316', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
-        >
-          ← Back
-        </button>
-        <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 600 }}>Meal Plan</h2>
-      </div>
-      <Header onGenerate={generatePlan} onDelete={deletePlan} onReset={resetPlan} />
-
-      {meals.length === 0 ? (
-        <div style={styles.empty}>No meals. Click "Generate Meal Plan" or "Reset".</div>
-      ) : (
-        <div style={styles.stack}>
-          {meals.map((meal, mi) => (
-            <MealSection
-              key={meal.name}
-              meal={meal}
-              onUpdateItem={(ii, grams) => updateGrams(mi, ii, grams)}
-            />
-          ))}
+    <Layout>
+      <div style={styles.page}>
+        <div className="title-container">
+          <h2 className="premium-title">Tạo Thực Đơn Premium</h2>
         </div>
-      )}
+        <Header onGenerate={generatePlan} onDelete={deletePlan} onReset={resetPlan} />
 
-      <TotalsFooter totals={totals} />
-    </div>
+        {meals.length === 0 ? (
+          <div style={styles.empty}>No meals. Click "Generate Meal Plan" or "Reset".</div>
+        ) : (
+          <div style={styles.stack}>
+            {meals.map((meal, mi) => (
+              <MealSection
+                key={meal.name}
+                meal={meal}
+                onUpdateItem={(ii, grams) => updateGrams(mi, ii, grams)}
+              />
+            ))}
+          </div>
+        )}
+
+        <TotalsFooter totals={totals} />
+      </div>
+    </Layout>
   );
 }
  
