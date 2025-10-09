@@ -24,7 +24,7 @@ const Index = ({ title, src }) => {
                 className="tw:h-48 tw:w-full tw:object-cover tw:rounded-xl"
               />
               <div className="tw:absolute tw:bottom-0 tw:left-0 tw:right-0 tw:bg-gradient-to-t tw:from-black/70 tw:to-transparent tw:p-3">
-                <p className="tw:text-white tw:font-semibold tw:text-base" style={{margin:"0"}}>
+                <p className="tw:text-white tw:font-semibold tw:text-base" style={{margin:"5px"}}>
                   {title}
                 </p>
               </div>

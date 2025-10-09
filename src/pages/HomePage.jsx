@@ -2,7 +2,6 @@ import React from "react";
 import Layout from "../components/layout/AppLayout";
 import CardPopular from "../components/CardPopular/Index";
 import Data from "../data/ListKey.json";
-import "tailwindcss";
 import { Typography } from "antd";
 import { Container } from "react-bootstrap";
 
@@ -11,7 +10,7 @@ const HomePage = () => {
   return (
     <React.Fragment>
       <Layout>
-        <Container className="tw:py-4">
+        <Container className="py-4">
           <Title level={3}>Từ Khóa Thịnh Hành</Title>
           <div className="tw:grid tw:grid-cols-1 tw:sm:grid-cols-2 tw:lg:grid-cols-4 tw:gap-6 tw:py-2">
             {Data.map((item, index) => (
