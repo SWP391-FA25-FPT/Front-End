@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PaymentModule from "../../components/admin/PaymentModule";
 import FeedbackModule from "../../components/admin/FeedbackModule";
 import ReportModule from "../../components/admin/ReportModule";
@@ -6,10 +7,12 @@ import ContentModerationModule from "../../components/admin/ContentModerationMod
 import UserManagementModule from "../../components/admin/UserManagementModule";
 import AIControlModule from "../../components/admin/AIControlModule";
 import StatisticsModule from "../../components/admin/StatisticsModule";
+import Logo from "../../assets/icon.svg";
 import "../style/AdminPage.css";
 
 export default function AdminPage() {
   const [activeModule, setActiveModule] = useState("payment");
+  const navigate = useNavigate();
 
   const modules = {
     payment: { component: PaymentModule, label: "Plans & Billing" },
@@ -25,6 +28,17 @@ export default function AdminPage() {
 
   return (
     <div className="admin-container">
+      {/* Logo */}
+      <div className="admin-logo">
+        <img 
+          src={Logo} 
+          alt="M&M Logo" 
+          className="logo-image"
+          onClick={() => navigate('/')}
+        />
+        <span className="logo-text" onClick={() => navigate('/')}>M&M</span>
+      </div>
+
       <aside className="sidebar">
         <div className="sidebar-icons">
           <i className="bi bi-house"></i>

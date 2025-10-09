@@ -58,7 +58,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     {
       key: "3",
       icon: <Icon icon="mdi:trophy-outline" width="24" height="24" />,
-      label: <a href="#">Thử Thách</a>,
+      label: <a href="/challenge">Thử Thách</a>,
     },
     {
       key: "4",
@@ -77,11 +77,16 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     },
     {
       key: "7",
+      icon: <Icon icon="mdi:help-circle-outline" width="24" height="24" />,
+      label: <a href="/support">Hỗ Trợ</a>,
+    },
+    {
+      key: "8",
       icon: <Icon icon="mdi:folder-outline" width="24" height="24" />,
       label: <a href="#" style={{color:"#A098AE"}}>Kho Món Ngon Của Bạn</a>,
       children: [
         {
-          key: "7-1",
+          key: "8-1",
           icon: (
             <Icon
               icon="material-symbols:menu-book-2-outline"
@@ -92,22 +97,22 @@ const Index = ({ collapsed, toggleCollapsed }) => {
           label: <a href="#">Tất Cả</a>,
         },
         {
-          key: "7-2",
+          key: "8-2",
           icon: <Icon icon="mdi:bookmark-outline" width="24" height="24" />,
           label: <a href="#">Đã Lưu</a>,
         },
         {
-          key: "7-3",
+          key: "8-3",
           icon: <Icon icon="mdi:account-outline" width="24" height="24" />,
           label: <a href="#">Món Của Tôi</a>,
         },
         {
-          key: "7-4",
+          key: "8-4",
           icon: <Icon icon="et:global" width="24" height="24" />,
           label: <a href="#">Đã Chia Sẻ</a>,
         },
         {
-          key: "7-5",
+          key: "8-5",
           icon: <Icon icon="mdi:file-document-outline" width="24" height="24" />,
           label: <a href="#">Món Nháp</a>,
         },
@@ -117,7 +122,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
 
   // Admin menu item - only show for admin users
   const adminItem = {
-    key: "8",
+    key: "9",
     icon: <Icon icon="mdi:shield-account" width="24" height="24" />,
     label: <a href="/admin">Admin</a>,
   };
@@ -131,10 +136,12 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   const getSelectedKey = () => {
     const path = location.pathname;
     if (path === '/') return '1';
+    if (path === '/challenge' || path.startsWith('/challenge/')) return '3';
     if (path === '/blog' || path.startsWith('/blog/')) return '4';
     if (path === '/meal-plan') return '2-3'; // Premium submenu
     if (path === '/profile') return '6';
-    if (path === '/admin') return '8';
+    if (path === '/support') return '7';
+    if (path === '/admin') return '9';
     return '1'; // default to home
   };
   return (

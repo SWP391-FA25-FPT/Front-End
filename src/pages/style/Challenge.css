@@ -1,0 +1,238 @@
+.challenge-page {
+  font-family: "Inter", sans-serif;
+  background: #f8f9fa;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Header */
+.challenge-header {
+  background: white;
+  padding: 20px 40px;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-box {
+  position: relative;
+  max-width: 500px;
+  width: 100%;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 20px 12px 45px;
+  border: 2px solid #e5e5e5;
+  border-radius: 25px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+  border-color: #F8B602;
+  box-shadow: 0 0 0 3px rgba(248, 182, 2, 0.1);
+}
+
+.search-box i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 18px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.btn-login {
+  padding: 10px 20px;
+  border: 2px solid #e5e5e5;
+  background: white;
+  color: #333;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+  border-color: #F8B602;
+  color: #F8B602;
+}
+
+.btn-primary {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #F8B602 0%, #ffc107 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(248, 182, 2, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(248, 182, 2, 0.4);
+}
+
+/* Main Content */
+.challenge-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.challenge-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.challenge-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.challenge-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.challenge-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.challenge-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.challenge-card:hover .challenge-image img {
+  transform: scale(1.05);
+}
+
+.challenge-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(248, 182, 2, 0.8) 0%, rgba(255, 208, 77, 0.8) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.challenge-card:hover .challenge-overlay {
+  opacity: 1;
+}
+
+.challenge-description {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.challenge-info {
+  padding: 20px;
+}
+
+.challenge-info h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.challenge-stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.stat-item i {
+  color: #F8B602;
+  font-size: 16px;
+}
+
+.no-challenges {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  font-size: 18px;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .challenge-header {
+    padding: 15px 20px;
+  }
+  
+  .search-box {
+    max-width: 100%;
+  }
+  
+  .challenges-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .challenge-title {
+    font-size: 24px;
+  }
+}
