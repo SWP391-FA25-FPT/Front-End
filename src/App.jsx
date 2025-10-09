@@ -16,6 +16,7 @@ import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import AdminPage from "./pages/admin/AdminPage";
 import MealPlan from "./pages/MealPlan";
+import AIConsultation from "./pages/AIConsultation";
 
 function App() {
   return (
@@ -105,6 +106,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <MealPlan />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/ai-consultation" 
+            element={
+              <ProtectedRoute>
+                <AIConsultation />
               </ProtectedRoute>
             } 
           />
