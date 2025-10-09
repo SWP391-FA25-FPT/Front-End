@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import SupportCard from "../../components/support/SupportCard";
+import { useNavigate } from "react-router-dom";
+import SupportCard from "../components/support/SupportCard";
+import Logo from "../assets/icon.svg";
 import "./style/SupportPage.css";
 
 export default function SupportPage() {
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const items = [
     {
@@ -50,6 +53,17 @@ export default function SupportPage() {
 
   return (
     <div className="support-page">
+      {/* Logo */}
+      <div className="support-logo">
+        <img 
+          src={Logo} 
+          alt="M&M Logo" 
+          className="logo-image"
+          onClick={() => navigate('/')}
+        />
+        <span className="logo-text" onClick={() => navigate('/')}>M&M</span>
+      </div>
+
       {/* Phần tiêu đề */}
       <section className="support-header">
         <h1>Trung Tâm Hỗ Trợ</h1>
@@ -68,12 +82,13 @@ export default function SupportPage() {
       {/* Các mục hỗ trợ */}
       <main className="support-grid">
         {filtered.map((item, index) => (
-          <div className="support-card" key={index}>
-            <div className="icon">{item.icon}</div>
-            <h3>{item.title}</h3>
-            <p className="description">{item.description}</p>
-            <a href={item.link}>Xem chi tiết </a>
-          </div>
+          <SupportCard
+            key={index}
+            icon={item.icon}
+            title={item.title}
+            description={item.description}
+            link={item.link}
+          />
         ))}
         {filtered.length === 0 && (
           <p className="support-empty">

@@ -9,6 +9,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import TakeSurvey from "./pages/TakeSurvey";
 import ProfilePage from "./pages/ProfilePage";
+import SupportPage from "./pages/SupportPage";
+import Challenge from "./pages/Challenge";
+import ChallengeDetail from "./pages/ChallengeDetail";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import AdminPage from "./pages/admin/AdminPage";
@@ -46,6 +49,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/support" 
+            element={
+              <ProtectedRoute>
+                <SupportPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/challenge" 
+            element={
+              <ProtectedRoute>
+                <Challenge />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/challenge/:id" 
+            element={
+              <ProtectedRoute>
+                <ChallengeDetail />
               </ProtectedRoute>
             } 
           />
