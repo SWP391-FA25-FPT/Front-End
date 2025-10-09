@@ -36,6 +36,15 @@
   width: 100%;
 }
 
+.blog-hero-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
 .blog-category-tag {
   background: #fef3e2;
   color: #ea580c;
@@ -48,6 +57,8 @@
   gap: 0.4rem;
   margin-bottom: 0.8rem;
   border: none;
+  line-height: 1.2;
+  height: fit-content;
 }
 
 .blog-title {
@@ -164,6 +175,7 @@
   margin-bottom: 1rem;
   font-size: 0.875rem;
   color: #6b7280;
+  line-height: 1.4;
 }
 
 .blog-post-category {
@@ -173,6 +185,10 @@
   border-radius: 12px;
   font-weight: 500;
   font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  line-height: 1.2;
 }
 
 .blog-post-title {
