@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Layout from "../components/layout/AppLayout";
+import Layout from "../components/layout/SettingLayout";
 import "./style/Challenge.css";
 
 const Challenge = () => {

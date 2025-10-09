@@ -1,6 +1,0 @@
-@import "tailwindcss";
-
-
-/* enforce light scheme */
-:root{color-scheme: light;}
-html,body,#root{background:#ffffff;}

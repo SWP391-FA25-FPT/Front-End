@@ -5,8 +5,8 @@ import { findPostById } from "../data/posts.js";
 import ReactionBar from "../components/blog/ReactionBar";
 import Comments from "../components/blog/Comments";
 import Rating from "../components/blog/Rating";
-import Layout from "../components/layout/AppLayout";
-import "../styles/blogdetail.css";
+import Layout from "../components/layout/SettingLayout";
+import "../pages/style/blogdetail.css";
 
 export default function BlogDetail() {
   const { id } = useParams();
@@ -31,7 +31,7 @@ export default function BlogDetail() {
         .filter((e) => e.count > 0)
         .sort((a, b) => b.count - a.count)
         .slice(0, 3);
-    } catch (e) {
+    } catch {
       return [];
     }
   }

@@ -1,4 +1,4 @@
-import { styles } from '../style/styles'
+import { styles } from '../../pages/style/styles'
 
 export default function Header({ onGenerate, onDelete, onReset }) {
   return (

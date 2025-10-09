@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Layout from "../components/layout/AppLayout";
+import Layout from "../components/layout/SettingLayout";
 import Logo from "../assets/icon.svg";
 import "./style/ChallengeDetail.css";
 

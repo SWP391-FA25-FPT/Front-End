@@ -2,13 +2,12 @@
 import React, { useMemo, useState } from "react";
 import { Typography } from "antd";
 import { Container } from "react-bootstrap";
-import Layout from "../components/layout/AppLayout";
+import Layout from "../components/layout/SettingLayout";
 import Featured from "../components/blog/Featured";
 import CategoryPills from "../components/blog/CategoryPills";
 import PostGrid from "../components/blog/PostGrid";
 import { POSTS } from "../data/posts";
-import "tailwindcss";
-import "../styles/blog.css";
+import "../pages/style/blog.css";
 
 const { Title } = Typography;
 

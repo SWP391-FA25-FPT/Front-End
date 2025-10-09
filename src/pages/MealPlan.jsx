@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { styles } from './style/styles'
-import Header from './component/Header'
-import MealSection from './component/MealSection'
-import TotalsFooter from './component/TotalsFooter'
-import { DEFAULT_MEALS } from './data/mealData'
-import Layout from '../components/layout/AppLayout'
+import Header from '../components/MealPlan/Header'
+import MealSection from '../components/MealPlan/MealSection'
+import TotalsFooter from '../components/MealPlan/TotalsFooter'
+import { DEFAULT_MEALS } from '../data/mealData'
+import Layout from '../components/layout/SettingLayout'
 import './style/MealPlan.css'
 
 

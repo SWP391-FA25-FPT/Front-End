@@ -1,4 +1,4 @@
-import { styles } from '../style/styles'
+import { styles } from '../../pages/style/styles'
 import MealRow from './MealRow'
 
 export default function MealSection({ meal, onUpdateItem }) {
