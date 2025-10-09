@@ -1,17 +1,16 @@
 import React from "react";
 import { Flex } from "antd";
 import Logo from "../../assets/icon.svg";
-
 const Index = ({ collapsed }) => {
   return (
     <React.Fragment>
       <Flex gap={10} align="center" justify="center">
-        <img src={Logo} className={collapsed ? "size-8" : "size-10"} />
+        <img src={Logo} className={collapsed ? "tw:size-8" : "tw:size-10"} />
         {!collapsed && (
           <>
-            <p className="text-4xl font-bold ">M&M</p>
-            <div className="relative size-0.5">
-              <div className="bg-amber-600 w-2 h-2 rounded-3xl relative bottom-0 right-0" />
+            <p className="tw:text-4xl tw:font-bold ">M&M</p>
+            <div className="tw:relative tw:size-0.5">
+              <div className="tw:bg-amber-600 tw:w-2 tw:h-2 tw:rounded-3xl tw:relative tw:bottom-0 tw:right-0" />
             </div>
           </>
         )}

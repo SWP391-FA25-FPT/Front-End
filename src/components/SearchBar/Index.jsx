@@ -1,7 +1,7 @@
 import React from "react";
 import { Icon } from "@iconify/react";
-import { Button, Checkbox, Form, Input, Flex } from "antd";
-
+import { Form, Input } from "antd";
+import "tailwindcss";
 const Index = () => {
   return (
     <React.Fragment>

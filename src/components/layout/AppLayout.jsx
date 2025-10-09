@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { Layout } from "antd";
+import { Layout, Typography } from "antd";
+import { useAuth } from "../../context/AuthContext";
 import SideBar from "../SideBar";
 import Head from "./Header";
 import Foot from "./Footer";
+import { Icon } from "@iconify/react";
+
 const AppLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
+  const { Title } = Typography;
+  const { user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleCollapsed = () => {
@@ -27,11 +32,23 @@ const AppLayout = ({ children }) => {
         <Layout>
           <Header
             style={{ backgroundColor: "white" }}
-            className="flex justify-center items-center"
+            className="tw:flex tw:justify-between tw:items-center"
           >
-            <h1 className="text-2xl font-bold text-black mr-auto">
-              Hello, Patricia
-            </h1>
+            <div className="tw:flex tw:items-center tw:gap-2 tw:ml-4">
+              <Icon 
+                icon="mdi:hand-wave" 
+                width="24" 
+                height="24" 
+                className="tw:animate-bounce"
+                style={{ color: '#ff7a00' }}
+              />
+              <Title 
+                level={3} 
+                className="tw:m-0 tw:bg-gradient-to-r tw:from-orange-500 tw:to-orange-600 tw:bg-clip-text tw:text-transparent tw:animate-pulse"
+              >
+                Hello, {user?.username || 'User'}
+              </Title>
+            </div>
             <Head />
           </Header>
           <Content
@@ -41,7 +58,7 @@ const AppLayout = ({ children }) => {
               borderRadius: "16px 0 0 16px",
             }}
           >
-            { children }
+            {children}
           </Content>
           <Footer style={{ textAlign: "start" }}>
             <Foot />
