@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import SurveyCheckRoute from "./components/auth/SurveyCheckRoute";
 import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
@@ -16,6 +17,7 @@ import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import AdminPage from "./pages/admin/AdminPage";
 import MealPlan from "./pages/MealPlan";
+import { useAuth } from "./context/AuthContext";
 
 function App() {
   return (
@@ -27,15 +29,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           
-          {/* Protected routes */}
-          <Route 
-            path="/" 
-            element={
-              <ProtectedRoute>
-                <HomePage />
-              </ProtectedRoute>
-            } 
-          />
+          {/* Survey route - only for first time users */}
           <Route 
             path="/survey" 
             element={
@@ -44,52 +38,62 @@ function App() {
               </ProtectedRoute>
             } 
           />
+          
+          {/* Protected routes that require survey completion */}
+          <Route 
+            path="/" 
+            element={
+              <SurveyCheckRoute>
+                <HomePage />
+              </SurveyCheckRoute>
+            } 
+          />
           <Route 
             path="/profile" 
             element={
-              <ProtectedRoute>
+              <SurveyCheckRoute>
                 <ProfilePage />
-              </ProtectedRoute>
+              </SurveyCheckRoute>
             } 
           />
           <Route 
             path="/support" 
             element={
-              <ProtectedRoute>
+              <SurveyCheckRoute>
                 <SupportPage />
-              </ProtectedRoute>
+              </SurveyCheckRoute>
             } 
           />
           <Route 
             path="/challenge" 
             element={
-              <ProtectedRoute>
+              <SurveyCheckRoute>
                 <Challenge />
-              </ProtectedRoute>
+              </SurveyCheckRoute>
             } 
           />
           <Route 
             path="/challenge/:id" 
             element={
-              <ProtectedRoute>
+              <SurveyCheckRoute>
                 <ChallengeDetail />
-              </ProtectedRoute>
+              </SurveyCheckRoute>
             } 
           />
           <Route 
             path="/blog" 
             element={
-              <ProtectedRoute>
+              <SurveyCheckRoute>
                 <Blog />
-              </ProtectedRoute>
+              </SurveyCheckRoute>
             } 
           />
           <Route 
             path="/blog/:id" 
             element={
-              <ProtectedRoute>
+              <SurveyCheckRoute>
                 <BlogDetail />
-              </ProtectedRoute>
+              </SurveyCheckRoute>
             } 
           />
           <Route 
@@ -103,9 +107,9 @@ function App() {
           <Route 
             path="/meal-plan" 
             element={
-              <ProtectedRoute>
+              <SurveyCheckRoute>
                 <MealPlan />
-              </ProtectedRoute>
+              </SurveyCheckRoute>
             } 
           />
            

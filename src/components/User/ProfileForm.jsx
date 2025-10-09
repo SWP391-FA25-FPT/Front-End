@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const ProfileForm = () => {
+const ProfileForm = ({ userProfile, onProfileUpdate }) => {
   const [formData, setFormData] = useState({
     name: '',
-    birthdate: '2025-01-01',
-    gender: 'Nam',
+    birthdate: '',
+    gender: '',
     weight: '',
     height: '',
     phone: '',
@@ -15,6 +15,28 @@ const ProfileForm = () => {
     allergies: ''
   });
 
+  // Update form data when userProfile changes
+  useEffect(() => {
+    if (userProfile) {
+      setFormData({
+        name: userProfile.name || '',
+        birthdate: userProfile.profile?.age ? 
+          new Date(new Date().getFullYear() - userProfile.profile.age, 0, 1).toISOString().split('T')[0] : 
+          '2025-01-01',
+        gender: userProfile.profile?.gender === 'male' ? 'Nam' : 
+                userProfile.profile?.gender === 'female' ? 'Nữ' : 'Khác',
+        weight: userProfile.profile?.weight || '',
+        height: userProfile.profile?.height || '',
+        phone: '', // Phone not in backend model
+        email: userProfile.email || '',
+        workHabits: userProfile.profile?.workHabits || '',
+        eatingHabits: userProfile.profile?.eatingHabits || '',
+        diet: userProfile.profile?.diet || '',
+        allergies: userProfile.profile?.allergies?.join(', ') || ''
+      });
+    }
+  }, [userProfile]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -23,10 +45,38 @@ const ProfileForm = () => {
     }));
   };
 
-  const handleUpdate = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    console.log('Update profile:', formData);
-    alert('Cập nhật thông tin thành công!');
+    
+    try {
+      // Convert form data to backend format
+      const updateData = {
+        name: formData.name,
+        profile: {
+          weight: formData.weight ? Number(formData.weight) : undefined,
+          height: formData.height ? Number(formData.height) : undefined,
+          gender: formData.gender === 'Nam' ? 'male' : 
+                  formData.gender === 'Nữ' ? 'female' : 'other',
+          age: formData.birthdate ? 
+            new Date().getFullYear() - new Date(formData.birthdate).getFullYear() : undefined,
+          workHabits: formData.workHabits || undefined,
+          eatingHabits: formData.eatingHabits || undefined,
+          diet: formData.diet || undefined,
+          allergies: formData.allergies ? formData.allergies.split(',').map(a => a.trim()).filter(a => a) : undefined
+        }
+      };
+
+      const result = await onProfileUpdate(updateData);
+      
+      if (result.success) {
+        alert('Cập nhật thông tin thành công!');
+      } else {
+        alert(`Lỗi: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Có lỗi xảy ra khi cập nhật thông tin!');
+    }
   };
 
   const handleSkip = () => {
@@ -243,12 +293,12 @@ const ProfileForm = () => {
             onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
           >
             <option value="">-- Chọn chế độ ăn --</option>
-            <option value="Ăn bình thường">Ăn bình thường</option>
-            <option value="Ăn chay">Ăn chay</option>
-            <option value="Ít tinh bột">Ít tinh bột (Low-carb)</option>
-            <option value="Giàu đạm">Giàu đạm (High-protein)</option>
-            <option value="Keto">Keto</option>
-            <option value="Khác">Khác</option>
+            <option value="none">Không có chế độ đặc biệt</option>
+            <option value="vegetarian">Ăn chay</option>
+            <option value="vegan">Thuần chay</option>
+            <option value="keto">Keto</option>
+            <option value="paleo">Paleo</option>
+            <option value="gluten-free">Không gluten</option>
           </select>
         </div>
 

@@ -299,7 +299,11 @@ function Login() {
                   <span className="requirement-circle"></span>
                   <span>Bao gồm 1 kí tự đặc biệt</span>
                 </div>
+                <a href="/" className="back-link">
+                                ← Quay lại đăng nhập
+                            </a>
               </div>
+
 
               <button type="submit" className="btn-register" disabled={loading}>
                 {loading ? 'Đang đăng ký...' : 'Đăng ký'}
@@ -334,7 +338,7 @@ function Login() {
           </button>
         </div>
 
-        {/* Tab Buttons for switching */}
+        {/* Tab Buttons for switching
         <div className="tab-buttons">
           <button
             className={isLogin ? 'active' : ''}
@@ -356,7 +360,7 @@ function Login() {
           >
             Đăng ký
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { userAPI } from '../../services/userAPI';
+import { useAuth } from '../context/AuthContext';
+import Logo from '../components/Logo';
 import './style/TakeSurvey.css';
 
-function Onboarding({ onComplete }) {
+function TakeSurvey({ onComplete }) {
+  const { updateUser } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -23,6 +26,8 @@ function Onboarding({ onComplete }) {
       profileImageUrl: '',
     },
   });
+
+  const [customAllergy, setCustomAllergy] = useState('');
 
   const totalSteps = 4;
 
@@ -46,15 +51,34 @@ function Onboarding({ onComplete }) {
   };
 
   const handleArrayChange = (field, value, isChecked) => {
-    setProfileData(prev => ({
-      ...prev,
-      profile: {
-        ...prev.profile,
-        [field]: isChecked
-          ? [...prev.profile[field], value]
-          : prev.profile[field].filter(item => item !== value),
-      },
-    }));
+    setProfileData(prev => {
+      let newArray = [...prev.profile[field]];
+      
+      if (value === 'Không') {
+        // Nếu chọn "Không", xóa tất cả các dị ứng khác
+        if (isChecked) {
+          newArray = ['Không'];
+        } else {
+          newArray = [];
+        }
+      } else {
+        // Nếu chọn dị ứng khác, xóa "Không" nếu có
+        if (isChecked) {
+          newArray = newArray.filter(item => item !== 'Không');
+          newArray.push(value);
+        } else {
+          newArray = newArray.filter(item => item !== value);
+        }
+      }
+      
+      return {
+        ...prev,
+        profile: {
+          ...prev.profile,
+          [field]: newArray,
+        },
+      };
+    });
   };
 
   const nextStep = () => {
@@ -139,6 +163,14 @@ function Onboarding({ onComplete }) {
     }
 
     try {
+      // Process allergies - add custom allergy if provided
+      let processedAllergies = [...profileData.profile.allergies];
+      if (profileData.profile.allergies.includes('Khác') && customAllergy.trim()) {
+        // Replace 'Khác' with the actual custom allergy text
+        processedAllergies = processedAllergies.filter(item => item !== 'Khác');
+        processedAllergies.push(customAllergy.trim());
+      }
+
       // Convert string numbers to actual numbers
       const processedData = {
         name: profileData.name, // Gửi tên từ user data
@@ -147,19 +179,23 @@ function Onboarding({ onComplete }) {
           weight: profileData.profile.weight ? Number(profileData.profile.weight) : undefined,
           height: profileData.profile.height ? Number(profileData.profile.height) : undefined,
           age: profileData.profile.age ? Number(profileData.profile.age) : undefined,
+          allergies: processedAllergies,
         },
       };
 
-      await userAPI.updateProfile(processedData);
-      await userAPI.completeOnboarding();
+      const updateResponse = await userAPI.updateProfile(processedData);
+      const completeResponse = await userAPI.completeOnboarding();
       
-      setSuccess('Thông tin đã được lưu thành công! Đang chuyển về trang đăng nhập...');
+      // Update user data in context
+      if (updateResponse.success && updateResponse.data) {
+        updateUser(updateResponse.data);
+      }
       
-      // Call the completion callback to logout and return to login
+      setSuccess('Thông tin đã được lưu thành công! Đang chuyển về trang chính...');
+      
+      // Redirect to home page after successful completion
       setTimeout(() => {
-        if (onComplete) {
-          onComplete();
-        }
+        window.location.href = '/';
       }, 2000);
     } catch (err) {
       setError(err.response?.data?.error || 'Có lỗi xảy ra khi lưu thông tin!');
@@ -293,18 +329,33 @@ function Onboarding({ onComplete }) {
               </select>
             </div>
             <div className="form-group">
-              <label>Dị ứng thực phẩm (tùy chọn - có thể chọn nhiều)</label>
-              <div className="checkbox-group">
-                {['Đậu phộng', 'Hải sản', 'Sữa', 'Trứng', 'Đậu nành', 'Lúa mì', 'Hạt cây', 'Khác'].map(allergy => (
-                  <label key={allergy} className="checkbox-label">
+              <label>Dị ứng thực phẩm (tùy chọn)</label>
+              <div className="allergy-section">
+                <div className="allergy-grid">
+                  {['Không', 'Đậu phộng', 'Hải sản', 'Sữa', 'Trứng', 'Đậu nành', 'Lúa mì', 'Hạt cây', 'Khác'].map(allergy => (
+                    <label key={allergy} className="allergy-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={profileData.profile.allergies.includes(allergy)}
+                        onChange={(e) => handleArrayChange('allergies', allergy, e.target.checked)}
+                      />
+                      <span className="allergy-text">{allergy}</span>
+                    </label>
+                  ))}
+                </div>
+                
+                {/* Custom allergy input */}
+                {profileData.profile.allergies.includes('Khác') && (
+                  <div className="custom-allergy-input">
                     <input
-                      type="checkbox"
-                      checked={profileData.profile.allergies.includes(allergy)}
-                      onChange={(e) => handleArrayChange('allergies', allergy, e.target.checked)}
+                      type="text"
+                      value={customAllergy}
+                      onChange={(e) => setCustomAllergy(e.target.value)}
+                      placeholder="Nhập dị ứng khác..."
+                      className="allergy-text-input"
                     />
-                    <span>{allergy}</span>
-                  </label>
-                ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -352,52 +403,64 @@ function Onboarding({ onComplete }) {
   };
 
   return (
-    <div className="onboarding-container">
-      <div className="onboarding-card">
-        <div className="onboarding-header">
-          <h1>Chào mừng đến với Meta Meal! 🎉</h1>
-          <p>Hãy cho chúng tôi biết một chút về bạn để tạo ra trải nghiệm cá nhân hóa tốt nhất</p>
+    <div className="survey-container">
+      <div className="survey-card">
+        {/* Logo Section */}
+        <div className="logo-section">
+          <div className="logo">
+            <Logo collapsed={false} />
+          </div>
         </div>
 
-        <div className="progress-bar">
-          <div className="progress-fill" style={{ width: `${(currentStep / totalSteps) * 100}%` }}></div>
+        {/* Title */}
+        <div className="page-title">
+          <h1>Khảo sát thông tin cá nhân</h1>
         </div>
 
-        <div className="step-indicator">
-          Bước {currentStep} / {totalSteps}
+        {/* Form Container with dotted border */}
+        <div className="form-container">
+          {error && <div className="alert alert-error">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
+
+          <div className="step-wrapper">
+            {renderStep()}
+          </div>
+
+          <div className="step-navigation">
+            {currentStep > 1 && (
+              <button onClick={prevStep} className="btn-secondary">
+                Quay lại
+              </button>
+            )}
+            
+            {currentStep < totalSteps ? (
+              <button onClick={nextStep} className="btn-primary">
+                Tiếp theo
+              </button>
+            ) : (
+              <button 
+                onClick={handleSubmit} 
+                className="btn-primary"
+                disabled={loading}
+              >
+                {loading ? 'Đang lưu...' : 'Hoàn thành'}
+              </button>
+            )}
+          </div>
         </div>
 
-        {error && <div className="alert alert-error">{error}</div>}
-        {success && <div className="alert alert-success">{success}</div>}
-
-        <div className="step-wrapper">
-          {renderStep()}
-        </div>
-
-        <div className="step-navigation">
-          {currentStep > 1 && (
-            <button onClick={prevStep} className="btn-secondary">
-              Quay lại
-            </button>
-          )}
-          
-          {currentStep < totalSteps ? (
-            <button onClick={nextStep} className="btn-primary">
-              Tiếp theo
-            </button>
-          ) : (
-            <button 
-              onClick={handleSubmit} 
-              className="btn-primary"
-              disabled={loading}
-            >
-              {loading ? 'Đang lưu...' : 'Hoàn thành'}
-            </button>
-          )}
+        {/* Progress indicator */}
+        <div className="progress-section">
+          <div className="step-indicator">
+            Bước {currentStep} / {totalSteps}
+          </div>
+          <div className="progress-bar">
+            <div className="progress-fill" style={{ width: `${(currentStep / totalSteps) * 100}%` }}></div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default Onboarding;
+export default TakeSurvey;
