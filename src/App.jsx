@@ -17,6 +17,7 @@ import BlogDetail from "./pages/BlogDetail";
 import AdminPage from "./pages/admin/AdminPage";
 import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
+import NutritionalAnalysis from "./pages/NutritionalAnalysis";
 
 function App() {
   return (
@@ -114,6 +115,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AIConsultation />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/nutritional-analysis" 
+            element={
+              <ProtectedRoute>
+                <NutritionalAnalysis />
               </ProtectedRoute>
             } 
           />
