@@ -30,12 +30,12 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         {
           key: "2-1",
           icon: <Icon icon="mdi:robot-outline" width="24" height="24" />,
-          label: <a href="#">AI Tư Vấn M&M</a>,
+          label: <a href="/ai-consultation">AI Tư Vấn M&M</a>,
         },
         {
           key: "2-2",
           icon: <Icon icon="mdi:camera-outline" width="24" height="24" />,
-          label: <a href="#">Phân tích Dinh Dưỡng Bằng Ảnh</a>,
+          label: <a href="/nutritional-analysis">Phân tích Dinh Dưỡng Bằng Ảnh</a>,
         },
 
         {
@@ -139,6 +139,8 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     if (path === '/challenge' || path.startsWith('/challenge/')) return '3';
     if (path === '/blog' || path.startsWith('/blog/')) return '4';
     if (path === '/meal-plan') return '2-3'; // Premium submenu
+    if (path === '/ai-consultation') return '2-1'; // AI Tư Vấn M&M
+    if (path === '/nutritional-analysis') return '2-2'; // Phân tích Dinh Dưỡng Bằng Ảnh
     if (path === '/profile') return '6';
     if (path === '/support') return '7';
     if (path === '/admin') return '9';

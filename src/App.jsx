@@ -17,7 +17,8 @@ import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import AdminPage from "./pages/admin/AdminPage";
 import MealPlan from "./pages/MealPlan";
-import { useAuth } from "./context/AuthContext";
+import AIConsultation from "./pages/AIConsultation";
+import NutritionalAnalysis from "./pages/NutritionalAnalysis";
 
 function App() {
   return (
@@ -110,6 +111,22 @@ function App() {
               <SurveyCheckRoute>
                 <MealPlan />
               </SurveyCheckRoute>
+            } 
+          />
+          <Route 
+            path="/ai-consultation" 
+            element={
+              <ProtectedRoute>
+                <AIConsultation />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/nutritional-analysis" 
+            element={
+              <ProtectedRoute>
+                <NutritionalAnalysis />
+              </ProtectedRoute>
             } 
           />
            

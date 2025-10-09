@@ -27,12 +27,13 @@ export default function Featured({ post }) {
         {/* Nội dung bên phải */}
         <div className="blog-hero-content">
           {/* Thẻ chủ đề và ngày */}
-          <div className="tw:flex tw:items-center tw:gap-3 tw:mb-3">
+          <div className="blog-hero-meta">
             <span className="blog-category-tag">
-              <Tag className="tw:h-3 tw:w-3" /> {post.category}
+              <Tag className="tw:h-3 tw:w-3 tw:flex-shrink-0" />
+              <span>{post.category}</span>
             </span>
-            <span className="tw:text-gray-500 tw:text-sm">•</span>
-            <span className="tw:text-gray-500 tw:text-sm">{post.date}</span>
+            <span className="tw:text-gray-500">•</span>
+            <span className="tw:text-gray-500">{post.date}</span>
           </div>
           
           {/* Tiêu đề lớn đậm */}

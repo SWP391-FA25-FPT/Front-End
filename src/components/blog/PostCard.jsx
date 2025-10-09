@@ -19,7 +19,8 @@ export default function PostCard({ post, formatDate }) {
       <CardContent className="blog-post-content">
         <div className="blog-post-meta">
           <span className="blog-post-category">
-            <Tag className="tw:h-3 tw:w-3" /> {post.category}
+            <Tag className="tw:h-3 tw:w-3 tw:flex-shrink-0" />
+            <span>{post.category}</span>
           </span>
           <span>•</span>
           <span>{formatDate(post.date)}</span>
