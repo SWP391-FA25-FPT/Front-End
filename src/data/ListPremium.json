@@ -1,0 +1,192 @@
+{
+  "premiumFeatures": [
+    {
+      "id": "ai-consultation",
+      "key": "2-1",
+      "title": "AI Tư Vấn M&M",
+      "description": "Trợ lý AI thông minh giúp tư vấn dinh dưỡng và sức khỏe cá nhân hóa",
+      "icon": "mdi:robot-outline",
+      "image": "https://tse3.mm.bing.net/th/id/OSK.HEROeqZ9UPM81lqnity5Jk5aRluG6H61ikDEF3S8m-lPjAM?o=7&cb=12rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "featuredDishes": [
+        {
+          "keyword": "pho",
+          "name": "Phở",
+          "image": "https://tse3.mm.bing.net/th/id/OSK.HEROeqZ9UPM81lqnity5Jk5aRluG6H61ikDEF3S8m-lPjAM?o=7&cb=12rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
+        },
+        {
+          "keyword": "bun_bo_hue", 
+          "name": "Bún Bò Huế",
+          "image": "https://www.hungryhuy.com/wp-content/uploads/bun-bo-hue-bowl.jpg"
+        }
+      ],
+      "features": [
+        "Tư vấn dinh dưỡng 24/7",
+        "Phân tích tình trạng sức khỏe",
+        "Đề xuất thực đơn phù hợp",
+        "Theo dõi tiến độ cá nhân"
+      ],
+      "price": "199,000 VNĐ/tháng",
+      "isPopular": true,
+      "benefits": [
+        "Tiết kiệm thời gian tìm hiểu",
+        "Lời khuyên chuyên nghiệp",
+        "Cập nhật kiến thức mới nhất"
+      ]
+    },
+    {
+      "id": "image-nutrition-analysis",
+      "key": "2-2", 
+      "title": "Phân tích Dinh Dưỡng Bằng Ảnh",
+      "description": "Chụp ảnh món ăn và nhận phân tích chi tiết về thành phần dinh dưỡng",
+      "icon": "mdi:camera-outline",
+      "image": "https://www.bing.com/th/id/OIP.aewxXuH5PDBM9anbsk5W6QAAAA?w=310&h=198&c=7&rs=1&bgcl=fffffe&r=0&o=6&cb=12&pid=23.1",
+      "featuredDishes": [
+        {
+          "keyword": "banh_mi",
+          "name": "Bánh Mì", 
+          "image": "https://www.bing.com/th/id/OIP.aewxXuH5PDBM9anbsk5W6QAAAA?w=310&h=198&c=7&rs=1&bgcl=fffffe&r=0&o=6&cb=12&pid=23.1"
+        },
+        {
+          "keyword": "com_tam",
+          "name": "Cơm Tấm",
+          "image": "https://dienmaynewsun.com/wp-content/uploads/2019/08/quan-com-tam-ngon.jpg"
+        }
+      ],
+      "features": [
+        "Nhận diện món ăn từ ảnh",
+        "Phân tích calo và dinh dưỡng",
+        "Đề xuất cải thiện món ăn",
+        "Lưu trữ lịch sử phân tích"
+      ],
+      "price": "149,000 VNĐ/tháng",
+      "isPopular": false,
+      "benefits": [
+        "Tiện lợi và nhanh chóng",
+        "Độ chính xác cao",
+        "Học hỏi về dinh dưỡng"
+      ]
+    },
+    {
+      "id": "premium-meal-plan",
+      "key": "2-3",
+      "title": "Tạo Thực Đơn Premium",
+      "description": "Thực đơn được thiết kế riêng bởi chuyên gia dinh dưỡng",
+      "icon": "mdi:food-outline",
+      "image": "https://bing.com/th?id=OSK.29fa2092e0a5f7f1a748978ea6d8d93a",
+      "featuredDishes": [
+        {
+          "keyword": "goi_cuon",
+          "name": "Gỏi Cuốn",
+          "image": "https://bing.com/th?id=OSK.29fa2092e0a5f7f1a748978ea6d8d93a"
+        },
+        {
+          "keyword": "mien_xao",
+          "name": "Miến Xào", 
+          "image": "https://cdn.tgdd.vn/2021/07/CookProduct/mien-xao-bo-bam-rau-cai-thumbnail-1-1200x676.jpg"
+        }
+      ],
+      "features": [
+        "Thực đơn cá nhân hóa",
+        "Đa dạng món ăn phong phú",
+        "Hướng dẫn nấu ăn chi tiết",
+        "Danh sách mua sắm tự động"
+      ],
+      "price": "299,000 VNĐ/tháng",
+      "isPopular": true,
+      "benefits": [
+        "Tiết kiệm thời gian lên kế hoạch",
+        "Đảm bảo dinh dưỡng cân bằng",
+        "Khám phá món ăn mới"
+      ]
+    },
+    {
+      "id": "progress-tracking",
+      "key": "2-4",
+      "title": "Theo Dõi Tiến Độ",
+      "description": "Hệ thống theo dõi và phân tích tiến độ sức khỏe toàn diện",
+      "icon": "mdi:chart-line",
+      "image": "https://cdn.tgdd.vn/2020/12/CookProduct/11-1200x676.jpg",
+      "featuredDishes": [
+        {
+          "keyword": "banh_xeo",
+          "name": "Bánh Xèo",
+          "image": "https://cdn.tgdd.vn/2020/12/CookProduct/11-1200x676.jpg"
+        }
+      ],
+      "features": [
+        "Biểu đồ tiến độ trực quan",
+        "Báo cáo sức khỏe định kỳ",
+        "Mục tiêu và thử thách cá nhân",
+        "So sánh với cộng đồng"
+      ],
+      "price": "99,000 VNĐ/tháng",
+      "isPopular": false,
+      "benefits": [
+        "Động lực duy trì lối sống lành mạnh",
+        "Hiểu rõ tiến độ của bản thân",
+        "Điều chỉnh kế hoạch phù hợp"
+      ]
+    },
+    {
+      "id": "top-meal-plans",
+      "key": "2-5",
+      "title": "Top Thực Đơn Xem Nhiều Nhất",
+      "description": "Truy cập vào bộ sưu tập thực đơn được yêu thích nhất",
+      "icon": "mdi:crown-outline",
+      "image": "https://th.bing.com/th/id/R.ea3ca5240e4e78235d072d1f278a6945?rik=4q%2bCWvCiH32qyw&pid=ImgRaw&r=0",
+      "featuredDishes": [
+        {
+          "keyword": "cha_gio",
+          "name": "Chả Giò",
+          "image": "https://th.bing.com/th/id/R.ea3ca5240e4e78235d072d1f278a6945?rik=4q%2bCWvCiH32qyw&pid=ImgRaw&r=0"
+        }
+      ],
+      "features": [
+        "Thực đơn trending",
+        "Đánh giá từ cộng đồng",
+        "Thực đơn của chuyên gia",
+        "Cập nhật hàng tuần"
+      ],
+      "price": "79,000 VNĐ/tháng",
+      "isPopular": false,
+      "benefits": [
+        "Khám phá xu hướng ẩm thực",
+        "Tham khảo ý kiến cộng đồng",
+        "Tiết kiệm thời gian lựa chọn"
+      ]
+    }
+  ],
+  "pricing": {
+    "monthly": {
+      "individual": "199,000 VNĐ/tháng",
+      "family": "399,000 VNĐ/tháng",
+      "yearly": "1,999,000 VNĐ/năm (tiết kiệm 20%)"
+    },
+    "features": [
+      "Truy cập tất cả tính năng premium",
+      "Hỗ trợ 24/7",
+      "Cập nhật miễn phí",
+      "Không quảng cáo"
+    ]
+  },
+  "testimonials": [
+    {
+      "name": "Nguyễn Thị Lan",
+      "avatar": "https://via.placeholder.com/50",
+      "rating": 5,
+      "comment": "AI tư vấn rất hữu ích, giúp tôi cải thiện chế độ ăn uống đáng kể!"
+    },
+    {
+      "name": "Trần Văn Minh",
+      "avatar": "https://via.placeholder.com/50", 
+      "rating": 5,
+      "comment": "Tính năng phân tích ảnh món ăn rất tiện lợi và chính xác."
+    },
+    {
+      "name": "Lê Thị Hương",
+      "avatar": "https://via.placeholder.com/50",
+      "rating": 4,
+      "comment": "Thực đơn premium đa dạng và ngon miệng, gia đình tôi rất thích!"
+    }
+  ]
+}
