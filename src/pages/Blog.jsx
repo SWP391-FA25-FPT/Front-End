@@ -8,7 +8,7 @@ import CategoryPills from "../components/blog/CategoryPills";
 import PostGrid from "../components/blog/PostGrid";
 import { POSTS } from "../data/posts";
 import "tailwindcss";
-import "../styles/blog.css";
+import "./style/blog.css";
 
 const { Title } = Typography;
 
@@ -57,7 +57,7 @@ export default function Blog() {
         <Container className="tw:py-8 blog-container">
           {/* Hero Section - Bài viết nổi bật */}
           <div className="tw:mb-12 blog-fade-in">
-            <Featured post={POSTS[1]} />
+            <Featured post={POSTS[1]} formatDate={formatDate} />
           </div>
 
           {/* Phần bài viết khác */}

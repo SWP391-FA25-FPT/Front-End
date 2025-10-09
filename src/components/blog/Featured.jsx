@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Tag } from "lucide-react";
 import { Card, CardContent } from "./ui";
 
-export default function Featured({ post }) {
+export default function Featured({ post, formatDate }) {
   if (!post) return null;
   return (
     <section className="tw:w-full">
@@ -32,7 +32,7 @@ export default function Featured({ post }) {
               <Tag className="tw:h-3 tw:w-3" /> {post.category}
             </span>
             <span className="tw:text-gray-500 tw:text-sm">•</span>
-            <span className="tw:text-gray-500 tw:text-sm">{post.date}</span>
+            <span className="tw:text-gray-500 tw:text-sm">{formatDate ? formatDate(post.date) : post.date}</span>
           </div>
           
           {/* Tiêu đề lớn đậm */}

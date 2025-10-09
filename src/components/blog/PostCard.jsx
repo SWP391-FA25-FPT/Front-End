@@ -21,7 +21,7 @@ export default function PostCard({ post, formatDate }) {
           <span className="blog-post-category">
             <Tag className="tw:h-3 tw:w-3" /> {post.category}
           </span>
-          <span>•</span>
+          <span className="separator">•</span>
           <span>{formatDate(post.date)}</span>
         </div>
         <h3 className="blog-post-title">

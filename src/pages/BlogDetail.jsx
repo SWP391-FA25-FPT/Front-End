@@ -1,16 +1,21 @@
 // src/pages/BlogDetail.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { findPostById } from "../data/posts.js";
 import ReactionBar from "../components/blog/ReactionBar";
 import Comments from "../components/blog/Comments";
 import Rating from "../components/blog/Rating";
 import Layout from "../components/layout/AppLayout";
-import "../styles/blogdetail.css";
+import "./style/blogdetail.css";
 
 export default function BlogDetail() {
   const { id } = useParams();
   const post = findPostById(id);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
   
   function getTopEmotes(postId) {
     try {
