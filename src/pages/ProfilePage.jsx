@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/layout/SettingLayout";
 import ProfileForm from "../components/User/ProfileForm"; 
-import { userAPI } from "../../services/userAPI";
+import { getProfile, updateProfile } from "../apis/user";
 import "./style/ProfilePage.css"; 
 
 const ProfilePage = () => {
@@ -13,11 +13,15 @@ const ProfilePage = () => {
     const fetchUserProfile = async () => {
       try {
         setLoading(true);
-        const response = await userAPI.getProfile();
-        if (response.success) {
-          setUserProfile(response.data);
+        console.log('Fetching user profile...');
+        const response = await getProfile();
+        console.log('Profile response:', response);
+        
+        // Nếu response.data chứa user data trực tiếp
+        if (response) {
+          setUserProfile(response);
         } else {
-          setError(response.error || 'Failed to fetch profile');
+          setError('Failed to fetch profile');
         }
       } catch (err) {
         console.error('Error fetching user profile:', err);
@@ -32,12 +36,13 @@ const ProfilePage = () => {
 
   const handleProfileUpdate = async (updatedData) => {
     try {
-      const response = await userAPI.updateProfile(updatedData);
-      if (response.success) {
-        setUserProfile(response.data);
+      const response = await updateProfile(updatedData);
+      // Nếu response.data chứa user data trực tiếp
+      if (response) {
+        setUserProfile(response);
         return { success: true, message: 'Profile updated successfully' };
       } else {
-        return { success: false, message: response.error || 'Failed to update profile' };
+        return { success: false, message: 'Failed to update profile' };
       }
     } catch (err) {
       console.error('Error updating profile:', err);

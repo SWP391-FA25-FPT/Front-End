@@ -43,11 +43,13 @@ const TipsSection = () => {
                 flexDirection: 'column',
                 height: '100%'
               }}
-              bodyStyle={{ 
-                flex: 1, 
-                display: 'flex', 
-                flexDirection: 'column',
-                justifyContent: 'center'
+              styles={{
+                body: {
+                  flex: 1, 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  justifyContent: 'center'
+                }
               }}
             >
               <Space direction="vertical" align="center" style={{ width: '100%', height: '100%', justifyContent: 'center', padding: '12px 0' }}>

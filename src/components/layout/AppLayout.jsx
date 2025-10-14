@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Layout, Typography } from "antd";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import SideBar from "../SideBar";
 import Head from "./Header";
 import Foot from "./Footer";

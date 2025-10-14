@@ -3,7 +3,7 @@ import Logo from "../Logo";
 import { Container } from "react-bootstrap";
 import { Button, ConfigProvider, Flex, Menu } from "antd";
 import { Icon } from "@iconify/react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useLocation } from "react-router-dom";
 
 const Index = ({ collapsed, toggleCollapsed }) => {

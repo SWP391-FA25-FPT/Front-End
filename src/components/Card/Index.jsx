@@ -24,12 +24,14 @@ const Index = ({ title, description, src }) => {
             display: 'flex',
             flexDirection: 'column'
           }}
-          bodyStyle={{
-            flex: 'none',
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '16px',
-            height: 'auto'
+          styles={{
+            body: {
+              flex: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '16px',
+              height: 'auto'
+            }
           }}
         >
           <Card.Meta 

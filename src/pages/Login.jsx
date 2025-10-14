@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { authAPI } from '../../services/api';
+import { loginApi, registerApi } from '../apis/auth';
+import { useAuth } from '../context/useAuth';
 import Logo from '../components/Logo';
 import './style/Login.css';
 
 function Login() {
+  const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -103,20 +105,24 @@ function Login() {
     }
 
     try {
-      const response = await authAPI.login(loginData);
+      const response = await loginApi(loginData);
       
       if (response.success) {
-        // Save token to localStorage
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+        // Update AuthContext
+        login({
+          token: response.data.token,
+          user: response.data.user
+        });
         
         setSuccess('Đăng nhập thành công!');
         console.log('User:', response.data.user);
         
-        // Redirect to dashboard
+        // Redirect to home page
         setTimeout(() => {
-          window.location.href = '/dashboard';
+          window.location.href = '/';
         }, 1000);
+      } else {
+        setError(response.error || 'Đăng nhập thất bại!');
       }
     } catch (err) {
       setError(err.response?.data?.error || 'Đăng nhập thất bại!');
@@ -138,29 +144,31 @@ function Login() {
     }
 
     try {
-      const response = await authAPI.register({
+      await registerApi({
         username: registerData.username,
         email: registerData.email,
         password: registerData.password,
+        onSuccess: () => {
+          setSuccess('Đăng ký thành công! Vui lòng đăng nhập.');
+          setRegisterData({
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+          });
+          
+          // Switch to login form after 2 seconds
+          setTimeout(() => {
+            setIsLogin(true);
+            setSuccess('');
+          }, 2000);
+        },
+        onFail: (error) => {
+          setError(error || 'Đăng ký thất bại!');
+        }
       });
-
-      if (response.success) {
-        setSuccess('Đăng ký thành công! Vui lòng đăng nhập.');
-        setRegisterData({
-          username: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-        });
-        
-        // Switch to login form after 2 seconds
-        setTimeout(() => {
-          setIsLogin(true);
-          setSuccess('');
-        }, 2000);
-      }
-    } catch (err) {
-      setError(err.response?.data?.error || 'Đăng ký thất bại!');
+    } catch {
+      setError('Đăng ký thất bại!');
     } finally {
       setLoading(false);
     }

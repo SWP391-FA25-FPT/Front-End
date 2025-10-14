@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { userAPI } from '../../services/userAPI';
-import { useAuth } from '../context/AuthContext';
+import { getProfile, updateProfile, completeOnboarding } from '../apis/user';
+import { useAuth } from '../context/useAuth';
 import Logo from '../components/Logo';
 import './style/TakeSurvey.css';
 
@@ -183,8 +183,8 @@ function TakeSurvey({ onComplete }) {
         },
       };
 
-      const updateResponse = await userAPI.updateProfile(processedData);
-      const completeResponse = await userAPI.completeOnboarding();
+      const updateResponse = await updateProfile(processedData);
+      const completeResponse = await completeOnboarding();
       
       // Update user data in context
       if (updateResponse.success && updateResponse.data) {
