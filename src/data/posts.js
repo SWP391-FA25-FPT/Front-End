@@ -38,7 +38,7 @@ export const POSTS = [
     date: "2025-08-30",
     category: "Dụng cụ bếp",
     image:
-      "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1200&auto=format&fit=crop",
+      "https://png.pngtree.com/thumb_back/fh260/background/20230901/pngtree-a-large-set-of-stainless-steel-pots-and-pans-set-on-image_13165180.jpg",
   },
   {
     id: 4,
@@ -51,7 +51,7 @@ export const POSTS = [
     date: "2025-09-28",
     category: "Ăn theo mùa",
     image:
-      "https://images.unsplash.com/photo-1511690078903-7b54b58f0b4a?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1200&auto=format&fit=crop",
   },
   {
     id: 5,
@@ -71,13 +71,130 @@ export const POSTS = [
     title: "Meal prep 101: chuẩn bị 10 phần ăn trong 90 phút",
     excerpt:
       "Một quy trình đơn giản để nấu một lần ăn cả tuần, phù hợp người mới bắt đầu.",
-    content: "Nội dung chi tiết cho bài viết 6.",
+    content: "Meal prep không chỉ giúp bạn tiết kiệm thời gian mà còn đảm bảo dinh dưỡng cân bằng. Với 90 phút chuẩn bị, bạn có thể có 10 phần ăn đủ chất cho cả tuần. Bắt đầu với việc lên kế hoạch thực đơn, chuẩn bị nguyên liệu và sử dụng các kỹ thuật nấu nướng hiệu quả.",
     author: "Bếp Nhàn",
     authorAvatar: "https://i.pravatar.cc/80?img=22",
     date: "2025-09-10",
     category: "Meal Prep",
     image:
       "https://images.unsplash.com/photo-1490818387583-1baba5e638af?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: 7,
+    title: "10 loại gia vị cơ bản mọi nhà bếp nên có",
+    excerpt:
+      "Từ muối, tiêu đến các loại thảo mộc khô - danh sách gia vị thiết yếu cho món ăn ngon.",
+    content: "Gia vị là linh hồn của món ăn. Với 10 loại gia vị cơ bản này, bạn có thể tạo ra hàng trăm món ăn khác nhau. Từ muối biển, tiêu đen, tỏi khô đến các loại thảo mộc như oregano, basil, thyme - mỗi loại đều có vai trò riêng trong việc tạo nên hương vị đặc trưng.",
+    author: "Spice Master",
+    authorAvatar: "https://i.pravatar.cc/80?img=8",
+    date: "2025-09-15",
+    category: "Mẹo nhà bếp",
+    image:
+      "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: 8,
+    title: "Thực đơn healthy cho người tập gym",
+    excerpt:
+      "Kết hợp protein, carb và chất béo tốt để tối ưu hiệu quả tập luyện và phục hồi cơ bắp.",
+    content: "Chế độ dinh dưỡng đúng cách là chìa khóa để đạt được mục tiêu fitness. Thực đơn này được thiết kế đặc biệt cho người tập gym, cân bằng giữa protein để xây dựng cơ bắp, carbohydrate để cung cấp năng lượng và chất béo tốt để hỗ trợ hormone.",
+    author: "Fitness Chef",
+    authorAvatar: "https://i.pravatar.cc/80?img=15",
+    date: "2025-09-12",
+    category: "Thực đơn tuần",
+    image:
+      "https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: 9,
+    title: "Cách bảo quản thực phẩm tươi lâu hơn",
+    excerpt:
+      "Mẹo hay để rau củ, thịt cá giữ được độ tươi ngon và dinh dưỡng trong tủ lạnh.",
+    content: "Bảo quản thực phẩm đúng cách không chỉ giúp tiết kiệm chi phí mà còn đảm bảo an toàn sức khỏe. Từ việc phân loại thực phẩm, sử dụng túi zip, hộp kín đến điều chỉnh nhiệt độ tủ lạnh - mỗi bước đều quan trọng để kéo dài thời gian sử dụng.",
+    author: "Food Saver",
+    authorAvatar: "https://i.pravatar.cc/80?img=19",
+    date: "2025-09-08",
+    category: "Mẹo nhà bếp",
+    image:
+      "https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: 10,
+    title: "So sánh các loại dầu ăn: dùng sao cho đúng?",
+    excerpt:
+      "Dầu olive, dầu dừa, dầu hướng dương - ưu nhược điểm và cách sử dụng phù hợp.",
+    content: "Mỗi loại dầu ăn có điểm bốc khói khác nhau và phù hợp với từng phương pháp nấu nướng. Dầu olive extra virgin tốt cho salad, dầu dừa chịu nhiệt cao cho chiên rán, còn dầu hướng dương phù hợp cho nướng. Hiểu rõ đặc tính của từng loại sẽ giúp bạn nấu ăn ngon và an toàn hơn.",
+    author: "Oil Expert",
+    authorAvatar: "https://i.pravatar.cc/80?img=25",
+    date: "2025-09-05",
+    category: "Dụng cụ bếp",
+    image:
+      "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: 11,
+    title: "Món ăn mùa thu: gợi ý từ các đầu bếp",
+    excerpt:
+      "Những món ăn ấm áp, bổ dưỡng phù hợp với thời tiết mùa thu và nguyên liệu theo mùa.",
+    content: "Mùa thu là thời điểm lý tưởng để thưởng thức những món ăn ấm áp và bổ dưỡng. Từ canh bí đỏ, cháo gà đến các món nướng với rau củ mùa thu - mỗi món đều mang hương vị đặc trưng của mùa. Các đầu bếp chia sẻ bí quyết chọn nguyên liệu tươi ngon và cách chế biến để giữ trọn hương vị.",
+    author: "Autumn Chef",
+    authorAvatar: "https://i.pravatar.cc/80?img=33",
+    date: "2025-09-18",
+    category: "Ăn theo mùa",
+    image:
+      "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: 12,
+    title: "Kỹ thuật nướng thịt hoàn hảo",
+    excerpt:
+      "Từ nhiệt độ, thời gian đến cách kiểm tra độ chín - bí quyết nướng thịt mềm ngon.",
+    content: "Nướng thịt là một nghệ thuật đòi hỏi sự kiên nhẫn và hiểu biết về nhiệt độ. Từ việc làm nóng lò trước, điều chỉnh nhiệt độ phù hợp đến cách kiểm tra độ chín bằng nhiệt kế - mỗi bước đều quan trọng để có món thịt nướng hoàn hảo.",
+    author: "Grill Master",
+    authorAvatar: "https://i.pravatar.cc/80?img=17",
+    date: "2025-09-03",
+    category: "Kỹ thuật nấu",
+    image:
+      "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: 13,
+    title: "Meal prep cho người ăn chay",
+    excerpt:
+      "Thực đơn đa dạng với đậu hũ, rau củ và ngũ cốc - đảm bảo đủ protein và dinh dưỡng.",
+    content: "Ăn chay không có nghĩa là thiếu dinh dưỡng. Với meal prep thông minh, bạn có thể tạo ra những bữa ăn chay đầy đủ chất. Từ đậu hũ, tempeh, các loại đậu đến rau củ đa dạng - mỗi nguyên liệu đều góp phần tạo nên bữa ăn cân bằng và ngon miệng.",
+    author: "Vegan Prep",
+    authorAvatar: "https://i.pravatar.cc/80?img=28",
+    date: "2025-09-01",
+    category: "Meal Prep",
+    image:
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: 14,
+    title: "Cách làm nước dùng ngon tại nhà",
+    excerpt:
+      "Bí quyết nấu nước dùng gà, bò, rau củ thơm ngon, không cần bột ngọt.",
+    content: "Nước dùng là nền tảng của nhiều món ăn ngon. Từ nước dùng gà trong suốt, nước dùng bò đậm đà đến nước dùng rau củ thanh mát - mỗi loại đều có bí quyết riêng. Sử dụng nguyên liệu tươi, thời gian ninh phù hợp và kỹ thuật lọc trong sẽ cho ra nước dùng hoàn hảo.",
+    author: "Broth Master",
+    authorAvatar: "https://i.pravatar.cc/80?img=11",
+    date: "2025-08-28",
+    category: "Kỹ thuật nấu",
+    image:
+      "https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: 15,
+    title: "Thực đơn giảm cân hiệu quả",
+    excerpt:
+      "Kế hoạch ăn uống 7 ngày với calo thấp nhưng vẫn đủ dinh dưỡng và ngon miệng.",
+    content: "Giảm cân không có nghĩa là nhịn ăn hay ăn uống nhàm chán. Thực đơn này được thiết kế khoa học với lượng calo phù hợp, đảm bảo đủ protein, chất xơ và vitamin. Từ bữa sáng giàu protein đến bữa tối nhẹ nhàng - mỗi bữa đều được tính toán kỹ lưỡng.",
+    author: "Diet Expert",
+    authorAvatar: "https://i.pravatar.cc/80?img=7",
+    date: "2025-08-25",
+    category: "Thực đơn tuần",
+    image:
+      "https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=1200&auto=format&fit=crop",
   },
 ];
 
