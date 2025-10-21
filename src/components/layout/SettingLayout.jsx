@@ -34,7 +34,7 @@ const SettingLayout = ({ children }) => {
             style={{
               backgroundColor: "white",
             }}
-            className="tw:items-center tw:flex tw:justify-between"
+            className="d-flex align-items-center justify-content-between"
           >
             <div>
               <a
@@ -60,7 +60,7 @@ const SettingLayout = ({ children }) => {
                 />
               </a>
             </div>
-            <div className="tw:flex tw:items-center tw:gap-2">
+            <div className="d-flex align-items-center gap-2">
               <User />
               <CreateButton />
             </div>

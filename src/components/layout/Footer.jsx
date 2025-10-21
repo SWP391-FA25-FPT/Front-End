@@ -22,7 +22,7 @@ const Footer = () => {
       </Title>
       <Title level={3}>Cộng Đồng M&M</Title>
       <Title level={3}>Tìm hiểu Thêm</Title>
-      <Text className="tw:text-center tw:flex tw:justify-center">
+      <Text className="text-center d-flex justify-content-center">
         M&M ©{new Date().getFullYear()} Created by M&M Team
       </Text>
     </React.Fragment>

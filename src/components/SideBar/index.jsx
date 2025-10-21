@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from "../Logo";
 import { Container } from "react-bootstrap";
-import { Button, ConfigProvider, Flex, Menu } from "antd";
+import { Button, ConfigProvider, Flex, Menu, Dropdown } from "antd";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/useAuth";
 import { useLocation } from "react-router-dom";
@@ -9,6 +9,50 @@ import { useLocation } from "react-router-dom";
 const Index = ({ collapsed, toggleCollapsed }) => {
   const { user } = useAuth();
   const location = useLocation();
+
+  // Determine selected key based on current location
+  const getSelectedKey = () => {
+    const path = location.pathname;
+    if (path === '/') return '1';
+    if (path === '/challenge' || path.startsWith('/challenge/')) return '3';
+    if (path === '/blog' || path.startsWith('/blog/')) return '4';
+    if (path === '/meal-plan') return '2'; // Premium dropdown
+    if (path === '/ai-consultation') return '2'; // Premium dropdown
+    if (path === '/nutritional-analysis') return '2'; // Premium dropdown
+    if (path === '/profile') return '6';
+    if (path === '/support') return '7';
+    if (path === '/admin') return '9';
+    return '1'; // default to home
+  };
+
+  // Premium dropdown items
+  const premiumDropdownItems = [
+    {
+      key: "2-1",
+      icon: <Icon icon="mdi:robot-outline" width="24" height="24" />,
+      label: <a href="/ai-consultation" style={{color: "#6c757d"}}>AI Tư Vấn M&M</a>,
+    },
+    {
+      key: "2-2",
+      icon: <Icon icon="mdi:camera-outline" width="24" height="24" />,
+      label: <a href="/nutritional-analysis" style={{color: "#6c757d"}}>Phân tích Dinh Dưỡng Bằng Ảnh</a>,
+    },
+    {
+      key: "2-3",
+      icon: <Icon icon="mdi:food-outline" width="24" height="24" />,
+      label: <a href="/meal-plan" style={{color: "#6c757d"}}>Tạo Thực Đơn Premium</a>,
+    },
+    {
+      key: "2-4",
+      icon: <Icon icon="mdi:chart-line" width="24" height="24" />,
+      label: <a href="#" style={{color: "#6c757d"}}>Theo Dõi Tiến Độ</a>,
+    },
+    {
+      key: "2-5",
+      icon: <Icon icon="mdi:crown-outline" width="24" height="24" />,
+      label: <a href="#" style={{color: "#6c757d"}}> Top Thực Đơn Xem Nhiều Nhất</a>,
+    },
+  ];
 
   const baseItems = [
     {
@@ -25,35 +69,35 @@ const Index = ({ collapsed, toggleCollapsed }) => {
           height="24"
         />
       ),
-      label: <a href="#" style={{color:"#A098AE"}}>Premium</a>,
-      children: [
-        {
-          key: "2-1",
-          icon: <Icon icon="mdi:robot-outline" width="24" height="24" />,
-          label: <a href="/ai-consultation">AI Tư Vấn M&M</a>,
-        },
-        {
-          key: "2-2",
-          icon: <Icon icon="mdi:camera-outline" width="24" height="24" />,
-          label: <a href="/nutritional-analysis">Phân tích Dinh Dưỡng Bằng Ảnh</a>,
-        },
-
-        {
-          key: "2-3",
-          icon: <Icon icon="mdi:food-outline" width="24" height="24" />,
-          label: <a href="/meal-plan">Tạo Thực Đơn Premium</a>,
-        },
-        {
-          key: "2-4",
-          icon: <Icon icon="mdi:chart-line" width="24" height="24" />,
-          label: <a href="#">Theo Dõi Tiến Độ</a>,
-        },
-        {
-          key: "2-5",
-          icon: <Icon icon="mdi:crown-outline" width="24" height="24" />,
-          label: <a href="#"> Top Thực Đơn Xem Nhiều Nhất</a>,
-        },
-      ],
+      label: (
+        <Dropdown
+          menu={{ 
+            items: premiumDropdownItems,
+            style: {
+              backgroundColor: '#fff',
+              borderRadius: '8px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            }
+          }}
+          placement="rightTop"
+          trigger={['click']}
+          overlayStyle={{
+            backgroundColor: '#fff',
+          }}
+        >
+          <a 
+            href="#" 
+            style={{
+              color: "#A098AE",
+              transition: 'color 0.3s ease',
+            }}
+            className={`premium-link ${getSelectedKey() === '2' ? 'selected' : ''}`}
+            onClick={(e) => e.preventDefault()}
+          >
+            Premium
+          </a>
+        </Dropdown>
+      ),
     },
     {
       key: "3",
@@ -83,7 +127,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     {
       key: "8",
       icon: <Icon icon="mdi:folder-outline" width="24" height="24" />,
-      label: <a href="#" style={{color:"#A098AE"}}>Kho Món Ngon Của Bạn</a>,
+      label: <a href="#" style={{color:"#A098AE"}} title="Kho Món Ngon Của Bạn">Kho Món Ngon Của Bạn</a>,
       children: [
         {
           key: "8-1",
@@ -132,20 +176,6 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     ? [...baseItems, adminItem]
     : baseItems;
 
-  // Determine selected key based on current location
-  const getSelectedKey = () => {
-    const path = location.pathname;
-    if (path === '/') return '1';
-    if (path === '/challenge' || path.startsWith('/challenge/')) return '3';
-    if (path === '/blog' || path.startsWith('/blog/')) return '4';
-    if (path === '/meal-plan') return '2-3'; // Premium submenu
-    if (path === '/ai-consultation') return '2-1'; // AI Tư Vấn M&M
-    if (path === '/nutritional-analysis') return '2-2'; // Phân tích Dinh Dưỡng Bằng Ảnh
-    if (path === '/profile') return '6';
-    if (path === '/support') return '7';
-    if (path === '/admin') return '9';
-    return '1'; // default to home
-  };
   return (
     <React.Fragment>
       <ConfigProvider
@@ -166,20 +196,25 @@ const Index = ({ collapsed, toggleCollapsed }) => {
           },
         }}
       >
-        <Container className={"tw:flex tw:flex-col tw:items-center tw:gap-4 tw:p-2"}>
-          <Flex space="between" gap={20} align="center" justify="center">
+        <Container className={"d-flex flex-column align-items-center gap-4 p-2"}>
+          <div className="d-flex align-items-center justify-content-center w-100 position-relative">
             <Logo collapsed={collapsed} />
             {!collapsed && (
-              <Button onClick={toggleCollapsed} type="button">
+              <Button 
+                onClick={toggleCollapsed} 
+                type="button"
+                className="position-absolute end-0"
+                size="small"
+              >
                 <Icon icon="mingcute:arrows-left-line" width="24" height="24" />
               </Button>
             )}
-          </Flex>
+          </div>
           {collapsed && (
             <Button
               onClick={toggleCollapsed}
               type="button"
-              className="tw:mb-1"
+              className="mb-1"
               size="small"
             >
               <Icon icon="mingcute:arrows-right-line" width="24" height="24" />
@@ -189,8 +224,8 @@ const Index = ({ collapsed, toggleCollapsed }) => {
             selectedKeys={[getSelectedKey()]}
             mode="inline"
             items={items}
-            defaultOpenKeys={collapsed ? [] : getSelectedKey().startsWith('2-') ? ["2"] : ["6"]}
-            className="tw:font-sans tw:font-semibold"
+            defaultOpenKeys={collapsed ? [] : ["8"]}
+            className="font-sans fw-semibold"
             inlineCollapsed={collapsed}
             style={{ border: "none" }}
           />

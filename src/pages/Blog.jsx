@@ -53,14 +53,14 @@ export default function Blog() {
   return (
     <React.Fragment>
       <Layout>
-        <Container className="tw:py-8 blog-container">
+        <Container className="py-5 blog-container">
           {/* Hero Section - Bài viết nổi bật */}
-          <div className="tw:mb-12 blog-fade-in">
+          <div className="mb-5 blog-fade-in">
             <Featured post={POSTS[1]} />
           </div>
 
           {/* Phần bài viết khác */}
-          <div className="tw:mb-8">
+          <div className="mb-4">
             <CategoryPills current={current} categories={CATEGORIES} onPick={handleCategoryChange} />
           </div>
 

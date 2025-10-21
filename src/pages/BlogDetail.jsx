@@ -76,7 +76,7 @@ export default function BlogDetail() {
   return (
     <React.Fragment>
       <Layout>
-        <div className="tw:py-8 blogdetail-container">
+        <div className="py-5 blogdetail-container">
           {/* Back Navigation */}
           <div className="blogdetail-back-nav">
             <Link 

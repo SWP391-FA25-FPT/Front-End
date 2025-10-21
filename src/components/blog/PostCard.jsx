@@ -7,8 +7,8 @@ import { Card, CardContent } from "./ui";
 export default function PostCard({ post, formatDate }) {
   return (
     <Card className="blog-post-card">
-      <div className="tw:h-48 tw:overflow-hidden">
-        <Link to={`/blog/${post.id}`} className="tw:block tw:h-full">
+      <div className="h-48 overflow-hidden">
+        <Link to={`/blog/${post.id}`} className="d-block h-100">
           <img
             src={post.image}
             alt={post.title}
@@ -19,7 +19,7 @@ export default function PostCard({ post, formatDate }) {
       <CardContent className="blog-post-content">
         <div className="blog-post-meta">
           <span className="blog-post-category">
-            <Tag className="tw:h-3 tw:w-3 tw:flex-shrink-0" />
+            <Tag className="h-3 w-3 flex-shrink-0" />
             <span>{post.category}</span>
           </span>
           <span>•</span>

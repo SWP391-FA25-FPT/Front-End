@@ -35,7 +35,7 @@ const Index = () => {
           <img
             src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
             alt="user"
-            className="tw:w-10 tw:h-10 tw:rounded-full"
+            className="w-10 h-10 rounded-circle"
           />
         </a>
       </Dropdown>

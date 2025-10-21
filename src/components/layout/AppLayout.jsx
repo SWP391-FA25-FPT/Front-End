@@ -32,19 +32,19 @@ const AppLayout = ({ children }) => {
         <Layout>
           <Header
             style={{ backgroundColor: "white" }}
-            className="tw:flex tw:justify-between tw:items-center"
+            className="d-flex justify-content-between align-items-center"
           >
-            <div className="tw:flex tw:items-center tw:gap-2 tw:ml-4">
+            <div className="d-flex align-items-center gap-2 ms-4">
               <Icon 
                 icon="mdi:hand-wave" 
                 width="24" 
                 height="24" 
-                className="tw:animate-bounce"
+                className="bounce-animation"
                 style={{ color: '#ff7a00' }}
               />
               <Title 
                 level={3} 
-                className="tw:m-0 tw:bg-gradient-to-r tw:from-orange-500 tw:to-orange-600 tw:bg-clip-text tw:text-transparent tw:animate-pulse"
+                className="m-0 gradient-text pulse-animation"
               >
                 Hello, {user?.username || 'User'}
               </Title>

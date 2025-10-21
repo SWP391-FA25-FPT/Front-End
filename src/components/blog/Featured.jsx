@@ -8,7 +8,7 @@ import { Card, CardContent } from "./ui";
 export default function Featured({ post }) {
   if (!post) return null;
   return (
-    <section className="tw:w-full">
+    <section className="w-100">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -20,7 +20,7 @@ export default function Featured({ post }) {
           <img
             src={post.image}
             alt={post.title}
-            className="tw:h-full tw:w-full tw:object-cover"
+            className="h-100 w-100 object-fit-cover"
           />
         </div>
         
@@ -29,11 +29,11 @@ export default function Featured({ post }) {
           {/* Thẻ chủ đề và ngày */}
           <div className="blog-hero-meta">
             <span className="blog-category-tag">
-              <Tag className="tw:h-3 tw:w-3 tw:flex-shrink-0" />
+              <Tag className="h-3 w-3 flex-shrink-0" />
               <span>{post.category}</span>
             </span>
-            <span className="tw:text-gray-500">•</span>
-            <span className="tw:text-gray-500">{post.date}</span>
+            <span className="text-muted">•</span>
+            <span className="text-muted">{post.date}</span>
           </div>
           
           {/* Tiêu đề lớn đậm */}
@@ -53,7 +53,7 @@ export default function Featured({ post }) {
               className="blog-read-more-btn"
             >
               Đọc tiếp
-              <svg className="tw:w-4 tw:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>
