@@ -1,0 +1,217 @@
+{
+  "stats": {
+    "totalMealPlans": 156,
+    "totalViews": 45820,
+    "totalLikes": 12340,
+    "averageRating": 4.6
+  },
+  "mealPlans": [
+    {
+      "id": 1,
+      "name": "Thực đơn Keto 7 ngày",
+      "description": "Thực đơn Low-carb High-fat giúp giảm cân nhanh chóng và hiệu quả",
+      "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=800&auto=format&fit=crop",
+      "isPremium": true,
+      "views": 8520,
+      "likes": 2340,
+      "rating": 4.8,
+      "nutrition": {
+        "calories": 1800,
+        "protein": 120,
+        "carbs": 50,
+        "fat": 140
+      },
+      "tags": ["Keto", "Giảm cân", "Low-carb"],
+      "category": "keto",
+      "author": {
+        "name": "Chef Minh",
+        "avatar": "https://i.pravatar.cc/80?img=12"
+      },
+      "createdAt": "2025-10-15"
+    },
+    {
+      "id": 2,
+      "name": "Thực đơn Healthy cho Gym",
+      "description": "Tăng cơ giảm mỡ với thực đơn cân bằng protein và carbs",
+      "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800&auto=format&fit=crop",
+      "isPremium": true,
+      "views": 7890,
+      "likes": 2120,
+      "rating": 4.9,
+      "nutrition": {
+        "calories": 2400,
+        "protein": 180,
+        "carbs": 250,
+        "fat": 70
+      },
+      "tags": ["Gym", "Tăng cơ", "Protein cao"],
+      "category": "muscle-gain",
+      "author": {
+        "name": "PT Hùng",
+        "avatar": "https://i.pravatar.cc/80?img=15"
+      },
+      "createdAt": "2025-10-12"
+    },
+    {
+      "id": 3,
+      "name": "Thực đơn Chay Healthy",
+      "description": "Ăn chay đầy đủ dinh dưỡng với đậu, rau củ và ngũ cốc",
+      "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800&auto=format&fit=crop",
+      "isPremium": false,
+      "views": 6750,
+      "likes": 1890,
+      "rating": 4.7,
+      "nutrition": {
+        "calories": 1600,
+        "protein": 80,
+        "carbs": 220,
+        "fat": 45
+      },
+      "tags": ["Chay", "Healthy", "Đầy đủ dinh dưỡng"],
+      "category": "vegetarian",
+      "author": {
+        "name": "Lan Anh",
+        "avatar": "https://i.pravatar.cc/80?img=5"
+      },
+      "createdAt": "2025-10-10"
+    },
+    {
+      "id": 4,
+      "name": "Thực đơn Giảm cân 1500 Calo",
+      "description": "Ăn ngon mà vẫn giảm cân với thực đơn 1500 calo/ngày",
+      "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop",
+      "isPremium": true,
+      "views": 6420,
+      "likes": 1750,
+      "rating": 4.6,
+      "nutrition": {
+        "calories": 1500,
+        "protein": 100,
+        "carbs": 150,
+        "fat": 50
+      },
+      "tags": ["Giảm cân", "Low-calorie", "Healthy"],
+      "category": "weight-loss",
+      "author": {
+        "name": "Dr. Thanh",
+        "avatar": "https://i.pravatar.cc/80?img=7"
+      },
+      "createdAt": "2025-10-08"
+    },
+    {
+      "id": 5,
+      "name": "Thực đơn Mediterranean",
+      "description": "Chế độ ăn Địa Trung Hải giàu omega-3 và chất chống oxy hóa",
+      "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=800&auto=format&fit=crop",
+      "isPremium": true,
+      "views": 5890,
+      "likes": 1620,
+      "rating": 4.8,
+      "nutrition": {
+        "calories": 2000,
+        "protein": 110,
+        "carbs": 200,
+        "fat": 90
+      },
+      "tags": ["Mediterranean", "Healthy", "Tim mạch"],
+      "category": "healthy",
+      "author": {
+        "name": "Chef Anna",
+        "avatar": "https://i.pravatar.cc/80?img=9"
+      },
+      "createdAt": "2025-10-05"
+    },
+    {
+      "id": 6,
+      "name": "Thực đơn Dash Diet",
+      "description": "Giảm huyết áp tự nhiên với thực đơn DASH",
+      "image": "https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=800&auto=format&fit=crop",
+      "isPremium": false,
+      "views": 5320,
+      "likes": 1450,
+      "rating": 4.5,
+      "nutrition": {
+        "calories": 1900,
+        "protein": 95,
+        "carbs": 230,
+        "fat": 60
+      },
+      "tags": ["DASH", "Huyết áp", "Healthy"],
+      "category": "healthy",
+      "author": {
+        "name": "BS. Hương",
+        "avatar": "https://i.pravatar.cc/80?img=20"
+      },
+      "createdAt": "2025-10-03"
+    },
+    {
+      "id": 7,
+      "name": "Thực đơn Clean Eating",
+      "description": "Ăn sạch với thực phẩm tự nhiên, không chế biến sẵn",
+      "image": "https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=800&auto=format&fit=crop",
+      "isPremium": false,
+      "views": 4890,
+      "likes": 1320,
+      "rating": 4.7,
+      "nutrition": {
+        "calories": 1850,
+        "protein": 105,
+        "carbs": 210,
+        "fat": 65
+      },
+      "tags": ["Clean Eating", "Organic", "Healthy"],
+      "category": "healthy",
+      "author": {
+        "name": "Mai Chi",
+        "avatar": "https://i.pravatar.cc/80?img=25"
+      },
+      "createdAt": "2025-10-01"
+    },
+    {
+      "id": 8,
+      "name": "Thực đơn Paleo",
+      "description": "Ăn như người tiền sử với thực phẩm nguyên thủy",
+      "image": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?q=80&w=800&auto=format&fit=crop",
+      "isPremium": true,
+      "views": 4560,
+      "likes": 1250,
+      "rating": 4.6,
+      "nutrition": {
+        "calories": 2100,
+        "protein": 130,
+        "carbs": 120,
+        "fat": 110
+      },
+      "tags": ["Paleo", "Nguyên thủy", "Low-carb"],
+      "category": "healthy",
+      "author": {
+        "name": "Coach Nam",
+        "avatar": "https://i.pravatar.cc/80?img=33"
+      },
+      "createdAt": "2025-09-28"
+    },
+    {
+      "id": 9,
+      "name": "Thực đơn Intermittent Fasting",
+      "description": "Kết hợp nhịn ăn gián đoạn 16:8 với thực đơn lành mạnh",
+      "image": "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?q=80&w=800&auto=format&fit=crop",
+      "isPremium": true,
+      "views": 4230,
+      "likes": 1180,
+      "rating": 4.5,
+      "nutrition": {
+        "calories": 1700,
+        "protein": 115,
+        "carbs": 160,
+        "fat": 70
+      },
+      "tags": ["IF", "16:8", "Giảm cân"],
+      "category": "weight-loss",
+      "author": {
+        "name": "Nutrionst Lan",
+        "avatar": "https://i.pravatar.cc/80?img=28"
+      },
+      "createdAt": "2025-09-25"
+    }
+  ]
+}

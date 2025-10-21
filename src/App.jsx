@@ -25,6 +25,7 @@ import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
 import ProgressTracking from "./pages/ProgressTracking";
+import TopMealPlans from "./pages/TopMealPlans";
 
 function App() {
   return (
@@ -140,6 +141,14 @@ function App() {
             element={
               <SurveyCheckRoute>
                 <ProgressTracking />
+              </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/top-meal-plans"
+            element={
+              <SurveyCheckRoute>
+                <TopMealPlans />
               </SurveyCheckRoute>
             }
           />

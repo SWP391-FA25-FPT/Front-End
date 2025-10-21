@@ -57,7 +57,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         {
           key: "2-5",
           icon: <Icon icon="mdi:crown-outline" width="24" height="24" />,
-          label: <a href="#"> Top Thực Đơn Xem Nhiều Nhất</a>,
+          label: <a href="/top-meal-plans">Top Thực Đơn Xem Nhiều Nhất</a>,
         },
       ],
     },
@@ -153,6 +153,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     if (path === "/ai-consultation") return "2-1"; // AI Tư Vấn M&M
     if (path === "/nutritional-analysis") return "2-2"; // Phân tích Dinh Dưỡng Bằng Ảnh
     if (path === "/progress-tracking") return "2-4"; // Theo Dõi Tiến Độ
+    if (path === "/top-meal-plans") return "2-5"; // Top Thực Đơn Xem Nhiều Nhất
     if (path === "/profile") return "6";
     if (path === "/support") return "7";
     if (path === "/admin") return "9";

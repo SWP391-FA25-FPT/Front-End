@@ -17,6 +17,7 @@ import DailyProgress from "../components/Progress/DailyProgress";
 import WaterIntake from "../components/Progress/WaterIntake";
 import WeeklyOverview from "../components/Progress/WeeklyOverview";
 import GoalsSection from "../components/Progress/GoalsSection";
+import progressData from "../data/progressData.json";
 import "./style/ProgressTracking.css";
 
 const ProgressTracking = () => {
@@ -24,85 +25,13 @@ const ProgressTracking = () => {
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const [form] = Form.useForm();
 
-  // Mock data - trong thực tế sẽ lấy từ API
-  const [stats, setStats] = useState({
-    currentWeight: 68.5,
-    targetWeight: 65,
-    weightChange: -2.5,
-    currentStreak: 7,
-  });
-
-  const [weightData, setWeightData] = useState({
-    labels: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
-    values: [71, 70.5, 70, 69.5, 69, 68.5, 68.5],
-    target: Array(7).fill(65),
-  });
-
-  const [dailyData, setDailyData] = useState({
-    calories: { current: 1450, target: 2000 },
-    protein: { current: 78, target: 120 },
-    carbs: { current: 180, target: 250 },
-    fat: { current: 45, target: 65 },
-  });
-
-  const [waterData, setWaterData] = useState({
-    current: 5,
-    target: 8,
-  });
-
-  const [weeklyData] = useState([
-    { date: "2025-10-15", exercised: true, metCalories: true, metWater: true },
-    { date: "2025-10-16", exercised: true, metCalories: false, metWater: true },
-    { date: "2025-10-17", exercised: false, metCalories: true, metWater: true },
-    { date: "2025-10-18", exercised: true, metCalories: true, metWater: false },
-    { date: "2025-10-19", exercised: true, metCalories: true, metWater: true },
-    { date: "2025-10-20", exercised: true, metCalories: true, metWater: true },
-    {
-      date: "2025-10-21",
-      exercised: false,
-      metCalories: false,
-      metWater: true,
-    },
-  ]);
-
-  const [goals] = useState([
-    {
-      title: "Giảm cân",
-      description: "Giảm 5kg trong 2 tháng",
-      progress: 50,
-      current: 2.5,
-      target: 5,
-      unit: "kg",
-      daysLeft: 30,
-      status: "in-progress",
-      icon: "mdi:target",
-      color: "#F8B602",
-    },
-    {
-      title: "Tập luyện đều đặn",
-      description: "Tập thể dục 5 ngày/tuần",
-      progress: 80,
-      current: 4,
-      target: 5,
-      unit: "ngày",
-      daysLeft: 2,
-      status: "in-progress",
-      icon: "mdi:run",
-      color: "#52c41a",
-    },
-    {
-      title: "Uống đủ nước",
-      description: "Uống 2L nước mỗi ngày",
-      progress: 100,
-      current: 7,
-      target: 7,
-      unit: "ngày",
-      daysLeft: 0,
-      status: "completed",
-      icon: "mdi:cup-water",
-      color: "#1890ff",
-    },
-  ]);
+  // Load data from JSON file
+  const [stats, setStats] = useState(progressData.stats);
+  const [weightData, setWeightData] = useState(progressData.weightData);
+  const [dailyData, setDailyData] = useState(progressData.dailyData);
+  const [waterData, setWaterData] = useState(progressData.waterData);
+  const [weeklyData] = useState(progressData.weeklyData);
+  const [goals] = useState(progressData.goals);
 
   const handleAddWater = () => {
     if (waterData.current < waterData.target) {
