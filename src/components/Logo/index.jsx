@@ -4,15 +4,20 @@ import Logo from "../../assets/icon.svg";
 const Index = ({ collapsed }) => {
   return (
     <React.Fragment>
-      <Flex gap={10} align="center" justify="center">
+      <Flex
+        gap={8}
+        align="center"
+        justify="center"
+        className="tw:h-full tw:py-2"
+      >
         <img src={Logo} className={collapsed ? "tw:size-8" : "tw:size-10"} />
         {!collapsed && (
-          <>
-            <p className="tw:text-4xl tw:font-bold ">M&M</p>
-            <div className="tw:relative tw:size-0.5">
-              <div className="tw:bg-amber-600 tw:w-2 tw:h-2 tw:rounded-3xl tw:relative tw:bottom-0 tw:right-0" />
-            </div>
-          </>
+          <p
+            className="tw:text-3xl tw:font-bold tw:leading-none tw:flex tw:items-center"
+            style={{ color: "#000000", transform: "translateY(4px)" }}
+          >
+            M&M
+          </p>
         )}
       </Flex>
     </React.Fragment>

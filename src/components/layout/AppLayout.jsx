@@ -35,18 +35,18 @@ const AppLayout = ({ children }) => {
             className="tw:flex tw:justify-between tw:items-center"
           >
             <div className="tw:flex tw:items-center tw:gap-2 tw:ml-4">
-              <Icon 
-                icon="mdi:hand-wave" 
-                width="24" 
-                height="24" 
+              <Icon
+                icon="mdi:hand-wave"
+                width="24"
+                height="24"
                 className="tw:animate-bounce"
-                style={{ color: '#ff7a00' }}
+                style={{ color: "#F8B602" }}
               />
-              <Title 
-                level={3} 
+              <Title
+                level={3}
                 className="tw:m-0 tw:bg-gradient-to-r tw:from-orange-500 tw:to-orange-600 tw:bg-clip-text tw:text-transparent tw:animate-pulse"
               >
-                Hello, {user?.username || 'User'}
+                Hello, {user?.username || "User"}
               </Title>
             </div>
             <Head />

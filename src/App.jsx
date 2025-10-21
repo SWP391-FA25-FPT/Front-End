@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import SurveyCheckRoute from "./components/auth/SurveyCheckRoute";
@@ -19,6 +24,7 @@ import AdminPage from "./pages/admin/AdminPage";
 import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
+import ProgressTracking from "./pages/ProgressTracking";
 
 function App() {
   return (
@@ -29,107 +35,115 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          
+
           {/* Survey route - only for first time users */}
-          <Route 
-            path="/survey" 
+          <Route
+            path="/survey"
             element={
               <ProtectedRoute>
                 <TakeSurvey />
               </ProtectedRoute>
-            } 
+            }
           />
-          
+
           {/* Protected routes that require survey completion */}
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
               <SurveyCheckRoute>
                 <HomePage />
               </SurveyCheckRoute>
-            } 
+            }
           />
-          <Route 
-            path="/profile" 
+          <Route
+            path="/profile"
             element={
               <SurveyCheckRoute>
                 <ProfilePage />
               </SurveyCheckRoute>
-            } 
+            }
           />
-          <Route 
-            path="/support" 
+          <Route
+            path="/support"
             element={
               <SurveyCheckRoute>
                 <SupportPage />
               </SurveyCheckRoute>
-            } 
+            }
           />
-          <Route 
-            path="/challenge" 
+          <Route
+            path="/challenge"
             element={
               <SurveyCheckRoute>
                 <Challenge />
               </SurveyCheckRoute>
-            } 
+            }
           />
-          <Route 
-            path="/challenge/:id" 
+          <Route
+            path="/challenge/:id"
             element={
               <SurveyCheckRoute>
                 <ChallengeDetail />
               </SurveyCheckRoute>
-            } 
+            }
           />
-          <Route 
-            path="/blog" 
+          <Route
+            path="/blog"
             element={
               <SurveyCheckRoute>
                 <Blog />
               </SurveyCheckRoute>
-            } 
+            }
           />
-          <Route 
-            path="/blog/:id" 
+          <Route
+            path="/blog/:id"
             element={
               <SurveyCheckRoute>
                 <BlogDetail />
               </SurveyCheckRoute>
-            } 
+            }
           />
-          <Route 
-            path="/admin" 
+          <Route
+            path="/admin"
             element={
               <AdminProtectedRoute>
                 <AdminPage />
               </AdminProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/meal-plan" 
+          <Route
+            path="/meal-plan"
             element={
               <SurveyCheckRoute>
                 <MealPlan />
               </SurveyCheckRoute>
-            } 
+            }
           />
-          <Route 
-            path="/ai-consultation" 
+          <Route
+            path="/ai-consultation"
             element={
               <ProtectedRoute>
                 <AIConsultation />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/nutritional-analysis" 
+          <Route
+            path="/nutritional-analysis"
             element={
               <ProtectedRoute>
                 <NutritionalAnalysis />
               </ProtectedRoute>
-            } 
+            }
           />
-           
+          <Route
+            path="/progress-tracking"
+            element={
+              <SurveyCheckRoute>
+                <ProgressTracking />
+              </SurveyCheckRoute>
+            }
+          />
+
           {/* Redirect to home if route not found */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

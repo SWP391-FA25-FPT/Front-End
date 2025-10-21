@@ -28,7 +28,7 @@
 /* ===== HEADER SECTION ===== */
 .analysis-header {
   margin-bottom: 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #e19a28 0%, #5f4ba2 100%);
   border: none;
 }
 
@@ -55,7 +55,7 @@
 }
 
 .upload-card .ant-card-head {
-  background: linear-gradient(135deg, #F8B602 0%, #ff9500 100%);
+  background: linear-gradient(135deg, #f8b602 0%, #ff9500 100%);
   border-bottom: none;
 }
 
@@ -76,7 +76,7 @@
   flex: 1;
   min-height: 250px;
   max-height: 400px;
-  border: 2px dashed #F8B602 !important;
+  border: 2px dashed #f8b602 !important;
   border-radius: 12px !important;
   background: #fafafa !important;
 }
@@ -87,7 +87,7 @@
 }
 
 .upload-card .ant-upload-drag-icon {
-  color: #F8B602 !important;
+  color: #f8b602 !important;
 }
 
 .upload-card .ant-upload-text {
@@ -211,7 +211,7 @@
 
 .food-item:hover {
   background: #f5f5f5;
-  border-color: #F8B602;
+  border-color: #f8b602;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(248, 182, 2, 0.2);
 }
@@ -302,20 +302,20 @@
 
 /* ===== BUTTONS ===== */
 .upload-card .ant-btn-primary {
-  background: linear-gradient(135deg, #F8B602 0%, #ff9500 100%);
+  background: linear-gradient(135deg, #f8b602 0%, #ff9500 100%);
   border: none;
   box-shadow: 0 4px 16px rgba(248, 182, 2, 0.3);
   transition: all 0.3s ease;
 }
 
 .upload-card .ant-btn-primary:hover {
-  background: linear-gradient(135deg, #ff9500 0%, #F8B602 100%);
+  background: linear-gradient(135deg, #ff9500 0%, #f8b602 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(248, 182, 2, 0.4);
 }
 
 .upload-card .ant-btn-primary:focus {
-  background: linear-gradient(135deg, #F8B602 0%, #ff9500 100%);
+  background: linear-gradient(135deg, #f8b602 0%, #ff9500 100%);
   border: none;
 }
 
@@ -355,16 +355,16 @@
   .nutritional-analysis-container {
     padding: 16px;
   }
-  
+
   .analysis-header {
     margin-bottom: 24px;
   }
-  
+
   .food-item-content {
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .confidence-score {
     margin-left: 0;
     align-self: flex-start;
@@ -375,7 +375,7 @@
   .upload-card .ant-upload-drag {
     min-height: 200px;
   }
-  
+
   .food-nutrition .ant-tag {
     font-size: 11px;
     margin-right: 4px;
@@ -415,7 +415,7 @@
 }
 
 .results-card .ant-card-body::-webkit-scrollbar-thumb {
-  background: #F8B602;
+  background: #f8b602;
   border-radius: 3px;
 }
 
@@ -431,7 +431,7 @@
 
 .nutritional-analysis-container .ant-tag-orange {
   background: #fff7e6;
-  border-color: #F8B602;
+  border-color: #f8b602;
   color: #d46b08;
 }
 
@@ -454,9 +454,9 @@
 }
 
 .nutritional-analysis-container .ant-progress-circle .ant-progress-circle-path {
-  stroke: #F8B602;
+  stroke: #f8b602;
 }
 
 .nutritional-analysis-container .ant-progress-line .ant-progress-bg {
-  background: #F8B602;
+  background: #f8b602;
 }
