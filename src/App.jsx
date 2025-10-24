@@ -6,6 +6,7 @@ import SurveyCheckRoute from "./components/auth/SurveyCheckRoute";
 import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
+import AdminLogin from "./pages/admin/AdminLogin";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import TakeSurvey from "./pages/TakeSurvey";
@@ -20,6 +21,7 @@ import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
 
+
 function App() {
   return (
     <AuthProvider>
@@ -27,6 +29,7 @@ function App() {
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           

@@ -1,7 +1,8 @@
-export const baseUrl = "https://toan215-Meta-Meal.hf.space";
+export const baseUrl = "http://localhost:7860";
 
 export const apiUrls = {
-  login: "/api/auth/login",
+  loginUser: "/api/auth/login/user",
+  loginAdmin: "/api/auth/login/admin",
   register: "/api/auth/register",
   getMe: "/api/auth/me",
   getProfile: "/api/user/profile",

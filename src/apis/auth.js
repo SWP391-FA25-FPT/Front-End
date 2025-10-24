@@ -2,11 +2,12 @@ import apiHelper from "../utils/apiHelper";
 import { apiUrls } from "../utils/constants";
 import { getCookie, setCookie, removeCookie } from "../utils/cookie";
 
-export async function loginApi(data) {
+// THAY ĐỔI 1: Đổi tên loginApi -> loginUserApi và dùng apiUrls.loginUser
+export async function loginUserApi(data) {
   // Remove current token
   removeCookie("token");
   // Send login request
-  const response = await apiHelper.post(apiUrls.login, data);
+  const response = await apiHelper.post(apiUrls.loginUser, data);
   // Handle response
   if (response.success && response?.data?.token) {
     // Set cookies
@@ -17,7 +18,30 @@ export async function loginApi(data) {
   return response;
 }
 
-export async function registerApi({ username, email, password, onFail, onSuccess }) {
+// THAY ĐỔI 2: Thêm hàm mới (sẽ không bị conflict)
+export async function loginAdminApi(data) {
+  // Remove current token
+  removeCookie("token");
+  // Send login request
+  const response = await apiHelper.post(apiUrls.loginAdmin, data);
+  // Handle response
+  if (response.success && response?.data?.token) {
+    // Set cookies
+    setCookie("token", response.data.token);
+    // Set token to apiHelper
+    apiHelper.addToken(response.data.token);
+  }
+  return response;
+}
+
+// CÁC HÀM KHÁC GIỮ NGUYÊN (Không đụng đến)
+export async function registerApi({
+  username,
+  email,
+  password,
+  onFail,
+  onSuccess,
+}) {
   // Remove current token
   removeCookie("token");
   // Send register request
