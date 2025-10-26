@@ -18,20 +18,30 @@ const AppLayout = ({ children }) => {
 
   return (
     <React.Fragment>
-      <Layout>
+      <Layout style={{ backgroundColor: "#f8f6f2", padding: "5px" }}>
         {/* <SideBar /> */}
         <Sider
           theme="light"
-          width={250}
-          style={{ minHeight: "100vh" }}
+          width={265}
+          style={{
+            minHeight: "calc(100vh - 10px)",
+            borderRadius: "8px",
+            overflow: "hidden",
+          }}
           collapsed={collapsed}
           onCollapse={setCollapsed}
         >
           <SideBar collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
         </Sider>
-        <Layout>
+        <Layout
+          style={{ borderRadius: "8px", overflow: "hidden", marginLeft: "5px" }}
+        >
           <Header
-            style={{ backgroundColor: "white" }}
+            style={{ 
+              backgroundColor: "white",
+              borderRadius: "8px",
+              margin: "8px 8px 0 8px"
+            }}
             className="d-flex justify-content-between align-items-center"
           >
             <div className="d-flex align-items-center gap-2 ms-4">
@@ -42,10 +52,7 @@ const AppLayout = ({ children }) => {
                 className="bounce-animation"
                 style={{ color: "#F8B602" }}
               />
-              <Title
-                level={3}
-                className="m-0 gradient-text pulse-animation"
-              >
+              <Title level={3} className="m-0 gradient-text pulse-animation">
                 Hello, {user?.username || "User"}
               </Title>
             </div>
@@ -53,9 +60,9 @@ const AppLayout = ({ children }) => {
           </Header>
           <Content
             style={{
-              margin: "24px 0 0 24px ",
+              margin: "8px",
               backgroundColor: "white",
-              borderRadius: "16px 0 0 16px",
+              borderRadius: "8px",
             }}
           >
             {children}

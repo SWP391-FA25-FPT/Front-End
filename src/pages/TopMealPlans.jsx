@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Row, Col, Empty, Pagination } from "antd";
-import AppLayout from "../components/layout/AppLayout";
+import SettingLayout from "../components/layout/SettingLayout";
 import PageHeader from "../components/TopMeals/PageHeader";
 import FilterBar from "../components/TopMeals/FilterBar";
 import MealPlanListCard from "../components/TopMeals/MealPlanListCard";
@@ -77,7 +77,7 @@ const TopMealPlans = () => {
   };
 
   return (
-    <AppLayout>
+    <SettingLayout>
       <div className="top-meal-plans-container">
         <PageHeader />
 
@@ -136,7 +136,7 @@ const TopMealPlans = () => {
           </Col>
         </Row>
       </div>
-    </AppLayout>
+    </SettingLayout>
   );
 };
 

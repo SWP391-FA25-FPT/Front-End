@@ -9,7 +9,7 @@ import {
   Button,
   message,
 } from "antd";
-import AppLayout from "../components/layout/AppLayout";
+import SettingLayout from "../components/layout/SettingLayout";
 import PageHeader from "../components/Progress/PageHeader";
 import StatsOverview from "../components/Progress/StatsOverview";
 import WeightChart from "../components/Progress/WeightChart";
@@ -68,7 +68,7 @@ const ProgressTracking = () => {
   };
 
   return (
-    <AppLayout>
+    <SettingLayout>
       <div className="progress-tracking-container">
         <PageHeader
           onAddRecord={handleAddRecord}
@@ -176,7 +176,7 @@ const ProgressTracking = () => {
           <p>Danh sách lịch sử theo dõi sẽ được hiển thị ở đây...</p>
         </div>
       </Modal>
-    </AppLayout>
+    </SettingLayout>
   );
 };
 
