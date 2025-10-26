@@ -3,6 +3,8 @@ import { getProfile, updateProfile, completeOnboarding } from '../apis/user';
 import { useAuth } from '../context/useAuth';
 import Logo from '../components/Logo';
 import './style/TakeSurvey.css';
+import { useNavigate } from "react-router-dom";
+
 
 function TakeSurvey({ onComplete }) {
   const { updateUser } = useAuth();
@@ -10,6 +12,7 @@ function TakeSurvey({ onComplete }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState({
     name: '', // Để trống để user nhập
@@ -53,7 +56,7 @@ function TakeSurvey({ onComplete }) {
   const handleArrayChange = (field, value, isChecked) => {
     setProfileData(prev => {
       let newArray = [...prev.profile[field]];
-      
+
       if (value === 'Không') {
         // Nếu chọn "Không", xóa tất cả các dị ứng khác
         if (isChecked) {
@@ -70,7 +73,7 @@ function TakeSurvey({ onComplete }) {
           newArray = newArray.filter(item => item !== value);
         }
       }
-      
+
       return {
         ...prev,
         profile: {
@@ -86,7 +89,7 @@ function TakeSurvey({ onComplete }) {
     if (!validateStep(currentStep)) {
       return;
     }
-    
+
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
       setError(''); // Clear error when moving to next step
@@ -185,18 +188,19 @@ function TakeSurvey({ onComplete }) {
 
       const updateResponse = await updateProfile(processedData);
       const completeResponse = await completeOnboarding();
-      
+
       // Update user data in context
-      if (updateResponse.success && updateResponse.data) {
+      if (completeResponse?.success) {
         updateUser(updateResponse.data);
       }
-      
+
       setSuccess('Thông tin đã được lưu thành công! Đang chuyển về trang chính...');
-      
+
       // Redirect to home page after successful completion
       setTimeout(() => {
-        window.location.href = '/';
+        navigate("/", { replace: true });
       }, 2000);
+
     } catch (err) {
       setError(err.response?.data?.error || 'Có lỗi xảy ra khi lưu thông tin!');
     } finally {
@@ -343,7 +347,7 @@ function TakeSurvey({ onComplete }) {
                     </label>
                   ))}
                 </div>
-                
+
                 {/* Custom allergy input */}
                 {profileData.profile.allergies.includes('Khác') && (
                   <div className="custom-allergy-input">
@@ -432,14 +436,14 @@ function TakeSurvey({ onComplete }) {
                 Quay lại
               </button>
             )}
-            
+
             {currentStep < totalSteps ? (
               <button onClick={nextStep} className="btn-primary">
                 Tiếp theo
               </button>
             ) : (
-              <button 
-                onClick={handleSubmit} 
+              <button
+                onClick={handleSubmit}
                 className="btn-primary"
                 disabled={loading}
               >
