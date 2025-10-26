@@ -6,7 +6,7 @@ import Layout from "../components/layout/SettingLayout";
 import Featured from "../components/blog/Featured";
 import CategoryPills from "../components/blog/CategoryPills";
 import PostGrid from "../components/blog/PostGrid";
-import { POSTS } from "../data/posts";
+import POSTS from "../data/posts.json";
 import "../pages/style/blog.css";
 
 const { Title } = Typography;
@@ -21,7 +21,6 @@ const CATEGORIES = [
   "Meal Prep",
 ];
 
-
 function formatDate(iso) {
   const d = new Date(iso);
   return d.toLocaleDateString("vi-VN", {
@@ -35,15 +34,21 @@ export default function Blog() {
   const [current, setCurrent] = useState("Tất cả");
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6; // Hiển thị 6 bài viết mỗi trang
-  
-  const filtered = useMemo(() => (current === "Tất cả" ? POSTS : POSTS.filter(p => p.category === current)), [current]);
-  
+
+  const filtered = useMemo(
+    () =>
+      current === "Tất cả"
+        ? POSTS
+        : POSTS.filter((p) => p.category === current),
+    [current]
+  );
+
   // Tính toán pagination
   const totalPages = Math.ceil(filtered.length / postsPerPage);
   const startIndex = (currentPage - 1) * postsPerPage;
   const endIndex = startIndex + postsPerPage;
   const currentPosts = filtered.slice(startIndex, endIndex);
-  
+
   // Reset về trang 1 khi thay đổi category
   const handleCategoryChange = (category) => {
     setCurrent(category);
@@ -61,7 +66,11 @@ export default function Blog() {
 
           {/* Phần bài viết khác */}
           <div className="mb-4">
-            <CategoryPills current={current} categories={CATEGORIES} onPick={handleCategoryChange} />
+            <CategoryPills
+              current={current}
+              categories={CATEGORIES}
+              onPick={handleCategoryChange}
+            />
           </div>
 
           <div id="latest" className="blog-fade-in">
@@ -72,27 +81,31 @@ export default function Blog() {
           {totalPages >= 1 && (
             <div className="blog-pagination">
               {/* Previous button */}
-              <button 
+              <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 className="blog-pagination-btn"
               >
                 ←
               </button>
-              
+
               {/* Page numbers */}
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`blog-pagination-btn ${currentPage === page ? 'active' : ''}`}
-                >
-                  {page}
-                </button>
-              ))}
-              
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`blog-pagination-btn ${
+                      currentPage === page ? "active" : ""
+                    }`}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
+
               {/* Next button */}
-              <button 
+              <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 className="blog-pagination-btn"

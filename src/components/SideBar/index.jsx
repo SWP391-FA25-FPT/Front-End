@@ -10,49 +10,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   const { user } = useAuth();
   const location = useLocation();
 
-  // Determine selected key based on current location
-  const getSelectedKey = () => {
-    const path = location.pathname;
-    if (path === '/') return '1';
-    if (path === '/challenge' || path.startsWith('/challenge/')) return '3';
-    if (path === '/blog' || path.startsWith('/blog/')) return '4';
-    if (path === '/meal-plan') return '2'; // Premium dropdown
-    if (path === '/ai-consultation') return '2'; // Premium dropdown
-    if (path === '/nutritional-analysis') return '2'; // Premium dropdown
-    if (path === '/profile') return '6';
-    if (path === '/support') return '7';
-    if (path === '/admin') return '9';
-    return '1'; // default to home
-  };
 
-  // Premium dropdown items
-  const premiumDropdownItems = [
-    {
-      key: "2-1",
-      icon: <Icon icon="mdi:robot-outline" width="24" height="24" />,
-      label: <a href="/ai-consultation" style={{color: "#6c757d"}}>AI Tư Vấn M&M</a>,
-    },
-    {
-      key: "2-2",
-      icon: <Icon icon="mdi:camera-outline" width="24" height="24" />,
-      label: <a href="/nutritional-analysis" style={{color: "#6c757d"}}>Phân tích Dinh Dưỡng Bằng Ảnh</a>,
-    },
-    {
-      key: "2-3",
-      icon: <Icon icon="mdi:food-outline" width="24" height="24" />,
-      label: <a href="/meal-plan" style={{color: "#6c757d"}}>Tạo Thực Đơn Premium</a>,
-    },
-    {
-      key: "2-4",
-      icon: <Icon icon="mdi:chart-line" width="24" height="24" />,
-      label: <a href="#" style={{color: "#6c757d"}}>Theo Dõi Tiến Độ</a>,
-    },
-    {
-      key: "2-5",
-      icon: <Icon icon="mdi:crown-outline" width="24" height="24" />,
-      label: <a href="#" style={{color: "#6c757d"}}> Top Thực Đơn Xem Nhiều Nhất</a>,
-    },
-  ];
 
   const baseItems = [
     {
@@ -70,34 +28,40 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         />
       ),
       label: (
-        <Dropdown
-          menu={{ 
-            items: premiumDropdownItems,
-            style: {
-              backgroundColor: '#fff',
-              borderRadius: '8px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            }
-          }}
-          placement="rightTop"
-          trigger={['click']}
-          overlayStyle={{
-            backgroundColor: '#fff',
-          }}
-        >
-          <a 
-            href="#" 
-            style={{
-              color: "#A098AE",
-              transition: 'color 0.3s ease',
-            }}
-            className={`premium-link ${getSelectedKey() === '2' ? 'selected' : ''}`}
-            onClick={(e) => e.preventDefault()}
-          >
-            Premium
-          </a>
-        </Dropdown>
+        <a href="#" style={{ color: "#A098AE" }}>
+          Premium
+        </a>
       ),
+      children: [
+        {
+          key: "2-1",
+          icon: <Icon icon="mdi:robot-outline" width="24" height="24" />,
+          label: <a href="/ai-consultation">AI Tư Vấn M&M</a>,
+        },
+        {
+          key: "2-2",
+          icon: <Icon icon="mdi:camera-outline" width="24" height="24" />,
+          label: (
+            <a href="/nutritional-analysis">Phân tích Dinh Dưỡng Bằng Ảnh</a>
+          ),
+        },
+
+        {
+          key: "2-3",
+          icon: <Icon icon="mdi:food-outline" width="24" height="24" />,
+          label: <a href="/meal-plan">Tạo Thực Đơn Premium</a>,
+        },
+        {
+          key: "2-4",
+          icon: <Icon icon="mdi:chart-line" width="24" height="24" />,
+          label: <a href="/progress-tracking">Theo Dõi Tiến Độ</a>,
+        },
+        {
+          key: "2-5",
+          icon: <Icon icon="mdi:crown-outline" width="24" height="24" />,
+          label: <a href="/top-meal-plans">Top Thực Đơn Xem Nhiều Nhất</a>,
+        },
+      ],
     },
     {
       key: "3",
@@ -127,7 +91,11 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     {
       key: "8",
       icon: <Icon icon="mdi:folder-outline" width="24" height="24" />,
-      label: <a href="#" style={{color:"#A098AE"}} title="Kho Món Ngon Của Bạn">Kho Món Ngon Của Bạn</a>,
+      label: (
+        <a href="#" style={{ color: "#A098AE" }}>
+          Kho Món Ngon Của Bạn
+        </a>
+      ),
       children: [
         {
           key: "8-1",
@@ -157,7 +125,9 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         },
         {
           key: "8-5",
-          icon: <Icon icon="mdi:file-document-outline" width="24" height="24" />,
+          icon: (
+            <Icon icon="mdi:file-document-outline" width="24" height="24" />
+          ),
           label: <a href="#">Món Nháp</a>,
         },
       ],
@@ -172,10 +142,25 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   };
 
   // Combine base items with admin item if user is admin
-  const items = user && user.role === 'admin' 
-    ? [...baseItems, adminItem]
-    : baseItems;
+  const items =
+    user && user.role === "admin" ? [...baseItems, adminItem] : baseItems;
 
+  // Determine selected key based on current location
+  const getSelectedKey = () => {
+    const path = location.pathname;
+    if (path === "/") return "1";
+    if (path === "/challenge" || path.startsWith("/challenge/")) return "3";
+    if (path === "/blog" || path.startsWith("/blog/")) return "4";
+    if (path === "/meal-plan") return "2-3"; // Premium submenu
+    if (path === "/ai-consultation") return "2-1"; // AI Tư Vấn M&M
+    if (path === "/nutritional-analysis") return "2-2"; // Phân tích Dinh Dưỡng Bằng Ảnh
+    if (path === "/progress-tracking") return "2-4"; // Theo Dõi Tiến Độ
+    if (path === "/top-meal-plans") return "2-5"; // Top Thực Đơn Xem Nhiều Nhất
+    if (path === "/profile") return "6";
+    if (path === "/support") return "7";
+    if (path === "/admin") return "9";
+    return "1"; // default to home
+  };
   return (
     <React.Fragment>
       <ConfigProvider
@@ -224,7 +209,9 @@ const Index = ({ collapsed, toggleCollapsed }) => {
             selectedKeys={[getSelectedKey()]}
             mode="inline"
             items={items}
-            defaultOpenKeys={collapsed ? [] : ["8"]}
+            defaultOpenKeys={
+              collapsed ? [] : getSelectedKey().startsWith("2-") ? ["2"] : ["8"]
+            }
             className="font-sans fw-semibold"
             inlineCollapsed={collapsed}
             style={{ border: "none" }}

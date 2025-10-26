@@ -1,0 +1,154 @@
+{
+  "stats": {
+    "ongoingChallenges": 8,
+    "totalParticipants": 1250,
+    "totalEntries": 420,
+    "prizesAwarded": 45
+  },
+  "challenges": [
+    {
+      "id": 1,
+      "title": "Trung Thu Trọn Vị",
+      "description": "Sáng tạo món ăn truyền thống Trung Thu với hương vị hiện đại",
+      "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+      "category": "Món tráng miệng",
+      "status": "ongoing",
+      "participants": 125,
+      "entries": 48,
+      "progress": 65,
+      "duration": "15/09 - 30/09/2025",
+      "timeLeft": "Còn 9 ngày",
+      "prizes": ["5.000.000đ", "3.000.000đ", "1.000.000đ"],
+      "host": {
+        "name": "Chef Minh",
+        "avatar": "https://i.pravatar.cc/80?img=12"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Healthy Breakfast Challenge",
+      "description": "Bữa sáng lành mạnh dưới 400 calories nhưng vẫn đầy năng lượng",
+      "image": "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=800&h=600&fit=crop",
+      "category": "Healthy",
+      "status": "ongoing",
+      "participants": 98,
+      "entries": 35,
+      "progress": 45,
+      "duration": "10/09 - 25/09/2025",
+      "timeLeft": "Còn 4 ngày",
+      "prizes": ["Premium 3 tháng", "Premium 2 tháng", "Premium 1 tháng"],
+      "host": {
+        "name": "Nutritionist Lan",
+        "avatar": "https://i.pravatar.cc/80?img=5"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Món Ngon Cuối Tuần",
+      "description": "Chia sẻ món ăn yêu thích cho bữa ăn gia đình cuối tuần",
+      "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=600&fit=crop",
+      "category": "Món Á",
+      "status": "ongoing",
+      "participants": 156,
+      "entries": 67,
+      "progress": 80,
+      "duration": "01/09 - 30/09/2025",
+      "timeLeft": "Còn 9 ngày",
+      "prizes": ["2.000.000đ", "1.000.000đ", "500.000đ"],
+      "host": {
+        "name": "Home Chef Hương",
+        "avatar": "https://i.pravatar.cc/80?img=20"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Vegan Delight",
+      "description": "Sáng tạo món chay với nguyên liệu tự nhiên và giàu dinh dưỡng",
+      "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=600&fit=crop",
+      "category": "Chay",
+      "status": "ongoing",
+      "participants": 87,
+      "entries": 42,
+      "progress": 55,
+      "duration": "05/09 - 20/09/2025",
+      "timeLeft": "Kết thúc",
+      "prizes": ["1.500.000đ", "800.000đ", "400.000đ"],
+      "host": {
+        "name": "Vegan Chef Mai",
+        "avatar": "https://i.pravatar.cc/80?img=25"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Western Brunch Masters",
+      "description": "Tạo ra món brunch phong cách Tây với kỹ thuật chuyên nghiệp",
+      "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop",
+      "category": "Món Tây",
+      "status": "upcoming",
+      "participants": 0,
+      "entries": 0,
+      "progress": 0,
+      "duration": "01/10 - 15/10/2025",
+      "timeLeft": "Bắt đầu sau 10 ngày",
+      "prizes": ["3.000.000đ", "2.000.000đ", "1.000.000đ"],
+      "host": {
+        "name": "Chef Anna",
+        "avatar": "https://i.pravatar.cc/80?img=9"
+      }
+    },
+    {
+      "id": 6,
+      "title": "Dessert Dream",
+      "description": "Sáng tạo món tráng miệng độc đáo với presentation ấn tượng",
+      "image": "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&h=600&fit=crop",
+      "category": "Món tráng miệng",
+      "status": "upcoming",
+      "participants": 0,
+      "entries": 0,
+      "progress": 0,
+      "duration": "05/10 - 20/10/2025",
+      "timeLeft": "Bắt đầu sau 14 ngày",
+      "prizes": ["Premium 6 tháng", "Premium 3 tháng", "Premium 1 tháng"],
+      "host": {
+        "name": "Pastry Chef Linh",
+        "avatar": "https://i.pravatar.cc/80?img=28"
+      }
+    },
+    {
+      "id": 7,
+      "title": "Asian Fusion Festival",
+      "description": "Kết hợp tinh hoa ẩm thực Á Đông với phong cách hiện đại",
+      "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop",
+      "category": "Món Á",
+      "status": "ongoing",
+      "participants": 143,
+      "entries": 56,
+      "progress": 70,
+      "duration": "12/09 - 28/09/2025",
+      "timeLeft": "Còn 7 ngày",
+      "prizes": ["4.000.000đ", "2.500.000đ", "1.500.000đ"],
+      "host": {
+        "name": "Chef Việt",
+        "avatar": "https://i.pravatar.cc/80?img=33"
+      }
+    },
+    {
+      "id": 8,
+      "title": "Quick & Easy Dinner",
+      "description": "Món ăn tối nhanh gọn dưới 30 phút cho người bận rộn",
+      "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800&h=600&fit=crop",
+      "category": "Healthy",
+      "status": "ongoing",
+      "participants": 112,
+      "entries": 51,
+      "progress": 60,
+      "duration": "08/09 - 22/09/2025",
+      "timeLeft": "Còn 1 ngày",
+      "prizes": ["1.200.000đ", "700.000đ", "300.000đ"],
+      "host": {
+        "name": "Quick Chef Nam",
+        "avatar": "https://i.pravatar.cc/80?img=17"
+      }
+    }
+  ]
+}

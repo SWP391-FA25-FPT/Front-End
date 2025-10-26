@@ -1,0 +1,193 @@
+{
+  "1": {
+    "id": 1,
+    "title": "Trung Thu Trọn Vị",
+    "description": "Chào mừng các bạn đến với thử thách 'Trung Thu Trọn Vị'!\n\nHãy chia sẻ công thức món ăn yêu thích của bạn trong dịp Tết Trung thu. Có thể là món truyền thống như bánh trung thu, chè, hoặc món sáng tạo mang hương vị trung thu.\n\nHãy kể câu chuyện và kỷ niệm đẹp của bạn về Tết Trung thu, sử dụng các hashtag để tham gia thử thách.",
+    "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop",
+    "category": "Món tráng miệng",
+    "status": "ongoing",
+    "participants": 125,
+    "dishes": 48,
+    "timeLeft": "Còn 9 ngày",
+    "duration": "15/09/2025 - 30/09/2025",
+    "hashtags": ["#trungthutronvi", "#midautumn", "#mooncake"],
+    "requirements": [
+      "Thời gian chế biến đầy đủ",
+      "Danh sách nguyên liệu chi tiết",
+      "Ảnh sản phẩm đẹp, chất lượng cao",
+      "Ít nhất 2 ảnh quá trình chế biến với hướng dẫn từng bước",
+      "Chia sẻ câu chuyện hoặc kỷ niệm về Trung thu"
+    ],
+    "prizes": [
+      {
+        "title": "Giải Nhất",
+        "description": "Công thức có lời giới thiệu ấn tượng nhất - 5.000.000đ + Chiếc thớt gỗ MBM cao cấp"
+      },
+      {
+        "title": "Giải Nhì",
+        "description": "Công thức ấn tượng nhất từ chủ bếp mới - 3.000.000đ + Chiếc thớt gỗ MBM"
+      },
+      {
+        "title": "Giải Ba",
+        "description": "Món có presentation đẹp nhất - 1.000.000đ"
+      }
+    ],
+    "prizeDetails": {
+      "note": "Chủ bếp mới là người chưa hoặc ít tham gia các thử thách của M&M",
+      "items": "Tất cả người chiến thắng đều nhận được huy hiệu 'Trung Thu Trọn Vị 2025'"
+    },
+    "entries": [
+      {
+        "id": 1,
+        "title": "Bánh Trung Thu Nhân Trứng Muối",
+        "image": "https://images.unsplash.com/photo-1599785209758-e3829ace3b1b?w=400&h=300&fit=crop",
+        "author": {
+          "name": "Chef Minh Anh",
+          "avatar": "https://i.pravatar.cc/80?img=12"
+        },
+        "likes": 156,
+        "rating": 4.8,
+        "views": 2340,
+        "submittedAt": "2025-09-18T10:30:00",
+        "isPremium": true
+      },
+      {
+        "id": 2,
+        "title": "Chè Hạt Sen Truyền Thống",
+        "image": "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=300&fit=crop",
+        "author": {
+          "name": "Hương Giang",
+          "avatar": "https://i.pravatar.cc/80?img=5"
+        },
+        "likes": 124,
+        "rating": 4.6,
+        "views": 1890,
+        "submittedAt": "2025-09-17T14:20:00",
+        "isPremium": false
+      },
+      {
+        "id": 3,
+        "title": "Bánh Dẻo Matcha Đậu Đỏ",
+        "image": "https://images.unsplash.com/photo-1558326567-98ae2405596b?w=400&h=300&fit=crop",
+        "author": {
+          "name": "Pastry Chef Linh",
+          "avatar": "https://i.pravatar.cc/80?img=28"
+        },
+        "likes": 189,
+        "rating": 4.9,
+        "views": 3120,
+        "submittedAt": "2025-09-19T09:15:00",
+        "isPremium": true
+      },
+      {
+        "id": 4,
+        "title": "Thạch Dừa Trái Cây Nhiệt Đới",
+        "image": "https://images.unsplash.com/photo-1587314168485-3236d6710814?w=400&h=300&fit=crop",
+        "author": {
+          "name": "Thanh Nga",
+          "avatar": "https://i.pravatar.cc/80?img=20"
+        },
+        "likes": 98,
+        "rating": 4.5,
+        "views": 1456,
+        "submittedAt": "2025-09-16T16:45:00",
+        "isPremium": false
+      },
+      {
+        "id": 5,
+        "title": "Bánh Nướng Nhân Thập Cẩm",
+        "image": "https://images.unsplash.com/photo-1601001815894-4bb6c81416d7?w=400&h=300&fit=crop",
+        "author": {
+          "name": "Chef Nam",
+          "avatar": "https://i.pravatar.cc/80?img=17"
+        },
+        "likes": 145,
+        "rating": 4.7,
+        "views": 2210,
+        "submittedAt": "2025-09-18T11:30:00",
+        "isPremium": false
+      },
+      {
+        "id": 6,
+        "title": "Bánh Dẻo Sầu Riêng",
+        "image": "https://images.unsplash.com/photo-1541599468348-e96984315921?w=400&h=300&fit=crop",
+        "author": {
+          "name": "Kim Oanh",
+          "avatar": "https://i.pravatar.cc/80?img=25"
+        },
+        "likes": 167,
+        "rating": 4.8,
+        "views": 2678,
+        "submittedAt": "2025-09-19T13:00:00",
+        "isPremium": true
+      },
+      {
+        "id": 7,
+        "title": "Chè Khúc Bạch Hoa Quả",
+        "image": "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&h=300&fit=crop",
+        "author": {
+          "name": "Mỹ Duyên",
+          "avatar": "https://i.pravatar.cc/80?img=9"
+        },
+        "likes": 113,
+        "rating": 4.6,
+        "views": 1734,
+        "submittedAt": "2025-09-17T10:20:00",
+        "isPremium": false
+      },
+      {
+        "id": 8,
+        "title": "Bánh Trung Thu Vỏ Bột Khoai Môn",
+        "image": "https://images.unsplash.com/photo-1557925923-cd4648e211a0?w=400&h=300&fit=crop",
+        "author": {
+          "name": "Hoàng Long",
+          "avatar": "https://i.pravatar.cc/80?img=33"
+        },
+        "likes": 134,
+        "rating": 4.7,
+        "views": 1998,
+        "submittedAt": "2025-09-18T15:45:00",
+        "isPremium": true
+      }
+    ]
+  },
+  "2": {
+    "id": 2,
+    "title": "Healthy Breakfast Challenge",
+    "description": "Thử thách tạo ra bữa sáng lành mạnh, đầy đủ dinh dưỡng nhưng dưới 400 calories!\n\nBữa sáng là bữa ăn quan trọng nhất trong ngày. Hãy chia sẻ công thức bữa sáng healthy yêu thích của bạn - có thể là smoothie bowl, overnight oats, bánh mì nguyên cám, hay bất kỳ món nào bạn thích.\n\nMón ăn cần đảm bảo cân bằng dinh dưỡng với đủ protein, carbs, và chất béo lành mạnh.",
+    "image": "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=1200&h=600&fit=crop",
+    "category": "Healthy",
+    "status": "ongoing",
+    "participants": 98,
+    "dishes": 35,
+    "timeLeft": "Còn 4 ngày",
+    "duration": "10/09/2025 - 25/09/2025",
+    "hashtags": ["#healthybreakfast", "#cleaneating", "#nutritiousstart"],
+    "requirements": [
+      "Tổng calories dưới 400 kcal",
+      "Bảng thành phần dinh dưỡng chi tiết (protein, carbs, fat)",
+      "Thời gian chuẩn bị và chế biến",
+      "Ảnh món ăn đẹp mắt",
+      "Chia sẻ lợi ích sức khỏe của món ăn"
+    ],
+    "prizes": [
+      {
+        "title": "Giải Nhất",
+        "description": "Bữa sáng cân bằng dinh dưỡng nhất - Premium 3 tháng + Bộ dụng cụ nhà bếp"
+      },
+      {
+        "title": "Giải Nhì",
+        "description": "Món ăn sáng tạo nhất - Premium 2 tháng"
+      },
+      {
+        "title": "Giải Ba",
+        "description": "Presentation đẹp nhất - Premium 1 tháng"
+      }
+    ],
+    "prizeDetails": {
+      "note": "Người chiến thắng sẽ được feature trong blog chính của M&M",
+      "items": "Tất cả top 10 sẽ nhận được huy hiệu 'Healthy Master'"
+    },
+    "entries": []
+  }
+}

@@ -1,13 +1,12 @@
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { styles } from './style/styles'
-import Header from '../components/MealPlan/Header'
-import MealSection from '../components/MealPlan/MealSection'
-import TotalsFooter from '../components/MealPlan/TotalsFooter'
-import { DEFAULT_MEALS } from '../data/mealData'
-import Layout from '../components/layout/SettingLayout'
-import './style/MealPlan.css'
-
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { styles } from "./style/styles";
+import Header from "../components/MealPlan/Header";
+import MealSection from "../components/MealPlan/MealSection";
+import TotalsFooter from "../components/MealPlan/TotalsFooter";
+import DEFAULT_MEALS from "../data/mealData.json";
+import Layout from "../components/layout/SettingLayout";
+import "./style/MealPlan.css";
 
 function multiplyByGrams(baseValue, grams) {
   return (baseValue * grams) / 100;
@@ -18,7 +17,10 @@ export default function MealPlan() {
   const navigate = useNavigate();
 
   const totals = useMemo(() => {
-    let cals = 0, proteins = 0, carbs = 0, fats = 0;
+    let cals = 0,
+      proteins = 0,
+      carbs = 0,
+      fats = 0;
     meals.forEach((meal) => {
       meal.items.forEach((it) => {
         const ratio = it.grams / 100;
@@ -50,13 +52,18 @@ export default function MealPlan() {
 
   function generatePlan() {
     // Simple randomization of grams for demo purposes
-    setMeals((prev) => prev.map((m) => ({
-      ...m,
-      items: m.items.map((it) => ({
-        ...it,
-        grams: Math.max(20, Math.min(300, Math.round(it.grams * (0.7 + Math.random() * 0.8))))
+    setMeals((prev) =>
+      prev.map((m) => ({
+        ...m,
+        items: m.items.map((it) => ({
+          ...it,
+          grams: Math.max(
+            20,
+            Math.min(300, Math.round(it.grams * (0.7 + Math.random() * 0.8)))
+          ),
+        })),
       }))
-    })));
+    );
   }
 
   function deletePlan() {
@@ -73,10 +80,16 @@ export default function MealPlan() {
         <div className="title-container">
           <h2 className="premium-title">Tạo Thực Đơn Premium</h2>
         </div>
-        <Header onGenerate={generatePlan} onDelete={deletePlan} onReset={resetPlan} />
+        <Header
+          onGenerate={generatePlan}
+          onDelete={deletePlan}
+          onReset={resetPlan}
+        />
 
         {meals.length === 0 ? (
-          <div style={styles.empty}>No meals. Click "Generate Meal Plan" or "Reset".</div>
+          <div style={styles.empty}>
+            No meals. Click "Generate Meal Plan" or "Reset".
+          </div>
         ) : (
           <div style={styles.stack}>
             {meals.map((meal, mi) => (
@@ -94,4 +107,3 @@ export default function MealPlan() {
     </Layout>
   );
 }
- 

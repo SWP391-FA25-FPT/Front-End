@@ -35,18 +35,18 @@ const AppLayout = ({ children }) => {
             className="d-flex justify-content-between align-items-center"
           >
             <div className="d-flex align-items-center gap-2 ms-4">
-              <Icon 
-                icon="mdi:hand-wave" 
-                width="24" 
-                height="24" 
+              <Icon
+                icon="mdi:hand-wave"
+                width="24"
+                height="24"
                 className="bounce-animation"
-                style={{ color: '#ff7a00' }}
+                style={{ color: "#F8B602" }}
               />
-              <Title 
-                level={3} 
+              <Title
+                level={3}
                 className="m-0 gradient-text pulse-animation"
               >
-                Hello, {user?.username || 'User'}
+                Hello, {user?.username || "User"}
               </Title>
             </div>
             <Head />
