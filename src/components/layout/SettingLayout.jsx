@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Typography, Button } from "antd";
-// import { useAuth } from "../../context/AuthContext";
+import { Layout, Typography } from "antd";
 import SideBar from "../SideBar";
 import Foot from "./Footer";
 import { Icon } from "@iconify/react";
@@ -10,46 +9,59 @@ import CreateButton from "../../components/CreateButton";
 const SettingLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
   const { Title } = Typography;
-  //   const { user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
+
   return (
     <React.Fragment>
-      <Layout>
-        {/* <SideBar /> */}
+      <Layout style={{ backgroundColor: "#f8f6f2", padding: "5px" }}>
         <Sider
           theme="light"
-          width={250}
-          style={{ minHeight: "100vh" }}
+          width={265}
+          style={{
+            minHeight: "calc(100vh - 10px)",
+            borderRadius: "8px",
+            overflow: "hidden",
+          }}
           collapsed={collapsed}
           onCollapse={setCollapsed}
         >
           <SideBar collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
         </Sider>
-        <Layout>
+        <Layout
+          style={{ borderRadius: "8px", overflow: "hidden", marginLeft: "5px" }}
+        >
           <Header
             style={{
               backgroundColor: "white",
+              borderRadius: "8px",
+              margin: "0 8px 0 8px"
             }}
             className="d-flex align-items-center justify-content-between"
           >
             <div>
               <a
-                href="/dashboard"
+                href="/"
                 style={{
-                  
                   textDecoration: "none",
-                  backgroundColor: "rgb(248 246 242/var(--tw-bg-opacity,1))",
-                  borderColor: "#A098AE",
+                  backgroundColor: "#f8f6f2",
+                  border: "1px solid #A098AE",
                   borderRadius: "50%",
                   width: "48px",
                   height: "48px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#e8e6e2";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#f8f6f2";
                 }}
               >
                 <Icon
@@ -67,9 +79,9 @@ const SettingLayout = ({ children }) => {
           </Header>
           <Content
             style={{
-              margin: "24px 0 0 24px ",
+              margin: "8px",
               backgroundColor: "white",
-              borderRadius: "16px 0 0 16px",
+              borderRadius: "8px",
             }}
           >
             {children}

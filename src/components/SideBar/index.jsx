@@ -5,6 +5,7 @@ import { Button, ConfigProvider, Flex, Menu, Dropdown } from "antd";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/useAuth";
 import { useLocation } from "react-router-dom";
+import "./index.css";
 
 const Index = ({ collapsed, toggleCollapsed }) => {
   const { user } = useAuth();
@@ -184,13 +185,13 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         theme={{
           components: {
             Menu: {
-              itemColor: "#606060",
-              itemHoverColor: "#000",
-              itemHoverBg: "#fff",
-              itemSelectedBg: "#fff",
-              itemSelectedColor: "#f93",
+              itemColor: "var(--primary-color)",
+              itemHoverColor: "var(--primary-hover-color)",
+              itemHoverBg: "var(--primary-hover-bg)",
+              itemSelectedBg: "var(--primary-selected-bg)",
+              itemSelectedColor: "var(--primary-selected-color)",
               subMenuItemBg: "#fff",
-              subMenuItemSelectedColor: "#f93",
+              subMenuItemSelectedColor: "var(--primary-selected-color)",
             },
           },
           token: {

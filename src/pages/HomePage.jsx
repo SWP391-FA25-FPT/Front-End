@@ -80,6 +80,11 @@ const HomePage = () => {
     navigate(`/recipe/${recipeId}`);
   };
 
+  // Handle trending tag click - navigate to search page
+  const handleTrendingTagClick = (tagName) => {
+    navigate(`/search?q=${encodeURIComponent(tagName)}`);
+  };
+
   return (
     <React.Fragment>
       <Layout>
@@ -98,7 +103,7 @@ const HomePage = () => {
                 <div className="row g-4 py-2">
                   {trendingTags.map((tag, index) => (
                     <div key={index} className="col-12 col-sm-6 col-lg-3">
-                      <div onClick={() => tag.recipeId && handleRecipeClick(tag.recipeId)} style={{ cursor: 'pointer' }}>
+                      <div onClick={() => handleTrendingTagClick(tag.name)} style={{ cursor: 'pointer' }}>
                         <CardPopular 
                           title={tag.name} 
                           src={tag.image} 

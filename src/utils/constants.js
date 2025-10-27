@@ -18,6 +18,7 @@ export const apiUrls = {
   createRecipe: "/api/recipes",
   updateRecipe: "/api/recipes",
   deleteRecipe: "/api/recipes",
+  searchRecipes: "/api/recipes/search",
   
   // Analytics endpoints
   trackSearch: "/api/analytics/search",

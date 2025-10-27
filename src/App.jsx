@@ -26,6 +26,7 @@ import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
 import ProgressTracking from "./pages/ProgressTracking";
 import TopMealPlans from "./pages/TopMealPlans";
+import SearchingPage from "./pages/SearchingPage";
 
 function App() {
   return (
@@ -149,6 +150,14 @@ function App() {
             element={
               <SurveyCheckRoute>
                 <TopMealPlans />
+              </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <SurveyCheckRoute>
+                <SearchingPage />
               </SurveyCheckRoute>
             }
           />

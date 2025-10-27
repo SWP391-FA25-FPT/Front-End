@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import { Layout, Typography } from "antd";
-import { useAuth } from "../../context/useAuth";
+import { Layout } from "antd";
 import SideBar from "../SideBar";
 import Head from "./Header";
 import Foot from "./Footer";
-import { Icon } from "@iconify/react";
 import SearchBar from "../SearchBar";
-const AppLayout = ({ children }) => {
+
+const SearchingLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
-  const { Title } = Typography;
-  const { user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleCollapsed = () => {
@@ -19,7 +16,6 @@ const AppLayout = ({ children }) => {
   return (
     <React.Fragment>
       <Layout style={{ backgroundColor: "#f8f6f2", padding: "5px" }}>
-        {/* <SideBar /> */}
         <Sider
           theme="light"
           width={265}
@@ -40,23 +36,14 @@ const AppLayout = ({ children }) => {
             style={{ 
               backgroundColor: "white",
               borderRadius: "8px",
-              margin: "0 8px 0 8px"
+              margin: "0 8px 0 8px",
+              padding: "0 24px"
             }}
             className="d-flex justify-content-between align-items-center"
           >
-            <div className="d-flex align-items-center gap-2 ms-4">
-              <Icon
-                icon="mdi:hand-wave"
-                width="24"
-                height="24"
-                className="bounce-animation"
-                style={{ color: "#F8B602" }}
-              />
-              <Title level={3} className="m-0 gradient-text pulse-animation">
-                Hello, {user?.username || "User"}
-              </Title>
+            <div className="d-flex align-items-center" style={{ flex: 1 }}>
+              <SearchBar />
             </div>
-            <SearchBar />
             <Head />
           </Header>
           <Content
@@ -77,4 +64,5 @@ const AppLayout = ({ children }) => {
   );
 };
 
-export default AppLayout;
+export default SearchingLayout;
+

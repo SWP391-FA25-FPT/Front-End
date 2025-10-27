@@ -1,0 +1,110 @@
+.searching-page {
+  min-height: calc(100vh - 200px);
+}
+
+/* Flexbox Layout for Main Content and Filter */
+.search-layout-flex {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.search-content-main {
+  flex: 1;
+  min-width: 0; /* Important for flex items */
+}
+
+.search-filter-wrapper {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.search-header {
+  padding-bottom: 8px;
+}
+
+.search-tabs {
+  margin-bottom: 16px;
+}
+
+.search-tabs .ant-tabs-nav {
+  margin-bottom: 0;
+}
+
+.search-tabs .ant-tabs-tab {
+  padding: 8px 16px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.search-tabs .ant-tabs-tab:hover {
+  color: var(--primary-hover-color);
+}
+
+.search-tabs .ant-tabs-tab-active {
+  background-color: transparent;
+}
+
+.search-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--primary-selected-color);
+  font-weight: 600;
+}
+
+.search-tabs .ant-tabs-ink-bar {
+  background-color: var(--primary-selected-color);
+  height: 3px;
+  border-radius: 2px 2px 0 0;
+}
+
+.verified-notice {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .search-layout-flex {
+    flex-direction: column;
+  }
+  
+  .search-filter-wrapper {
+    width: 100%;
+    margin-top: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .search-header h2 {
+    font-size: 22px !important;
+  }
+  
+  .search-tabs .ant-tabs-tab {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  
+  .verified-notice {
+    font-size: 13px !important;
+  }
+  
+  .search-layout-flex {
+    gap: 16px;
+  }
+}
+

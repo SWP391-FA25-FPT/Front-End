@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <React.Fragment>
       <Flex justify="center" align="center" gap={"16px"}>
-        <SearchBar />
+        {/* <SearchBar /> */}
         <Flex gap="16px" align="center" justify="space-between">
           <User />
           <CreateButton />

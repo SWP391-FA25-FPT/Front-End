@@ -135,3 +135,37 @@ export const deleteRecipe = async (recipeId) => {
   }
 };
 
+// Search recipes with filters
+export const searchRecipes = async (keyword, params = {}) => {
+  try {
+    const queryParams = new URLSearchParams();
+    
+    if (keyword) queryParams.append('q', keyword);
+    if (params.tags) queryParams.append('tags', params.tags);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+    if (params.sortBy) queryParams.append('sortBy', params.sortBy);
+    if (params.minTrustScore) queryParams.append('minTrustScore', params.minTrustScore);
+
+    const url = `${baseUrl}${apiUrls.searchRecipes}${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi tìm kiếm recipes");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Search recipes error:", error);
+    throw error;
+  }
+};
+
