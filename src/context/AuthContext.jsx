@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { getCookie } from "../utils/cookie";
+import { getCookie, setCookie, removeCookie } from "../utils/cookie";
 
 const AuthContext = createContext(null);
 
@@ -27,8 +27,8 @@ export const AuthProvider = ({ children }) => {
     setUser(newUser);
     if (newToken) {
       localStorage.setItem("token", newToken);
-      // Also set cookie for apiHelper
-      document.cookie = `token=${newToken}; path=/`;
+      // Also set cookie for apiHelper using js-cookie
+      setCookie("token", newToken, { path: "/" });
     }
     if (newUser) localStorage.setItem("user", JSON.stringify(newUser));
   };
@@ -38,8 +38,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    // Also clear cookie
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // Also clear cookie using js-cookie
+    removeCookie("token");
   };
 
   const updateUser = (updatedUser) => {

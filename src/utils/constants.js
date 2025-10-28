@@ -20,6 +20,17 @@ export const apiUrls = {
   deleteRecipe: "/api/recipes",
   searchRecipes: "/api/recipes/search",
   
+  // Comment endpoints
+  getCommentsByRecipeId: "/api/recipes/:recipeId/comments",
+  createComment: "/api/recipes/:recipeId/comments",
+  deleteComment: "/api/comments/:id",
+  
+  // Rating endpoints
+  getRatingsByRecipeId: "/api/recipes/:recipeId/ratings",
+  createOrUpdateRating: "/api/recipes/:recipeId/ratings",
+  deleteUserRating: "/api/recipes/:recipeId/ratings",
+  deleteRating: "/api/ratings/:id",
+  
   // Analytics endpoints
   trackSearch: "/api/analytics/search",
   getTrendingTags: "/api/analytics/trending-tags",

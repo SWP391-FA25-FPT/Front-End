@@ -27,6 +27,15 @@ import NutritionalAnalysis from "./pages/NutritionalAnalysis";
 import ProgressTracking from "./pages/ProgressTracking";
 import TopMealPlans from "./pages/TopMealPlans";
 import SearchingPage from "./pages/SearchingPage";
+import RecipeDetail from "./pages/RecipeDetail";
+import RecipeCreate from "./pages/RecipeCreate";
+import RecipeUpdate from "./pages/RecipeUpdate";
+import MyRecipes from "./pages/MyRecipes";
+import AllRecipes from "./pages/AllRecipes";
+import DraftRecipes from "./pages/DraftRecipes";
+import PrivateRecipes from "./pages/PrivateRecipes";
+import PublishedRecipes from "./pages/PublishedRecipes";
+import SavedRecipes from "./pages/SavedRecipes";
 
 function App() {
   return (
@@ -159,6 +168,90 @@ function App() {
               <SurveyCheckRoute>
                 <SearchingPage />
               </SurveyCheckRoute>
+            }
+          />
+          
+          {/* Recipe routes */}
+          <Route
+            path="/recipe/:id"
+            element={
+              <SurveyCheckRoute>
+                <RecipeDetail />
+              </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/recipe/create"
+            element={
+              <ProtectedRoute>
+                <RecipeCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recipe/create/:draftId"
+            element={
+              <ProtectedRoute>
+                <RecipeCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recipe/:id/edit"
+            element={
+              <ProtectedRoute>
+                <RecipeUpdate />
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* My Recipes routes */}
+          <Route
+            path="/my-recipes"
+            element={
+              <ProtectedRoute>
+                <MyRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-recipes/all"
+            element={
+              <ProtectedRoute>
+                <AllRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-recipes/drafts"
+            element={
+              <ProtectedRoute>
+                <DraftRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-recipes/private"
+            element={
+              <ProtectedRoute>
+                <PrivateRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-recipes/published"
+            element={
+              <ProtectedRoute>
+                <PublishedRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-recipes/saved"
+            element={
+              <ProtectedRoute>
+                <SavedRecipes />
+              </ProtectedRoute>
             }
           />
 

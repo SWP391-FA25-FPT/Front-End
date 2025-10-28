@@ -1,18 +1,24 @@
 import React, { useState } from "react";
 import { Layout, Typography } from "antd";
+import { useNavigate } from "react-router-dom";
 import SideBar from "../SideBar";
 import Foot from "./Footer";
 import { Icon } from "@iconify/react";
 import User from "../../components/User";
 import CreateButton from "../../components/CreateButton";
 
-const SettingLayout = ({ children }) => {
+const SettingLayout = ({ children, hideUserActions = false }) => {
   const { Header, Footer, Sider, Content } = Layout;
   const { Title } = Typography;
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
+  };
+
+  const handleBack = () => {
+    navigate(-1);
   };
 
   return (
@@ -43,8 +49,8 @@ const SettingLayout = ({ children }) => {
             className="d-flex align-items-center justify-content-between"
           >
             <div>
-              <a
-                href="/"
+              <button
+                onClick={handleBack}
                 style={{
                   textDecoration: "none",
                   backgroundColor: "#f8f6f2",
@@ -56,6 +62,8 @@ const SettingLayout = ({ children }) => {
                   alignItems: "center",
                   justifyContent: "center",
                   transition: "all 0.3s ease",
+                  cursor: "pointer",
+                  outline: "none",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = "#e8e6e2";
@@ -70,12 +78,14 @@ const SettingLayout = ({ children }) => {
                   width="32"
                   height="32"
                 />
-              </a>
+              </button>
             </div>
-            <div className="d-flex align-items-center gap-2">
-              <User />
-              <CreateButton />
-            </div>
+            {!hideUserActions && (
+              <div className="d-flex align-items-center gap-2">
+                <User />
+                <CreateButton />
+              </div>
+            )}
           </Header>
           <Content
             style={{
