@@ -1,5 +1,4 @@
 import { useState } from "react";
-// THAY ĐỔI 1: Import hàm loginUserApi thay vì loginApi
 import { loginUserApi, registerApi } from "../apis/auth";
 import { useAuth } from "../context/useAuth";
 import Logo from "../components/Logo";
@@ -358,7 +357,7 @@ function Login() {
               setSuccess("");
             }}
           >
-            Đăng ký t{" "}
+            Đăng ký tài khoản{" "}
           </button>
         </div>
       </div>

@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import PaymentModule from "../../components/admin/PaymentModule";
-import FeedbackModule from "../../components/admin/FeedbackModule";
-import ReportModule from "../../components/admin/ReportModule";
-import ContentModerationModule from "../../components/admin/ContentModerationModule";
-import UserManagementModule from "../../components/admin/UserManagementModule";
-import AIControlModule from "../../components/admin/AIControlModule";
-import StatisticsModule from "../../components/admin/StatisticsModule";
-import Logo from "../../assets/icon.svg";
-import "../style/AdminPage.css";
+import { Container } from "react-bootstrap";
+import Layout from "../../components/layout/AppLayout"; 
+
+import PaymentModule from "../../components/admin/PaymentModule"; 
+import FeedbackModule from "../../components/admin/FeedbackModule"; 
+import ReportModule from "../../components/admin/ReportModule"; 
+import ContentModerationModule from "../../components/admin/ContentModerationModule"; 
+import UserManagementModule from "../../components/admin/UserManagementModule"; 
+import AIControlModule from "../../components/admin/AIControlModule"; 
+import StatisticsModule from "../../components/admin/StatisticsModule"; 
 
 export default function AdminPage() {
   const [activeModule, setActiveModule] = useState("payment");
-  const navigate = useNavigate();
 
   const modules = {
     payment: { component: PaymentModule, label: "Plans & Billing" },
@@ -27,47 +26,39 @@ export default function AdminPage() {
   const ActiveComponent = modules[activeModule].component;
 
   return (
-    <div className="admin-container">
-      {/* Logo */}
-      <div className="admin-logo">
-        <img 
-          src={Logo} 
-          alt="M&M Logo" 
-          className="logo-image"
-          onClick={() => navigate('/')}
-        />
-        <span className="logo-text" onClick={() => navigate('/')}>M&M</span>
-      </div>
+    <React.Fragment>
+      <Layout>
+        <Container className="py-4">
+          
+          <main>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Admin Settings
+            </h2>
 
-      <aside className="sidebar">
-        <div className="sidebar-icons">
-          <i className="bi bi-house"></i>
-          <i className="bi bi-bar-chart"></i>
-          <i className="bi bi-layers"></i>
-          <i className="bi bi-people"></i>
-          <i className="bi bi-gear"></i>
-        </div>
-      </aside>
+            <nav className="flex flex-wrap gap-2 border-b border-gray-200 pb-3 mb-6">
+              {Object.entries(modules).map(([key, module]) => (
+                <button
+                  key={key}
+                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors 
+                              ${
+                                activeModule === key
+                                  ? "bg-blue-600 text-white shadow-sm"
+                                  : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
+                              }`}
+                  onClick={() => setActiveModule(key)}
+                >
+                  {module.label}
+                </button>
+              ))}
+            </nav>
 
-      <main className="main-content">
-        <h2 className="page-title">Admin Settings</h2>
+            <div className="module-view">
+              <ActiveComponent />
+            </div>
+          </main>
 
-        <nav className="top-menu">
-          {Object.entries(modules).map(([key, module]) => (
-            <button
-              key={key}
-              className={`nav-button ${activeModule === key ? "active" : ""}`}
-              onClick={() => setActiveModule(key)}
-            >
-              {module.label}
-            </button>
-          ))}
-        </nav>
-
-        <div className="module-view">
-          <ActiveComponent />
-        </div>
-      </main>
-    </div>
+        </Container>
+      </Layout>
+    </React.Fragment>
   );
 }

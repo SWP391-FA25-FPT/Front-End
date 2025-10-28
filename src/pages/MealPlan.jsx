@@ -8,7 +8,6 @@ import { DEFAULT_MEALS } from '../data/mealData'
 import Layout from '../components/layout/SettingLayout'
 import './style/MealPlan.css'
 
-
 function multiplyByGrams(baseValue, grams) {
   return (baseValue * grams) / 100;
 }
