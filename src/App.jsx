@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import TakeSurvey from "./pages/TakeSurvey";
+import Profile from "./pages/Profile";
 import ProfilePage from "./pages/ProfilePage";
 import SupportPage from "./pages/SupportPage";
 import Challenge from "./pages/Challenge";
@@ -26,6 +27,7 @@ import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
 import ProgressTracking from "./pages/ProgressTracking";
 import TopMealPlans from "./pages/TopMealPlans";
+import CreateRecipe from "./pages/CreateRecipe";
 
 function App() {
   return (
@@ -64,6 +66,23 @@ function App() {
               </SurveyCheckRoute>
             }
           />
+          <Route
+            path="/user"
+            element={
+              <SurveyCheckRoute>
+                <Profile />
+              </SurveyCheckRoute>
+            }
+          />
+            <Route
+            path="/create-recipe"
+            element={
+              <SurveyCheckRoute>
+                <CreateRecipe />
+              </SurveyCheckRoute>
+            }
+          />
+
           <Route
             path="/support"
             element={
