@@ -33,10 +33,10 @@
 }
 
 .blogdetail-back-link:hover {
-  color: #F8B602;
+  color: #f8b602;
   text-decoration: none;
   background: #fef3e2;
-  border-color: #F8B602;
+  border-color: #f8b602;
   box-shadow: 0 2px 6px rgba(240, 181, 62, 0.15);
 }
 
@@ -140,16 +140,16 @@
 }
 
 .blogdetail-reaction-btn:hover {
-  color: #F8B602;
+  color: #f8b602;
   background: #fef3e2;
-  border-color: #F8B602;
+  border-color: #f8b602;
   box-shadow: 0 2px 6px rgba(240, 181, 62, 0.15);
 }
 
 .blogdetail-reaction-btn.active {
   background: #fef3e2;
   color: white;
-  border-color: #F8B602;
+  border-color: #f8b602;
   box-shadow: 0 2px 6px rgba(240, 181, 62, 0.15);
 }
 
@@ -183,6 +183,16 @@
   cursor: pointer;
   transition: color 0.2s ease;
   user-select: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+.blogdetail-star:focus {
+  outline: none;
+  border: none;
 }
 
 .blogdetail-star:hover {
@@ -206,10 +216,19 @@
   margin-left: 0.5rem;
   transition: color 0.2s ease;
   text-decoration: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+}
+
+.blogdetail-rating-clear:focus {
+  outline: none;
+  border: none;
 }
 
 .blogdetail-rating-clear:hover {
-  color: #F8B602;
+  color: #f8b602;
 }
 
 /* Comments Section */
@@ -231,14 +250,14 @@
 
 .blogdetail-comment-input:focus {
   outline: none;
-  border-color: #F8B602;
+  border-color: #f8b602;
   box-shadow: 0 0 0 3px rgba(240, 181, 62, 0.15);
 }
 
 .blogdetail-comment-submit {
-  background: #F8B602;
+  background: #f8b602;
   color: white;
-  border: 1px solid #F8B602;
+  border: 1px solid #f8b602;
   border-radius: 8px;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
@@ -262,18 +281,78 @@
 }
 
 .blogdetail-comment-item {
-  border-bottom: 1px solid #e5e7eb;
-  padding: 1rem 0;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.blogdetail-comment-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #d1d5db;
 }
 
 .blogdetail-comment-item:last-child {
-  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.blogdetail-comment-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.blogdetail-comment-avatar {
+  flex-shrink: 0;
+}
+
+.blogdetail-avatar-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f8b602 0%, #ffa30f 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.125rem;
+  box-shadow: 0 2px 8px rgba(248, 182, 2, 0.3);
+}
+
+.blogdetail-avatar-image {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(248, 182, 2, 0.3);
+}
+
+.blogdetail-comment-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.blogdetail-comment-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .blogdetail-comment-author {
   font-weight: 600;
   color: #1a1a1a;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0;
+}
+
+.blogdetail-comment-date {
+  font-size: 0.75rem;
+  color: #6b7280;
 }
 
 .blogdetail-comment-content {
@@ -285,6 +364,25 @@
 .blogdetail-comment-time {
   font-size: 0.75rem;
   color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.blogdetail-comment-time button {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.blogdetail-comment-time button:hover {
+  color: #f8b602 !important;
+}
+
+.blogdetail-comment-time button:focus {
+  outline: none;
+  border: none;
 }
 
 .blogdetail-no-comments {
@@ -341,29 +439,29 @@
     margin: 0.5rem;
     border-radius: 12px;
   }
-  
+
   .blogdetail-back-link {
     font-size: 0.8rem;
     padding: 0.4rem 0.8rem;
   }
-  
+
   .blogdetail-title {
     font-size: 1.875rem;
   }
-  
+
   .blogdetail-article-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .blogdetail-image {
     height: 250px;
   }
-  
+
   .blogdetail-reaction-section {
     gap: 0.5rem;
   }
-  
+
   .blogdetail-reaction-btn {
     width: 40px;
     height: 40px;
