@@ -23,7 +23,7 @@ export default function Featured({ post }) {
             className="h-100 w-100 object-fit-cover"
           />
         </div>
-        
+
         {/* Nội dung bên phải */}
         <div className="blog-hero-content">
           {/* Thẻ chủ đề và ngày */}
@@ -35,29 +35,30 @@ export default function Featured({ post }) {
             <span className="text-muted">•</span>
             <span className="text-muted">{post.date}</span>
           </div>
-          
+
           {/* Tiêu đề lớn đậm */}
-          <h1 className="blog-title">
-            {post.title}
-          </h1>
+          <h1 className="blog-title">{post.title}</h1>
 
           {/* Mô tả ngắn */}
-          <p className="blog-excerpt">
-            {post.excerpt}
-          </p>
-          
+          <p className="blog-excerpt">{post.excerpt}</p>
+
           {/* Nút Đọc tiếp */}
-          <div>
-            <Link
-              to={`/blog/${post.id}`}
-              className="blog-read-more-btn"
+          <Link to={`/blog/${post.id}`} className="blog-read-more-btn">
+            Đọc tiếp
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              Đọc tiếp
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </Link>
         </div>
       </motion.div>
     </section>

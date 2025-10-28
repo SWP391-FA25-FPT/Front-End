@@ -38,7 +38,7 @@
 
 .blog-hero-meta {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.4rem;
   font-size: 0.8rem;
@@ -47,7 +47,7 @@
 
 .blog-category-tag {
   background: #fff8ee;
-  color: #F8B602;
+  color: #f8b602;
   padding: 0.4rem 0.8rem;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -77,18 +77,23 @@
 }
 
 .blog-read-more-btn {
-  background: #F8B602;
+  background: #f8b602;
   color: white;
-  padding: 0.7rem 1.3rem;
+  padding: 0.7rem 2rem;
   border-radius: 25px;
   font-weight: 500;
   text-decoration: none;
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   transition: all 0.3s ease;
   border: none;
-  font-size: 0.85rem;
+  font-size: 1rem;
+  white-space: nowrap;
+  margin: 0;
+  width: fit-content;
+  min-width: 140px;
 }
 
 .blog-read-more-btn:hover {
@@ -120,14 +125,14 @@
 }
 
 .blog-category-pill:hover {
-  background: #F8B602;
+  background: #f8b602;
   color: #ffffff;
   border-color: #d1d5db;
   transform: translateY(-1px);
 }
 
 .blog-category-pill.active {
-  background: #F8B602;
+  background: #f8b602;
   color: white;
 }
 
@@ -180,7 +185,7 @@
 
 .blog-post-category {
   background: #fff8ee;
-  color: #F8B602;
+  color: #f8b602;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-weight: 500;
@@ -201,7 +206,7 @@
 }
 
 .blog-post-title:hover {
-  color: #F8B602;
+  color: #f8b602;
 }
 
 .blog-post-title a {
@@ -210,7 +215,7 @@
 }
 
 .blog-post-title a:hover {
-  color: #F8B602;
+  color: #f8b602;
 }
 
 .blog-post-excerpt {
@@ -253,7 +258,7 @@
 }
 
 .blog-pagination-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #F8B602 0%, #ffa30f 100%);
+  background: linear-gradient(135deg, #f8b602 0%, #ffa30f 100%);
   color: white;
   border-color: transparent;
   transform: translateY(-2px);
@@ -261,7 +266,7 @@
 }
 
 .blog-pagination-btn.active {
-  background: linear-gradient(135deg, #F8B602 0%);
+  background: linear-gradient(135deg, #f8b602 0%);
   color: white;
   border-color: transparent;
   box-shadow: 0 4px 16px rgba(180, 89, 41, 0.3);
@@ -304,25 +309,25 @@
     flex-direction: column;
     gap: 1.5rem;
   }
-  
+
   .blog-hero-content {
     padding-left: 0;
     margin-top: 0;
   }
-  
+
   .blog-title {
     font-size: 2rem;
   }
-  
+
   .blog-post-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .blog-category-pills {
     gap: 0.5rem;
   }
-  
+
   .blog-category-pill {
     padding: 0.375rem 1rem;
     font-size: 0.8rem;
