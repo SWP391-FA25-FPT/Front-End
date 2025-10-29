@@ -3,7 +3,7 @@ import { Layout } from "antd";
 import SideBar from "../SideBar";
 import Head from "./Header";
 import Foot from "./Footer";
-import SearchBar from "../SearchBar";
+import SearchBar from "../SearchBar/Index";
 
 const SearchingLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
