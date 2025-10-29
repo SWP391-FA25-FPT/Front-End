@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Card, Avatar, Tag, Badge } from "antd";
 import { Icon } from "@iconify/react";
 import "./style.css";
@@ -222,4 +222,5 @@ const SearchResultCard = ({ recipe, onClick, layout = "vertical" }) => {
 };
 
 export default SearchResultCard;
+
 

@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../Logo";
+import Logo from "../Logo/Logo.jsx";
 import { Container } from "react-bootstrap";
 import { Button, ConfigProvider, Flex, Menu, Dropdown } from "antd";
 import { Icon } from "@iconify/react";
@@ -248,3 +248,5 @@ const Index = ({ collapsed, toggleCollapsed }) => {
 };
 
 export default Index;
+
+

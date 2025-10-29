@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Layout, Typography } from "antd";
 import { useAuth } from "../../context/useAuth";
-import SideBar from "../SideBar";
+import SideBar from "../SideBar/SideBar.jsx";
 import Head from "./Header";
 import Foot from "./Footer";
 import { Icon } from "@iconify/react";
-import SearchBar from "../SearchBar/index.jsx";
+import SearchBar from "../SearchBar/SearchBar.jsx";
 const AppLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
   const { Title } = Typography;

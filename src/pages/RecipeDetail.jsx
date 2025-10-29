@@ -14,14 +14,13 @@ import RecipeRating from "../components/Recipe/RecipeRating";
 import RecipeComments from "../components/Recipe/RecipeComments";
 import RecipeReactions from "../components/Recipe/RecipeReactions";
 import { getRecipeById, getAllRecipes } from "../apis/recipe";
-import CardRecent from "../components/CardRecent";
+import CardRecent from "../components/CardRecent/CardRecent.jsx";
 import "./style/RecipeDetail.css";
 
 const RecipeDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [recipe, setRecipe] = useState(null);
-  const [ratingData, setRatingData] = useState(null);
   const [similarRecipes, setSimilarRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -58,9 +57,7 @@ const RecipeDetail = () => {
     }
   };
 
-  const handleRatingUpdate = (newRatingData) => {
-    setRatingData(newRatingData);
-  };
+  const handleRatingUpdate = () => {};
 
   if (loading) {
     return (

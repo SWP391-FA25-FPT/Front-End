@@ -52,3 +52,5 @@ const Index = ({ title, src, avatar, userName, subtitle }) => {
 };
 
 export default Index;
+
+

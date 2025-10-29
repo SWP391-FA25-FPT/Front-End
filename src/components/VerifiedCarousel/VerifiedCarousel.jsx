@@ -107,3 +107,4 @@ const VerifiedCarousel = ({ recipes, onRecipeClick }) => {
 
 export default VerifiedCarousel;
 
+

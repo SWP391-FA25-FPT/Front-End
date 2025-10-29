@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { loginApi, registerApi } from '../apis/auth';
 import { useAuth } from '../context/useAuth';
-import Logo from '../components/Logo';
+import Logo from '../components/Logo/Logo.jsx';
 import './style/Login.css';
 
 function Login() {
