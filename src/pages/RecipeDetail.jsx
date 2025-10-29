@@ -14,7 +14,7 @@ import RecipeRating from "../components/Recipe/RecipeRating";
 import RecipeComments from "../components/Recipe/RecipeComments";
 import RecipeReactions from "../components/Recipe/RecipeReactions";
 import { getRecipeById, getAllRecipes } from "../apis/recipe";
-import CardRecent from "../components/CardRecent/Index";
+import CardRecent from "../components/CardRecent";
 import "./style/RecipeDetail.css";
 
 const RecipeDetail = () => {

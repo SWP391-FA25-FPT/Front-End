@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/layout/AppLayout";
-import CardPopular from "../components/CardPopular/Index";
-import CardRecent from "../components/CardRecent/Index";
-import Card from "../components/Card/Index";
+import CardPopular from "../components/CardPopular";
+import CardRecent from "../components/CardRecent";
+import Card from "../components/Card";
 import ListPremium from "../data/ListPremium.json";
 import { Typography, Space, Spin, message } from "antd";
 import { Container } from "react-bootstrap";

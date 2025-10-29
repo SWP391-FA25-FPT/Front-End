@@ -5,7 +5,7 @@ import SideBar from "../SideBar";
 import Foot from "./Footer";
 import { Icon } from "@iconify/react";
 import User from "../User";
-import CreateButton from "../../components/CreateButton";
+import CreateButton from "../CreateButton";
 
 const SettingLayout = ({ children, hideUserActions = false }) => {
   const { Header, Footer, Sider, Content } = Layout;

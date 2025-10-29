@@ -94,3 +94,4 @@ const Index = ({ onSearch, autoNavigate = true }) => {
 };
 
 export default Index;
+

@@ -5,7 +5,7 @@ import SideBar from "../SideBar";
 import Head from "./Header";
 import Foot from "./Footer";
 import { Icon } from "@iconify/react";
-import SearchBar from "../SearchBar";
+import SearchBar from "../SearchBar/index.jsx";
 const AppLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
   const { Title } = Typography;
