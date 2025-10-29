@@ -1,6 +1,6 @@
 import React from "react";
-import SearchBar from "../SearchBar/Index";
-import User from "../User/Index";
+import SearchBar from "../SearchBar";
+import User from "../User";
 import CreateButton from "../CreateButton/Index";
 import { Flex } from "antd";
 

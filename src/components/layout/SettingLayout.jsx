@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import SideBar from "../SideBar";
 import Foot from "./Footer";
 import { Icon } from "@iconify/react";
-import User from "../../components/User";
+import User from "../User";
 import CreateButton from "../../components/CreateButton";
 
 const SettingLayout = ({ children, hideUserActions = false }) => {
