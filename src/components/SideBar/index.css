@@ -70,3 +70,19 @@
   line-height: 1 !important;
 }
 
+/* Subscription menu item styling */
+.ant-menu-item a {
+  width: 100%;
+}
+
+.ant-menu-item-selected a span[style*="linear-gradient"],
+.ant-menu-item-selected a span[style*="background"] {
+  opacity: 1 !important;
+}
+
+/* Ensure badges don't break on smaller widths */
+.ant-menu-inline:not(.ant-menu-inline-collapsed) .ant-menu-item a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}

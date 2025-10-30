@@ -1,0 +1,57 @@
+.subscription-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.subscription-badge.free {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.subscription-badge.free:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.subscription-badge.premium {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(240, 147, 251, 0.3);
+}
+
+.subscription-badge.premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4);
+}
+
+.badge-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.badge-text {
+  line-height: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .subscription-badge {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+  
+  .badge-icon {
+    font-size: 0.9rem;
+  }
+}
+
+

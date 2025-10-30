@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Row, Col, Card, Input, Button, Typography, Avatar, Space, Tag } from "antd";
+import React, { useState, useRef, useEffect } from "react";
+import { Row, Col, Card, Input, Button, Typography, Avatar, Space, Tag, message } from "antd";
 import { Container } from "react-bootstrap";
 import { SendOutlined, RobotOutlined, UserOutlined, CameraOutlined, FileTextOutlined, HeartOutlined } from "@ant-design/icons";
 import Layout from "../components/layout/SettingLayout";
+import { sendMessageToAI } from "../services/geminiAI";
 import "../pages/style/AIConsultation.css";
 
 const { Title, Text, Paragraph } = Typography;
@@ -13,20 +14,48 @@ export default function AIConsultation() {
     {
       id: 1,
       type: "ai",
-      content: "Xin chào! Tôi là AI Tư Vấn M&M. Tôi có thể giúp bạn tư vấn về dinh dưỡng, thực đơn, và các mẹo nấu ăn. Bạn cần hỗ trợ gì hôm nay?",
+      content: "Xin chào! Tôi là AI Tư Vấn M&M. Tôi có thể giúp bạn tư vấn về dinh dưỡng, thực đơn, và các mẹo nấu ăn. Bạn cần hỗ trợ gì hôm nay? 😊",
       timestamp: new Date().toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit' })
     }
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
-  const handleSendMessage = () => {
+  // Auto scroll to bottom smoothly
+  const scrollToBottom = () => {
+    // Use setTimeout to ensure DOM has updated
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ 
+        behavior: "smooth",
+        block: "end"
+      });
+    }, 100);
+  };
+
+  // Only scroll when new messages arrive (not on every render)
+  useEffect(() => {
+    if (messages.length > 1) { // Skip initial message
+      scrollToBottom();
+    }
+  }, [messages.length]); // Only when message count changes
+
+  // Scroll when typing indicator appears
+  useEffect(() => {
+    if (isTyping) {
+      scrollToBottom();
+    }
+  }, [isTyping]);
+
+  const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
+    const userMessageContent = inputMessage.trim();
     const newMessage = {
       id: messages.length + 1,
       type: "user",
-      content: inputMessage,
+      content: userMessageContent,
       timestamp: new Date().toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit' })
     };
 
@@ -34,17 +63,62 @@ export default function AIConsultation() {
     setInputMessage("");
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Prepare conversation history for AI
+      const conversationHistory = messages
+        .filter(msg => msg.type !== "system") // Exclude system messages if any
+        .map(msg => ({
+          type: msg.type,
+          content: msg.content
+        }));
+
+      // Call Gemini AI
+      const aiResponseText = await sendMessageToAI(userMessageContent, conversationHistory);
+
       const aiResponse = {
         id: messages.length + 2,
         type: "ai",
-        content: "Cảm ơn bạn đã hỏi! Tôi đang phân tích câu hỏi của bạn và sẽ đưa ra lời khuyên phù hợp nhất. Đây là một tính năng premium, bạn sẽ nhận được tư vấn chi tiết và chuyên nghiệp.",
+        content: aiResponseText,
         timestamp: new Date().toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit' })
       };
+
       setMessages(prev => [...prev, aiResponse]);
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      
+      const errorMessage = {
+        id: messages.length + 2,
+        type: "ai",
+        content: error.message || "Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng thử lại sau. 😔",
+        timestamp: new Date().toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setMessages(prev => [...prev, errorMessage]);
+      message.error("Không thể kết nối với AI. Vui lòng thử lại!");
+    } finally {
       setIsTyping(false);
-    }, 2000);
+    }
+  };
+
+  // Handle quick action click
+  const handleQuickAction = (actionTitle) => {
+    let prompt = "";
+    
+    switch (actionTitle) {
+      case "Phân tích ảnh món ăn":
+        prompt = "Tôi muốn biết cách phân tích dinh dưỡng của món ăn từ ảnh. Bạn có thể hướng dẫn tôi không?";
+        break;
+      case "Tạo thực đơn":
+        prompt = "Tôi muốn tạo thực đơn ăn uống lành mạnh cho 1 tuần. Bạn có thể giúp tôi không?";
+        break;
+      case "Tư vấn sức khỏe":
+        prompt = "Tôi muốn có lời khuyên về chế độ ăn uống để cải thiện sức khỏe. Bạn có thể tư vấn cho tôi không?";
+        break;
+      default:
+        return;
+    }
+
+    setInputMessage(prompt);
   };
 
   const quickActions = [
@@ -108,6 +182,7 @@ export default function AIConsultation() {
                     </div>
                   </div>
                 )}
+                <div ref={messagesEndRef} />
               </div>
 
               <div className="chat-input">
@@ -142,7 +217,11 @@ export default function AIConsultation() {
               {/* Quick Actions */}
               <Card title="Tính năng nhanh" className="quick-actions-card">
                 {quickActions.map((action, index) => (
-                  <div key={index} className="quick-action-item">
+                  <div 
+                    key={index} 
+                    className="quick-action-item"
+                    onClick={() => handleQuickAction(action.title)}
+                  >
                     <div className="quick-action-icon">{action.icon}</div>
                     <div className="quick-action-content">
                       <Text strong>{action.title}</Text>

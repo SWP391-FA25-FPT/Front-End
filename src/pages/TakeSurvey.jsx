@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getProfile, updateProfile, completeOnboarding } from '../apis/user';
 import { useAuth } from '../context/useAuth';
-import Logo from '../components/Logo/Logo.jsx';
+import Logo from '../components/Logo';
 import './style/TakeSurvey.css';
 import { useNavigate } from "react-router-dom";
 

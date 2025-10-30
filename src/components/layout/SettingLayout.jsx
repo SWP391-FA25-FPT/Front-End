@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Layout, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
-import SideBar from "../SideBar/SideBar.jsx";
+import SideBar from "../SideBar";
 import Foot from "./Footer";
 import { Icon } from "@iconify/react";
-import User from "../User/User.jsx";
-import CreateButton from "../CreateButton/CreateButton.jsx";
+import User from "../../components/User";
+import CreateButton from "../../components/CreateButton";
 
 const SettingLayout = ({ children, hideUserActions = false }) => {
   const { Header, Footer, Sider, Content } = Layout;

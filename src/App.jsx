@@ -36,6 +36,7 @@ import DraftRecipes from "./pages/DraftRecipes";
 import PrivateRecipes from "./pages/PrivateRecipes";
 import PublishedRecipes from "./pages/PublishedRecipes";
 import SavedRecipes from "./pages/SavedRecipes";
+import Subscription from "./pages/Subscription";
 
 function App() {
   return (
@@ -251,6 +252,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <SavedRecipes />
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* Subscription route */}
+          <Route
+            path="/subscription"
+            element={
+              <ProtectedRoute>
+                <Subscription />
               </ProtectedRoute>
             }
           />

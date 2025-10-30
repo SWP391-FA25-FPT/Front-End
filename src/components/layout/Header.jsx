@@ -1,6 +1,7 @@
 import React from "react";
-import User from "../User/User.jsx";
-import CreateButton from "../CreateButton/CreateButton.jsx";
+import SearchBar from "../SearchBar/Index";
+import User from "../User/Index";
+import CreateButton from "../CreateButton/Index";
 import { Flex } from "antd";
 
 const Header = () => {
