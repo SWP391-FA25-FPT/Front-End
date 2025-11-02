@@ -1,15 +1,15 @@
 import React from "react";
 import { Modal, Button } from "antd";
 import { MailOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "../../pages/style/CreateRecipe.css";
 
 export default function RecipeSuccessModal({ open, onClose }) {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleLater = () => {
-    onClose(); 
-    navigate("/recipe-detail"); 
+    onClose();
+    navigate("/recipe-detail");
   };
 
   return (
