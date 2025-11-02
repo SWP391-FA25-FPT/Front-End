@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, Empty, Button, Spin, message, Modal, Badge } from "antd";
 import { Icon } from "@iconify/react";
 import { getMyRecipes, deleteRecipe, updateRecipeStatus } from "../../apis/recipe";
+import blank4x3 from "../../assets/blank4x3.png";
 
 const RecipeList = ({ statusFilter, emptyDescription, emptyButtonText, emptyButtonAction }) => {
   const navigate = useNavigate();
@@ -115,13 +116,13 @@ const RecipeList = ({ statusFilter, emptyDescription, emptyButtonText, emptyButt
       className="recipe-card"
       cover={
         <div className="recipe-card-cover">
-          {recipe.image ? (
-            <img alt={recipe.name} src={recipe.image} />
-          ) : (
-            <div className="recipe-card-placeholder">
-              <Icon icon="mdi:image-off" width="48" />
-            </div>
-          )}
+          <img 
+            alt={recipe.name} 
+            src={recipe.image || blank4x3}
+            onError={(e) => {
+              e.target.src = blank4x3;
+            }}
+          />
           <Badge
             status={getStatusColor(recipe.status)}
             text={getStatusLabel(recipe.status)}

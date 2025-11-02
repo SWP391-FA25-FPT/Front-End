@@ -1,12 +1,62 @@
-import React, { useRef } from "react";
-import { Card, Avatar, Tag, Badge } from "antd";
+import React, { useState, useEffect } from "react";
+import { Card, Avatar, Tag, Badge, message } from "antd";
 import { Icon } from "@iconify/react";
+import { useAuth } from "../../context/useAuth";
+import { toggleSaveRecipe, checkRecipeSaved } from "../../apis/recipe";
+import blank4x3 from "../../assets/blank4x3.png";
+import guest from "../../assets/guest.png";
 import "./style.css";
 
 const { Meta } = Card;
 
-const SearchResultCard = ({ recipe, onClick, layout = "vertical" }) => {
+const SearchResultCard = ({ recipe, onClick, layout = "vertical", onSaveChange }) => {
+  const { user } = useAuth();
+  const [isSaved, setIsSaved] = useState(false);
+  const [savingLoading, setSavingLoading] = useState(false);
   const isVerified = recipe.trustScore >= 70;
+
+  // Check if recipe is saved on component mount
+  useEffect(() => {
+    const checkSaved = async () => {
+      if (user && recipe._id) {
+        try {
+          const response = await checkRecipeSaved(recipe._id);
+          setIsSaved(response.data?.isSaved || false);
+        } catch (error) {
+          console.error('Check saved error:', error);
+        }
+      }
+    };
+    checkSaved();
+  }, [recipe._id, user]);
+
+  // Handle bookmark toggle
+  const handleBookmarkClick = async (e) => {
+    e.stopPropagation(); // Prevent card onClick from firing
+    
+    if (!user) {
+      message.warning('Vui lòng đăng nhập để lưu công thức');
+      return;
+    }
+
+    try {
+      setSavingLoading(true);
+      const response = await toggleSaveRecipe(recipe._id);
+      const newIsSaved = response.data?.isSaved || false;
+      setIsSaved(newIsSaved);
+      message.success(response.message || (newIsSaved ? 'Đã lưu công thức' : 'Đã bỏ lưu công thức'));
+      
+      // Callback to refresh parent component (e.g., SavedRecipes page)
+      if (onSaveChange) {
+        // Pass recipeId and new saved state to callback
+        onSaveChange(recipe._id, newIsSaved);
+      }
+    } catch (error) {
+      message.error(error.message || 'Lỗi khi lưu công thức');
+    } finally {
+      setSavingLoading(false);
+    }
+  };
 
   // Vertical Layout (Grid view)
   if (layout === "vertical") {
@@ -23,7 +73,10 @@ const SearchResultCard = ({ recipe, onClick, layout = "vertical" }) => {
             <div style={{ position: "relative", paddingTop: "75%", overflow: "hidden" }}>
               <img
                 alt={recipe.name}
-                src={recipe.image}
+                src={recipe.image || blank4x3}
+                onError={(e) => {
+                  e.target.src = blank4x3;
+                }}
                 style={{
                   position: "absolute",
                   top: 0,
@@ -33,6 +86,37 @@ const SearchResultCard = ({ recipe, onClick, layout = "vertical" }) => {
                   objectFit: "cover"
                 }}
               />
+              {/* Bookmark Icon for Vertical Layout */}
+              <div 
+                onClick={handleBookmarkClick}
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  right: "12px",
+                  cursor: user ? "pointer" : "default",
+                  opacity: savingLoading ? 0.6 : 1,
+                  transition: "all 0.2s",
+                  zIndex: 10,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "50%",
+                  backgroundColor: isSaved ? "rgba(255, 149, 0, 0.1)" : "rgba(255, 255, 255, 0.8)",
+                  backdropFilter: "blur(4px)"
+                }}
+                title={isSaved ? "Đã lưu - Nhấn để bỏ lưu" : "Lưu công thức"}
+              >
+                <Icon 
+                  icon={isSaved ? "mdi:bookmark" : "mdi:bookmark-outline"} 
+                  width="24" 
+                  style={{ 
+                    color: isSaved ? "#ff9500" : "#8c8c8c",
+                    transition: "all 0.2s"
+                  }}
+                />
+              </div>
             </div>
           }
           onClick={onClick}
@@ -53,7 +137,7 @@ const SearchResultCard = ({ recipe, onClick, layout = "vertical" }) => {
             description={
               <div>
                 <div className="d-flex align-items-center gap-2 mb-2">
-                  <Avatar size="small" src={recipe.image} />
+                  <Avatar size="small" src={recipe.authorInfo?.avatar || guest} />
                   <span style={{ fontSize: "13px", color: "#666" }}>
                     {recipe.author}
                   </span>
@@ -115,7 +199,10 @@ const SearchResultCard = ({ recipe, onClick, layout = "vertical" }) => {
         }}>
           <img
             alt={recipe.name}
-            src={recipe.image}
+            src={recipe.image || blank4x3}
+            onError={(e) => {
+              e.target.src = blank4x3;
+            }}
             style={{
               width: "100%",
               height: "100%",
@@ -196,7 +283,7 @@ const SearchResultCard = ({ recipe, onClick, layout = "vertical" }) => {
 
           {/* Author */}
           <div className="d-flex align-items-center gap-2 mt-2">
-            <Avatar size={24} src={recipe.authorInfo?.avatar || recipe.image} />
+            <Avatar size={24} src={recipe.authorInfo?.avatar || guest} />
             <span style={{ fontSize: "13px", color: "#595959" }}>
               {recipe.authorInfo?.name || recipe.author || "Người dùng"}
             </span>
@@ -204,16 +291,34 @@ const SearchResultCard = ({ recipe, onClick, layout = "vertical" }) => {
         </div>
 
         {/* Bookmark Icon */}
-        <div style={{
-          position: "absolute",
-          top: "16px",
-          right: "16px",
-          cursor: "pointer"
-        }}>
+        <div 
+          onClick={handleBookmarkClick}
+          style={{
+            position: "absolute",
+            top: "16px",
+            right: "16px",
+            cursor: user ? "pointer" : "default",
+            opacity: savingLoading ? 0.6 : 1,
+            transition: "all 0.2s",
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "32px",
+            height: "32px",
+            borderRadius: "50%",
+            backgroundColor: isSaved ? "rgba(255, 149, 0, 0.1)" : "rgba(255, 255, 255, 0.8)",
+            backdropFilter: "blur(4px)"
+          }}
+          title={isSaved ? "Đã lưu - Nhấn để bỏ lưu" : "Lưu công thức"}
+        >
           <Icon 
-            icon="mdi:bookmark-outline" 
+            icon={isSaved ? "mdi:bookmark" : "mdi:bookmark-outline"} 
             width="24" 
-            style={{ color: "#8c8c8c" }}
+            style={{ 
+              color: isSaved ? "#ff9500" : "#8c8c8c",
+              transition: "all 0.2s"
+            }}
           />
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Card, Button } from "antd";
 import { Icon } from "@iconify/react";
+import blank4x3 from "../../assets/blank4x3.png";
 import "./style.css";
 
 const VerifiedCarousel = ({ recipes, onRecipeClick }) => {
@@ -49,7 +50,10 @@ const VerifiedCarousel = ({ recipes, onRecipeClick }) => {
               <div style={{ position: "relative", paddingTop: "100%", overflow: "hidden" }}>
                 <img
                   alt={recipe.name}
-                  src={recipe.image}
+                  src={recipe.image || blank4x3}
+                  onError={(e) => {
+                    e.target.src = blank4x3;
+                  }}
                   style={{
                     position: "absolute",
                     top: 0,

@@ -83,52 +83,6 @@
   border-bottom: none;
 }
 
-/* New Ingredients List Style */
-.ingredients-list-container {
-  margin: 24px 0;
-}
-
-.ingredients-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #e8e8e8;
-}
-
-.ingredients-header h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: #333;
-  margin: 0;
-}
-
-.servings-info {
-  font-size: 14px;
-  color: #666;
-}
-
-.ingredients-content {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.ingredient-row {
-  display: grid;
-  grid-template-columns: 20px 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 8px 0;
-}
-
-.ingredient-bullet {
-  font-size: 20px;
-  color: var(--primary-selected-color, #ff9500);
-  font-weight: bold;
-}
-
 .ingredient-name {
   font-size: 15px;
   color: #333;
@@ -139,6 +93,72 @@
   font-weight: 600;
   color: #333;
   white-space: nowrap;
+}
+
+/* Ingredient Item (for form editing) */
+.ingredients-form-container {
+  margin-bottom: 24px;
+}
+
+.ingredients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ingredient-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background-color: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.ingredient-item:hover {
+  background-color: #fff;
+  border-color: #d9d9d9;
+}
+
+.ingredient-item.dragging {
+  opacity: 0.5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ingredient-item-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.ingredient-drag-handle {
+  padding: 4px;
+  cursor: move;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.ingredient-drag-handle:hover {
+  color: #666;
+  background-color: #f0f0f0;
+}
+
+.ingredient-input {
+  flex: 1;
+}
+
+.ingredient-remove-btn {
+  flex-shrink: 0;
+  padding: 4px 8px;
 }
 
 /* Steps List */

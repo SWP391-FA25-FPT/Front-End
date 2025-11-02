@@ -1,5 +1,7 @@
 import React from "react";
 import { Card, ConfigProvider, Avatar } from "antd";
+import blank4x3 from "../../assets/blank4x3.png";
+import guest from "../../assets/guest.png";
 
 const Index = ({ title, src, avatar, userName, subtitle }) => {
   return (
@@ -17,8 +19,11 @@ const Index = ({ title, src, avatar, userName, subtitle }) => {
           hoverable
           cover={
             <img
-              src={src}
+              src={src || blank4x3}
               alt={title}
+              onError={(e) => {
+                e.target.src = blank4x3;
+              }}
               style={{ width: "100%", height: "200px", objectFit: "cover" }}
             />
           }
@@ -30,7 +35,7 @@ const Index = ({ title, src, avatar, userName, subtitle }) => {
               alignItems: "center",
             }}
           >
-            <Avatar src={avatar} size="small" style={{ marginRight: "8px" }} />
+            <Avatar src={avatar || guest} size="small" style={{ marginRight: "8px" }} />
             <span style={{ fontSize: "14px", color: "#666" }}>{userName}</span>
           </div>
           <div>

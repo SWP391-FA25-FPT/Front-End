@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, ConfigProvider } from "antd";
+import blank4x3 from "../../assets/blank4x3.png";
 
 const Index = ({ title, description, src }) => {
   return (
@@ -9,8 +10,11 @@ const Index = ({ title, description, src }) => {
         hoverable
           cover={
             <img 
-              src={src} 
-              alt={title} 
+              src={src || blank4x3} 
+              alt={title}
+              onError={(e) => {
+                e.target.src = blank4x3;
+              }}
               style={{
                 height: '200px',
                 width: '100%',

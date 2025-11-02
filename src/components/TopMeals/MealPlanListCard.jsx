@@ -1,6 +1,8 @@
 import React from "react";
 import { Card, Tag, Avatar, Space, Tooltip } from "antd";
 import { Icon } from "@iconify/react";
+import blank4x3 from "../../assets/blank4x3.png";
+import guest from "../../assets/guest.png";
 
 const MealPlanListCard = ({ mealPlan, rank }) => {
   const getRankBadge = (rank) => {
@@ -45,9 +47,12 @@ const MealPlanListCard = ({ mealPlan, rank }) => {
         {/* Image */}
         <div className="list-card-image-wrapper">
           <img
-            src={mealPlan.image}
+            src={mealPlan.image || blank4x3}
             alt={mealPlan.name}
             className="list-card-image"
+            onError={(e) => {
+              e.target.src = blank4x3;
+            }}
           />
           {mealPlan.isPremium && (
             <div className="list-premium-badge">
@@ -141,7 +146,7 @@ const MealPlanListCard = ({ mealPlan, rank }) => {
             </div>
 
             <div className="list-card-author">
-              <Avatar src={mealPlan.author.avatar} size={28} />
+              <Avatar src={mealPlan.author?.avatar || guest} size={28} />
               <div className="list-author-info">
                 <span className="list-author-name">{mealPlan.author.name}</span>
                 <span className="list-author-date">{mealPlan.createdAt}</span>

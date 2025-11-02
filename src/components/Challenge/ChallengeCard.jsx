@@ -2,6 +2,8 @@ import React from "react";
 import { Card, Tag, Progress, Avatar, Space } from "antd";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
+import blank4x3 from "../../assets/blank4x3.png";
+import guest from "../../assets/guest.png";
 
 const ChallengeCard = ({ challenge }) => {
   const navigate = useNavigate();
@@ -24,7 +26,13 @@ const ChallengeCard = ({ challenge }) => {
       onClick={() => navigate(`/challenge/${challenge.id}`)}
       cover={
         <div className="challenge-card-cover">
-          <img src={challenge.image} alt={challenge.title} />
+          <img 
+            src={challenge.image || blank4x3} 
+            alt={challenge.title}
+            onError={(e) => {
+              e.target.src = blank4x3;
+            }}
+          />
           <div className="challenge-overlay">
             <Tag color={statusTag.color} className="status-tag">
               {statusTag.text}
@@ -113,7 +121,7 @@ const ChallengeCard = ({ challenge }) => {
 
         <div className="challenge-footer">
           <div className="host-info">
-            <Avatar src={challenge.host.avatar} size={32} />
+            <Avatar src={challenge.host?.avatar || guest} size={32} />
             <span className="host-name">{challenge.host.name}</span>
           </div>
         </div>

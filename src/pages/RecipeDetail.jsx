@@ -15,6 +15,7 @@ import RecipeComments from "../components/Recipe/RecipeComments";
 import RecipeReactions from "../components/Recipe/RecipeReactions";
 import { getRecipeById, getAllRecipes } from "../apis/recipe";
 import CardRecent from "../components/CardRecent/CardRecent.jsx";
+import guest from "../assets/guest.png";
 import "./style/RecipeDetail.css";
 
 const RecipeDetail = () => {
@@ -119,9 +120,12 @@ const RecipeDetail = () => {
               <div className="recipe-author-info">
                 <div className="author-meta">
                   <img 
-                    src={recipe.authorInfo?.avatar || "https://via.placeholder.com/40"} 
+                    src={recipe.authorInfo?.avatar || guest} 
                     alt={recipe.author}
                     className="author-avatar"
+                    onError={(e) => {
+                      e.target.src = guest;
+                    }}
                   />
                   <div>
                     <div className="author-name">{recipe.author}</div>

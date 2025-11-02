@@ -1,6 +1,7 @@
 // src/components/blog/Comments.jsx
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/useAuth";
+import guest from "../../assets/guest.png";
 
 function storageKey(postId) {
   return `post:${postId}:comments`;
@@ -87,17 +88,14 @@ export default function Comments({ postId }) {
               <div className="blogdetail-comment-row">
                 {/* Avatar */}
                 <div className="blogdetail-comment-avatar">
-                  {c.avatar ? (
-                    <img
-                      src={c.avatar}
-                      alt={authorName}
-                      className="blogdetail-avatar-image"
-                    />
-                  ) : (
-                    <div className="blogdetail-avatar-circle">
-                      {avatarLetter}
-                    </div>
-                  )}
+                  <img
+                    src={c.avatar || guest}
+                    alt={authorName}
+                    className="blogdetail-avatar-image"
+                    onError={(e) => {
+                      e.target.src = guest;
+                    }}
+                  />
                 </div>
 
                 {/* Content */}

@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { message, Input, Button, Upload, Spin, Alert } from "antd";
 import { Icon } from "@iconify/react";
 import SettingLayout from "../components/layout/SettingLayout";
 import { getRecipeById, updateRecipe } from "../apis/recipe";
+import { calculateNutrition as calcNutritionApi } from "../apis/nutrition";
 import { useAuth } from "../context/useAuth";
+import IngredientsForm from "../components/Recipe/IngredientsForm";
+import NutritionInfo from "../components/Recipe/NutritionInfo";
+import StepsForm from "../components/Recipe/StepsForm";
+import { convertNutritionFormat, getIngredientTexts } from "../utils/nutritionHelper";
 import "../pages/style/RecipeCreate.css";
 
 const { TextArea } = Input;
@@ -22,10 +27,44 @@ const RecipeUpdate = () => {
   const [description, setDescription] = useState("");
   const [totalTime, setTotalTime] = useState("");
   const [servings, setServings] = useState(2);
-  const [ingredients, setIngredients] = useState([{ name: "", amount: "" }]);
+  const [ingredients, setIngredients] = useState([
+    { text: "" } // Lưu nguyên liệu dạng text như "250g bột"
+  ]);
   const [steps, setSteps] = useState([{ description: "", image: null }]);
+  const [nutritionLoading, setNutritionLoading] = useState(false);
+  const [nutrition, setNutrition] = useState(null); // Format: { calories, protein, carbs, fat, fiber, sugar }
+  const nutritionDebounceRef = useRef(null);
   const [mainImage, setMainImage] = useState(null);
   const [mainImagePreview, setMainImagePreview] = useState(null);
+
+  // Parse ingredient text thành name và amount
+  const parseIngredientText = (text) => {
+    if (!text || !text.trim()) {
+      return { name: "", amount: "" };
+    }
+    
+    // Thử parse theo format: "250g bột" hoặc "100ml nước"
+    const match = text.trim().match(/^(\d+[/,.]?\d*\s*(?:kg|g|gram|gr|l|ml|tsp|tbsp|cup|viên|quả|cái|trái)?)\s+(.+)$/i);
+    if (match) {
+      return {
+        name: match[2].trim(),
+        amount: match[1].trim()
+      };
+    }
+    
+    // Nếu không parse được, coi toàn bộ là name, amount rỗng
+    return {
+      name: text.trim(),
+      amount: ""
+    };
+  };
+
+  // Convert ingredients từ text sang format backend (name + amount)
+  const getIngredientsForBackend = () => {
+    return ingredients
+      .filter(ing => ing.text && ing.text.trim())
+      .map(ing => parseIngredientText(ing.text));
+  };
 
   useEffect(() => {
     fetchRecipe();
@@ -58,11 +97,15 @@ const RecipeUpdate = () => {
       setDescription(data.description || "");
       setTotalTime(data.totalTime || "");
       setServings(data.servings || 2);
-      setIngredients(
-        data.ingredients && data.ingredients.length > 0
-          ? data.ingredients
-          : [{ name: "", amount: "" }]
-      );
+      // Convert từ backend format (name + amount) sang text format
+      const backendIngredients = data.ingredients && data.ingredients.length > 0 
+        ? data.ingredients 
+        : [];
+      const textIngredients = backendIngredients.map(ing => {
+        const text = [ing.amount, ing.name].filter(Boolean).join(" ").trim();
+        return { text: text || "" };
+      });
+      setIngredients(textIngredients.length > 0 ? textIngredients : [{ text: "" }]);
       setSteps(
         data.steps && data.steps.length > 0
           ? data.steps.map((s) => ({
@@ -73,6 +116,14 @@ const RecipeUpdate = () => {
           : [{ description: "", image: null }]
       );
       setMainImagePreview(data.image || null);
+      // Load nutrition if exists
+      if (data.nutrition && Object.keys(data.nutrition).length > 0) {
+        // Convert backend nutrition format to frontend format
+        const convertedNutrition = convertNutritionFormat(data.nutrition);
+        if (convertedNutrition) {
+          setNutrition(convertedNutrition);
+        }
+      }
     } catch (err) {
       console.error("Fetch recipe error:", err);
       setError(err.message || "Lỗi khi tải công thức");
@@ -82,20 +133,17 @@ const RecipeUpdate = () => {
   };
 
   // Ingredients handlers
-  const addIngredient = () => {
-    setIngredients([...ingredients, { name: "", amount: "" }]);
-  };
-
-  const updateIngredient = (index, field, value) => {
-    const newIngredients = [...ingredients];
-    newIngredients[index][field] = value;
+  const handleIngredientsChange = (newIngredients) => {
     setIngredients(newIngredients);
   };
 
-  const removeIngredient = (index) => {
-    if (ingredients.length > 1) {
-      setIngredients(ingredients.filter((_, i) => i !== index));
-    }
+  const addIngredient = () => {
+    setIngredients([...ingredients, { text: "" }]);
+  };
+
+  const addIngredientSection = () => {
+    // Thêm một phần mới (section) - có thể thêm separator hoặc title
+    setIngredients([...ingredients, { text: "", isSection: true }]);
   };
 
   // Steps handlers
@@ -150,9 +198,8 @@ const RecipeUpdate = () => {
       return;
     }
 
-    const validIngredients = ingredients.filter(
-      (ing) => ing.name.trim() && ing.amount.trim()
-    );
+    // Validate nguyên liệu
+    const validIngredients = getIngredientsForBackend().filter(ing => ing.name.trim());
     if (validIngredients.length === 0) {
       message.error("Vui lòng thêm ít nhất 1 nguyên liệu");
       return;
@@ -177,7 +224,7 @@ const RecipeUpdate = () => {
         JSON.stringify(validSteps.map((s) => ({ description: s.description })))
       );
       formData.append("tags", JSON.stringify([]));
-      formData.append("nutrition", JSON.stringify({}));
+      formData.append("nutrition", JSON.stringify(nutrition || {}));
       formData.append("tips", JSON.stringify([]));
 
       // Main image
@@ -205,6 +252,50 @@ const RecipeUpdate = () => {
   const handleDelete = () => {
     navigate(`/recipe/${id}`);
   };
+
+  // Auto-update nutrition when ingredients change
+  useEffect(() => {
+    // Clear previous timeout
+    if (nutritionDebounceRef.current) {
+      clearTimeout(nutritionDebounceRef.current);
+    }
+
+    // Extract ingredient texts
+    const ingredientTexts = getIngredientTexts(ingredients);
+    
+    // Only calculate if there's at least one ingredient with text
+    if (ingredientTexts.length === 0) {
+      setNutrition(null);
+      return;
+    }
+
+    // Debounce nutrition calculation
+    nutritionDebounceRef.current = setTimeout(async () => {
+      try {
+        setNutritionLoading(true);
+        const data = await calcNutritionApi(ingredientTexts);
+        if (data && !data.error && data.totals) {
+          // Convert backend format to frontend format
+          const convertedNutrition = convertNutritionFormat(data.totals);
+          setNutrition(convertedNutrition);
+        } else {
+          setNutrition(null);
+        }
+      } catch (err) {
+        console.error("Error calculating nutrition:", err);
+        setNutrition(null);
+      } finally {
+        setNutritionLoading(false);
+      }
+    }, 800); // 800ms debounce
+
+    // Cleanup timeout on unmount or when ingredients change
+    return () => {
+      if (nutritionDebounceRef.current) {
+        clearTimeout(nutritionDebounceRef.current);
+      }
+    };
+  }, [ingredients]);
 
   if (loading) {
     return (
@@ -364,123 +455,37 @@ const RecipeUpdate = () => {
           <div className="recipe-create-ingredients-column">
             <div className="section-card">
               <h3>Nguyên Liệu</h3>
-              <div className="ingredients-list">
-                {ingredients.map((ingredient, index) => (
-                  <div key={index} className="ingredient-item">
-                    <Input
-                      placeholder="Tên nguyên liệu"
-                      value={ingredient.name}
-                      onChange={(e) =>
-                        updateIngredient(index, "name", e.target.value)
-                      }
-                      style={{ marginBottom: "8px" }}
-                    />
-                    <div style={{ display: "flex", gap: "8px" }}>
-                      <Input
-                        placeholder="Số lượng"
-                        value={ingredient.amount}
-                        onChange={(e) =>
-                          updateIngredient(index, "amount", e.target.value)
-                        }
-                        style={{ flex: 1 }}
-                      />
-                      <Button
-                        danger
-                        icon={<Icon icon="mdi:delete" />}
-                        onClick={() => removeIngredient(index)}
-                        disabled={ingredients.length === 1}
-                      />
-                    </div>
-                  </div>
-                ))}
-                <Button
-                  type="dashed"
-                  onClick={addIngredient}
-                  block
-                  icon={<Icon icon="mdi:plus" />}
-                  style={{ marginTop: "12px" }}
-                >
-                  Thêm nguyên liệu
-                </Button>
-              </div>
+              {nutritionLoading && (
+                <div style={{ marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
+                  <Spin size="small" />
+                  <span>Đang tính dinh dưỡng...</span>
+                </div>
+              )}
+              <IngredientsForm
+                ingredients={ingredients}
+                onIngredientsChange={handleIngredientsChange}
+                onAddIngredient={addIngredient}
+                onAddSection={addIngredientSection}
+              />
+              
+              {/* Nutrition Info */}
+              {nutrition && (
+                <div style={{ marginTop: "24px" }}>
+                  <NutritionInfo nutrition={nutrition} />
+                </div>
+              )}
             </div>
           </div>
 
           {/* Right Column - Steps */}
           <div className="recipe-create-steps-column">
-            <div className="section-card">
-              <h3>Các bước</h3>
-
-              <div className="steps-list">
-                {steps.map((step, index) => (
-                  <div key={index} className="step-item">
-                    <div className="step-number">{index + 1}</div>
-                    <div className="step-content">
-                      <TextArea
-                        placeholder={`Trộn bột và nước đến khi đặc lại`}
-                        value={step.description}
-                        onChange={(e) =>
-                          updateStep(index, "description", e.target.value)
-                        }
-                        rows={3}
-                        style={{ marginBottom: "12px" }}
-                      />
-
-                      <div className="step-image-upload">
-                        {step.imagePreview ? (
-                          <div className="step-image-preview">
-                            <img
-                              src={step.imagePreview}
-                              alt={`Bước ${index + 1}`}
-                            />
-                            <Button
-                              danger
-                              size="small"
-                              icon={<Icon icon="mdi:close" />}
-                              onClick={() => updateStepImage(index, null)}
-                              className="remove-image-btn"
-                            />
-                          </div>
-                        ) : (
-                          <Upload
-                            beforeUpload={(file) => {
-                              updateStepImage(index, file);
-                              return false;
-                            }}
-                            showUploadList={false}
-                          >
-                            <div className="upload-placeholder">
-                              <Icon icon="mdi:camera" width="32" />
-                            </div>
-                          </Upload>
-                        )}
-                      </div>
-
-                      <Button
-                        danger
-                        size="small"
-                        icon={<Icon icon="mdi:delete" />}
-                        onClick={() => removeStep(index)}
-                        disabled={steps.length === 1}
-                        style={{ marginTop: "8px" }}
-                      >
-                        Xóa bước
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-
-                <Button
-                  type="dashed"
-                  onClick={addStep}
-                  block
-                  icon={<Icon icon="mdi:plus" />}
-                  className="add-step-btn"
-                >
-                  Thêm bước
-                </Button>
-              </div>
-            </div>
+            <StepsForm
+              steps={steps}
+              onUpdateStep={updateStep}
+              onUpdateStepImage={updateStepImage}
+              onRemoveStep={removeStep}
+              onAddStep={addStep}
+            />
           </div>
         </div>
       </div>

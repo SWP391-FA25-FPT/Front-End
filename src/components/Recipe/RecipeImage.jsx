@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Image, Modal } from "antd";
+import blank4x3 from "../../assets/blank4x3.png";
 import "./Recipe.css";
 
 const RecipeImage = ({ image, name }) => {
@@ -8,8 +9,11 @@ const RecipeImage = ({ image, name }) => {
   return (
     <div className="recipe-image-container" style={{ marginBottom: "24px" }}>
       <Image
-        src={image}
+        src={image || blank4x3}
         alt={name}
+        onError={(e) => {
+          e.target.src = blank4x3;
+        }}
         style={{
           width: "100%",
           maxHeight: "500px",

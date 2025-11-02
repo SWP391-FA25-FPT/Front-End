@@ -327,7 +327,7 @@
 .ingredients-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .ingredient-item {
@@ -335,6 +335,126 @@
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #e8e8e8;
+}
+
+/* Ingredients Form Container */
+.ingredients-form-container {
+  width: 100%;
+}
+
+/* New Ingredient Item Style */
+.ingredient-item-new {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  background-color: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.ingredient-item-new:hover {
+  background-color: #fff;
+  border-color: #d9d9d9;
+}
+
+.ingredient-item-new.dragging {
+  opacity: 0.5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: rotate(2deg);
+}
+
+.ingredient-drag-handle {
+  padding: 12px 8px;
+  cursor: move;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ingredient-drag-handle:hover {
+  color: #666;
+}
+
+.drag-icon {
+  font-size: 20px;
+}
+
+.ingredient-text-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 12px 0;
+}
+
+.ingredient-text-input:focus,
+.ingredient-text-input:hover {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.ingredient-menu-btn {
+  padding: 12px 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.ingredient-menu-btn:hover {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.menu-icon {
+  font-size: 20px;
+}
+
+.ingredient-add-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.add-section-btn,
+.add-ingredient-btn {
+  flex: 1;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  color: #666;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.add-section-btn:hover,
+.add-ingredient-btn:hover {
+  border-color: var(--primary-selected-color, #ff9500);
+  color: var(--primary-selected-color, #ff9500);
+  background-color: #fff9f0;
+}
+
+.add-section-btn:active,
+.add-ingredient-btn:active {
+  background-color: #fff5e6;
 }
 
 /* Steps List */
