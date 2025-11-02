@@ -1,8 +1,7 @@
 // src/pages/BlogDetail.jsx
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { Empty, Spin } from "antd";
-import { getBlogById } from "../apis/blog";
+import POSTS from "../data/posts.json";
 import ReactionBar from "../components/blog/ReactionBar";
 import Comments from "../components/blog/Comments";
 import Rating from "../components/blog/Rating";
@@ -11,78 +10,7 @@ import "../pages/style/blogdetail.css";
 
 export default function BlogDetail() {
   const { id } = useParams();
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [tick, setTick] = useState(0);
-
-  useEffect(() => {
-    const loadBlog = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        console.log("Loading blog with ID:", id);
-        const result = await getBlogById(id);
-        console.log("Blog API response:", result);
-
-        if (!result || !result.data) {
-          throw new Error("Blog data not found");
-        }
-
-        // Transform API data to match frontend format
-        const transformedPost = {
-          id: result.data._id || result.data.slug || id,
-          title: result.data.title,
-          excerpt: result.data.excerpt,
-          content: result.data.content,
-          author: result.data.author,
-          authorAvatar: result.data.authorAvatar,
-          date: result.data.publishedAt
-            ? new Date(result.data.publishedAt).toISOString().split("T")[0]
-            : result.data.date,
-          category: result.data.category,
-          image: result.data.imageUrl,
-        };
-
-        console.log("Transformed post:", transformedPost);
-        setPost(transformedPost);
-      } catch (error) {
-        console.error("Error loading blog:", error);
-        setError(error.message || "Không thể tải bài viết");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) {
-      loadBlog();
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if (!post) return;
-
-    function onUpdate(e) {
-      if (!e?.detail || String(e.detail.postId) !== String(post.id)) return;
-      // force re-render by touching state via noop setState with useState dummy
-      setTick((t) => t + 1);
-    }
-    // Add event listener immediately
-    window.addEventListener("reactions:update", onUpdate);
-
-    // Also listen for storage changes as backup
-    function onStorageChange(e) {
-      if (e.key === `post:${post.id}:reactions`) {
-        setTick((t) => t + 1);
-      }
-    }
-    window.addEventListener("storage", onStorageChange);
-
-    return () => {
-      window.removeEventListener("reactions:update", onUpdate);
-      window.removeEventListener("storage", onStorageChange);
-    };
-  }, [post]);
+  const post = POSTS.find((p) => Number(p.id) === Number(id));
 
   function getTopEmotes(postId) {
     try {
@@ -107,36 +35,43 @@ export default function BlogDetail() {
     }
   }
 
-  if (loading) {
-    return (
-      <Layout>
-        <div className="py-5 blogdetail-container">
-          <div className="text-center">
-            <Spin size="large" />
-            <div className="mt-3">Đang tải...</div>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
+  const [tick, setTick] = React.useState(0);
 
-  if (error || !post) {
+  React.useEffect(() => {
+    function onUpdate(e) {
+      if (!e?.detail || String(e.detail.postId) !== String(id)) return;
+      // force re-render by touching state via noop setState with useState dummy
+      setTick((t) => t + 1);
+    }
+    // Add event listener immediately
+    window.addEventListener("reactions:update", onUpdate);
+
+    // Also listen for storage changes as backup
+    function onStorageChange(e) {
+      if (e.key === `post:${id}:reactions`) {
+        setTick((t) => t + 1);
+      }
+    }
+    window.addEventListener("storage", onStorageChange);
+
+    return () => {
+      window.removeEventListener("reactions:update", onUpdate);
+      window.removeEventListener("storage", onStorageChange);
+    };
+  }, [id]);
+  if (!post) {
     return (
-      <Layout>
-        <div className="py-5 blogdetail-container">
-          <Empty
-            description={
-              error || !post ? "Bài viết không tìm thấy" : "Đang tải..."
-            }
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            style={{ padding: "60px 0" }}
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold">Bài viết không tìm thấy</h2>
+          <Link
+            to="/blog"
+            className="text-sm text-neutral-600 mt-2 inline-block"
           >
-            <Link to="/blog" className="ant-btn ant-btn-primary">
-              Quay về danh sách bài viết
-            </Link>
-          </Empty>
+            Quay về danh sách bài viết
+          </Link>
         </div>
-      </Layout>
+      </div>
     );
   }
 

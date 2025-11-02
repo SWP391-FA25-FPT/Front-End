@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Layout } from "antd";
-import SideBar from "../SideBar/SideBar.jsx";
+import SideBar from "../SideBar/SideBar";
 import Head from "./Header";
 import Foot from "./Footer";
-import SearchBar from "../SearchBar/SearchBar.jsx";
+import SearchBar from "../SearchBar/SearchBar";
 
 const SearchingLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;

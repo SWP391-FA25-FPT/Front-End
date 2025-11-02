@@ -14,7 +14,7 @@ import RecipeRating from "../components/Recipe/RecipeRating";
 import RecipeComments from "../components/Recipe/RecipeComments";
 import RecipeReactions from "../components/Recipe/RecipeReactions";
 import { getRecipeById, getAllRecipes } from "../apis/recipe";
-import CardRecent from "../components/CardRecent/CardRecent.jsx";
+import CardRecent from "../components/CardRecent/CardRecent";
 import guest from "../assets/guest.png";
 import "./style/RecipeDetail.css";
 
@@ -25,11 +25,6 @@ const RecipeDetail = () => {
   const [similarRecipes, setSimilarRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    fetchRecipe();
-  }, [id]);
 
   const fetchRecipe = async () => {
     try {
@@ -58,7 +53,11 @@ const RecipeDetail = () => {
     }
   };
 
-  const handleRatingUpdate = () => {};
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    fetchRecipe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   if (loading) {
     return (
@@ -201,7 +200,7 @@ const RecipeDetail = () => {
           {/* Rating */}
           <Divider style={{ margin: "40px 0" }} />
           <div className="recipe-rating-section">
-            <RecipeRating recipeId={id} onRatingUpdate={handleRatingUpdate} />
+            <RecipeRating recipeId={id} />
           </div>
 
           {/* Comments */}

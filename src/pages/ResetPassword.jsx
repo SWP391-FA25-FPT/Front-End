@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Logo from '../components/Logo/Logo.jsx';
+import Logo from '../components/Logo/Logo';
 import './style/ResetPassword.css';
 
 function ResetPassword() {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/layout/AppLayout";
-import CardPopular from "../components/CardPopular/CardPopular.jsx";
-import CardRecent from "../components/CardRecent/CardRecent.jsx";
-import Card from "../components/Card/Card.jsx";
-import SearchResultCard from "../components/SearchResultCard/SearchResultCard.jsx";
+import CardPopular from "../components/CardPopular/CardPopular";
+import CardRecent from "../components/CardRecent/CardRecent";
+import Card from "../components/Card/Card";
+import SearchResultCard from "../components/SearchResultCard/SearchResultCard";
 import ListPremium from "../data/ListPremium.json";
 import { Typography, Space, Spin, message, Modal, Button } from "antd";
 import { Icon } from "@iconify/react";

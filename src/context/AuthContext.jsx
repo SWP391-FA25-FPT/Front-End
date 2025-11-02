@@ -1,5 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { getCookie, setCookie, removeCookie } from "../utils/cookie";
+import apiHelper from "../utils/apiHelper";
+import { apiUrls } from "../utils/constants";
 
 const AuthContext = createContext(null);
 
@@ -47,10 +49,24 @@ export const AuthProvider = ({ children }) => {
     if (updatedUser) localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
+  const refreshUser = async () => {
+    try {
+      const response = await apiHelper.get(apiUrls.getMe);
+      if (response.success && response.data) {
+        setUser(response.data);
+        localStorage.setItem("user", JSON.stringify(response.data));
+        return response.data;
+      }
+    } catch (error) {
+      console.error("Refresh user error:", error);
+    }
+    return null;
+  };
+
   const isAuthenticated = () => Boolean(token);
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, updateUser, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, updateUser, refreshUser, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
