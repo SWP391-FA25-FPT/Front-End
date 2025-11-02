@@ -1,17 +1,51 @@
+/* 🌿 Mint Healthy Login - Compact Layout */
+
+/* Animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Layout */
 .login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  padding: 20px;
+  background: linear-gradient(135deg, #eaf7f3 0%, #ffffff 100%);
+  padding: 15px;
+  overflow: hidden;
+  position: relative;
 }
 
+/* Decorative fruits around */
+.decorative-fruit {
+  position: absolute;
+  font-size: 55px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.fruit-1 { top: 10%; left: 6%; animation: float 6s ease-in-out infinite; }
+.fruit-2 { top: 14%; right: 6%; animation: float 5s ease-in-out infinite 1s; }
+.fruit-3 { bottom: 12%; left: 6%; animation: float 7s ease-in-out infinite 2s; }
+.fruit-4 { bottom: 10%; right: 6%; animation: float 6s ease-in-out infinite 1.5s; }
+
+/* Card */
 .login-card {
-  background: white;
+  background: #ffffff;
+  max-width: 440px;
   width: 100%;
-  max-width: 450px;
-  padding: 40px;
+  padding: 30px 32px 30px;
+  border-radius: 24px;
+  box-shadow: 0 8px 25px rgba(44, 110, 99, 0.15);
+  text-align: center;
+  animation: fadeIn 0.6s ease-out;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,281 +53,185 @@
 
 /* Logo Section */
 .logo-section {
-  margin-bottom: 30px;
+  margin-bottom: 2px; /* 👈 Giảm mạnh khoảng cách logo với tiêu đề */
 }
 
 .logo {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 0; /* 👈 Xóa toàn bộ khoảng trống dưới logo */
+  transform: scale(1.05); /* 👈 Nhẹ nhàng phóng to để cân đối với tiêu đề */
 }
 
-.logo-image {
-  height: 60px;
-  width: auto;
-  max-width: 200px;
-}
-
-/* Page Title */
+/* Title */
 .page-title {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 12px; /* 👈 Giảm khoảng cách với form bên dưới */
 }
 
 .page-title h1 {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2c6e63;
+  margin-top: 0;
+  margin-bottom: 0; /* 👈 Không có khoảng trắng dưới dòng chữ */
 }
 
-/* Form Container with dotted border */
+/* Form */
 .form-container {
-  border: 2px dashed #87CEEB;
-  border-radius: 8px;
-  padding: 30px;
-  margin-bottom: 20px;
+  border: 2px dashed #bfe3d9;
+  border-radius: 16px;
+  background: #f9fdfc;
+  padding: 24px;
   width: 100%;
-  box-sizing: border-box;
-}
-
-/* External Login Buttons */
-.external-login {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.btn-google {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px 20px;
-  background: #333;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.btn-google:hover {
-  background: #555;
-}
-
-.google-icon {
-  display: flex;
-  align-items: center;
-}
-
-.btn-register-external {
-  padding: 12px 20px;
-  background: #FFD700;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.btn-register-external:hover {
-  background: #FFC107;
-}
-
-/* Tab Buttons */
-.tab-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 20px;
-  width: 100%;
-}
-
-.tab-buttons button {
-  padding: 12px;
-  border: none;
-  background: transparent;
-  color: #666;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
+  margin-bottom: 18px; /* 👈 Rút ngắn khoảng cách */
   position: relative;
-  transition: all 0.3s ease;
 }
 
-.tab-buttons button:hover {
-  color: #333;
+.corner-fruit {
+  position: absolute;
+  font-size: 28px;
 }
 
-.tab-buttons button.active {
-  color: #333;
-  font-weight: bold;
-}
+.corner-tl { top: -12px; left: -12px; }
+.corner-tr { top: -12px; right: -12px; }
+.corner-bl { bottom: -12px; left: -12px; }
+.corner-br { bottom: -12px; right: -12px; }
 
-.alert {
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-.alert-error {
-  background: #fee;
-  color: #c33;
-  border: 1px solid #fcc;
-}
-
-.alert-success {
-  background: #efe;
-  color: #3c3;
-  border: 1px solid #cfc;
-}
-
+/* Form Fields */
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  text-align: left;
 }
 
 .form-group label {
-  font-weight: 600;
-  color: #333;
   font-size: 14px;
+  font-weight: 600;
+  color: #2c6e63;
+  margin-bottom: 4px;
 }
 
 .form-group input {
-  padding: 12px 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  padding: 11px 14px;
+  border: 2px solid #d6ebe5;
+  border-radius: 10px;
   font-size: 15px;
   transition: all 0.3s ease;
+  background: #fff;
 }
 
 .form-group input:focus {
+  border-color: #2c6e63;
+  box-shadow: 0 0 0 3px rgba(44, 110, 99, 0.15);
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.form-group input:disabled {
-  background: #f5f5f5;
-  cursor: not-allowed;
-}
-
-/* Button Styles */
-.btn-login {
-  padding: 14px;
-  background: #FFD700;
+/* Buttons */
+.btn-login, .btn-register, .btn-register-external {
+  background: linear-gradient(135deg, #2c6e63, #1f4e47);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 10px;
+  border-radius: 10px;
+  padding: 12px;
   width: 100%;
-}
-
-.btn-login:hover:not(:disabled) {
-  background: #FFC107;
-}
-
-.btn-login:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-register {
-  padding: 14px;
-  background: #FFD700;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-  width: 100%;
+  transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(44, 110, 99, 0.25);
 }
 
-.btn-register:hover:not(:disabled) {
-  background: #FFC107;
+.btn-login:hover,
+.btn-register:hover,
+.btn-register-external:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #1f4e47, #163833);
 }
 
-.btn-register:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Password Requirements */
-.password-requirements {
-  margin: 15px 0;
-}
-
-.requirement-item {
+/* Google Button */
+.btn-google {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #999;
+  padding: 11px;
+  border: 1.5px solid #bfe3d9;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2c6e63;
+  transition: 0.3s;
+  box-shadow: 0 2px 6px rgba(44, 110, 99, 0.1);
 }
 
-.requirement-circle {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #ddd;
-  border-radius: 50%;
-  display: inline-block;
+.btn-google:hover {
+  background: #eaf7f3;
+  border-color: #2c6e63;
+  transform: translateY(-2px);
 }
 
+/* External Buttons Group */
+.external-login {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Links */
 .forgot-password-link {
-  text-align: center;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .forgot-link {
-  color: #333;
-  text-decoration: underline;
-  font-size: 14px;
-  font-weight: 500;
-  transition: color 0.3s ease;
+  font-size: 13.5px;
+  color: #2c6e63;
+  text-decoration: none;
+  transition: 0.2s;
 }
 
 .forgot-link:hover {
-  color: #666;
+  color: #1f4e47;
   text-decoration: underline;
 }
 
-@media (max-width: 480px) {
+/* Alerts */
+.alert {
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 13.5px;
+}
+
+.alert-error {
+  background: #fdecec;
+  border: 1px solid #f5b7b1;
+  color: #c0392b;
+}
+
+.alert-success {
+  background: #eaf7f3;
+  border: 1px solid #bfe3d9;
+  color: #2c6e63;
+}
+
+/* Responsive */
+@media (max-height: 700px) {
   .login-card {
-    padding: 30px 20px;
+    padding: 20px 24px;
   }
-
-  .page-title h1 {
-    font-size: 20px;
-  }
-
   .form-container {
     padding: 20px;
   }
+  .page-title h1 {
+    font-size: 20px;
+  }
 }
-
-

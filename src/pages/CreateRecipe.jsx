@@ -5,6 +5,7 @@ import RecipeHeader from "../components/Recipe/RecipeHeader";
 import RecipeInfoForm from "../components/Recipe/RecipeInfoForm";
 import RecipeStepsForm from "../components/Recipe/RecipeStepsForm";
 import RecipeActions from "../components/Recipe/RecipeActions";
+import RecipeSuccessModal from "../components/Recipe/RecipeSuccessModal";
 import "./style/CreateRecipe.css";
 
 const CreateRecipe = () => {
@@ -12,6 +13,7 @@ const CreateRecipe = () => {
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState([{ name: "", quantity: "" }]);
   const [steps, setSteps] = useState([{ description: "", image: null }]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = () => {
     if (!title.trim()) {
@@ -19,7 +21,7 @@ const CreateRecipe = () => {
       return;
     }
     message.success("Công thức đã được lưu!");
-    console.log({ title, description, ingredients, steps });
+    setIsModalOpen(true);
   };
 
   return (
@@ -43,6 +45,10 @@ const CreateRecipe = () => {
         </Row>
         <RecipeActions onSubmit={handleSubmit} />
       </div>
+      <RecipeSuccessModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </AppLayout>
   );
 };
