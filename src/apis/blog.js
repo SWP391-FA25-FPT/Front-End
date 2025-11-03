@@ -17,12 +17,25 @@ export const getAllBlogs = async (params = {}) => {
       queryParams.toString() ? "?" + queryParams.toString() : ""
     }`;
 
+    console.log("Fetching from URL:", url);
+
     const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
+
+    console.log("Response status:", response.status);
+    console.log("Response headers:", response.headers);
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      console.error("Response is not JSON, content-type:", contentType);
+      const text = await response.text();
+      console.error("Response body:", text.substring(0, 200));
+      throw new Error(`Server returned non-JSON response: ${contentType}`);
+    }
 
     const data = await response.json();
 
@@ -51,10 +64,23 @@ export const getBlogById = async (blogId) => {
       headers.Authorization = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${baseUrl}${apiUrls.getBlogById}/${blogId}`, {
+    const url = `${baseUrl}${apiUrls.getBlogById}/${blogId}`;
+    console.log("Fetching blog from URL:", url);
+
+    const response = await fetch(url, {
       method: "GET",
       headers,
     });
+
+    console.log("Response status:", response.status);
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      console.error("Response is not JSON, content-type:", contentType);
+      const text = await response.text();
+      console.error("Response body:", text.substring(0, 200));
+      throw new Error(`Server returned non-JSON response: ${contentType}`);
+    }
 
     const data = await response.json();
 
@@ -282,6 +308,31 @@ export const getMyBlogs = async (params = {}) => {
     return data;
   } catch (error) {
     console.error("Get my blogs error:", error);
+    throw error;
+  }
+};
+
+// Get top blogs by views
+export const getTopBlogsByViews = async (limit = 1) => {
+  try {
+    const url = `${baseUrl}${apiUrls.getTopBlogsByViews}?limit=${limit}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi lấy top blogs");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Get top blogs by views error:", error);
     throw error;
   }
 };

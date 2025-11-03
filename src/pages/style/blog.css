@@ -43,6 +43,21 @@
   margin-bottom: 0.4rem;
   font-size: 0.8rem;
   line-height: 1.4;
+  flex-wrap: wrap;
+}
+
+.blog-hero-meta .flex {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.blog-hero-meta svg {
+  color: #6b7280;
+}
+
+.blog-hero-meta .flex svg {
+  color: #f8b602;
 }
 
 .blog-category-tag {
@@ -181,6 +196,22 @@
   font-size: 0.875rem;
   color: #6b7280;
   line-height: 1.4;
+  flex-wrap: wrap;
+}
+
+.blog-post-meta .flex {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.blog-post-meta svg {
+  color: #9ca3af;
+  opacity: 0.8;
+}
+
+.blog-post-meta .flex svg {
+  color: #f8b602;
 }
 
 .blog-post-category {
