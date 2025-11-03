@@ -1,7 +1,8 @@
 // src/pages/BlogDetail.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Empty, Spin } from "antd";
+import { Eye } from "lucide-react";
 import { getBlogById } from "../apis/blog";
 import ReactionBar from "../components/blog/ReactionBar";
 import Comments from "../components/blog/Comments";
@@ -15,8 +16,17 @@ export default function BlogDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tick, setTick] = useState(0);
+  const loadedBlogIdsRef = useRef(new Set());
 
   useEffect(() => {
+    // Prevent double loading in StrictMode - track by blog ID
+    if (!id || loadedBlogIdsRef.current.has(id)) {
+      return;
+    }
+
+    // Mark this blog ID as loading
+    loadedBlogIdsRef.current.add(id);
+
     const loadBlog = async () => {
       try {
         setLoading(true);
@@ -42,6 +52,7 @@ export default function BlogDetail() {
             : result.data.date,
           category: result.data.category,
           image: result.data.imageUrl,
+          viewCount: result.data.viewCount || result.data.views || 0,
         };
 
         console.log("Transformed post:", transformedPost);
@@ -49,14 +60,20 @@ export default function BlogDetail() {
       } catch (error) {
         console.error("Error loading blog:", error);
         setError(error.message || "Không thể tải bài viết");
+        // Remove from set if error so it can retry
+        loadedBlogIdsRef.current.delete(id);
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) {
-      loadBlog();
-    }
+    loadBlog();
+
+    // Cleanup: Remove from set when component unmounts or id changes
+    return () => {
+      // Don't remove immediately, only on unmount or new id
+      // This prevents double calls in StrictMode
+    };
   }, [id]);
 
   useEffect(() => {
@@ -169,7 +186,14 @@ export default function BlogDetail() {
             {/* Article Content (Left Column ~65%) */}
             <div className="blogdetail-article-content">
               <div className="blogdetail-meta-info">
-                {post.category} • {post.date}
+                <span>{post.category}</span>
+                <span> • </span>
+                <span>{post.date}</span>
+                <span> • </span>
+                <span className="blogdetail-view-count">
+                  <Eye className="h-3.5 w-3.5" />
+                  <span>{(post.viewCount || 0).toLocaleString("vi-VN")}</span>
+                </span>
               </div>
               <h1 className="blogdetail-title">{post.title}</h1>
               <p className="blogdetail-description">{post.content}</p>

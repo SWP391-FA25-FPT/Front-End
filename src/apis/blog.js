@@ -285,3 +285,26 @@ export const getMyBlogs = async (params = {}) => {
     throw error;
   }
 };
+
+// Get featured blog (blog with most views)
+export const getFeaturedBlog = async () => {
+  try {
+    const response = await fetch(`${baseUrl}${apiUrls.getFeaturedBlog}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi lấy bài viết nổi bật");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Get featured blog error:", error);
+    throw error;
+  }
+};

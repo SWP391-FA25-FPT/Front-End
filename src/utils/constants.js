@@ -50,4 +50,5 @@ export const apiUrls = {
   deleteBlog: "/api/blogs",
   searchBlogs: "/api/blogs/search",
   getMyBlogs: "/api/blogs/my",
+  getFeaturedBlog: "/api/blogs/featured",
 };

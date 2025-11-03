@@ -2,11 +2,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Tag } from "lucide-react";
+import { Tag, Eye } from "lucide-react";
 import { Card, CardContent } from "./ui";
 
 export default function Featured({ post }) {
   if (!post) return null;
+  const viewCount = post.viewCount || post.views || 0;
+
   return (
     <section className="w-100">
       <motion.div
@@ -34,6 +36,11 @@ export default function Featured({ post }) {
             </span>
             <span className="text-muted">•</span>
             <span className="text-muted">{post.date}</span>
+            <span className="text-muted">•</span>
+            <span className="blog-hero-view">
+              <Eye className="h-3 w-3" />
+              <span>{viewCount.toLocaleString("vi-VN")}</span>
+            </span>
           </div>
 
           {/* Tiêu đề lớn đậm */}

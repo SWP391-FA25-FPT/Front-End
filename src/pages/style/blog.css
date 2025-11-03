@@ -229,6 +229,20 @@
   overflow: hidden;
 }
 
+.blog-post-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #6b7280;
+}
+
+.blog-hero-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #6b7280;
+}
+
 /* Pagination */
 .blog-pagination {
   display: flex;

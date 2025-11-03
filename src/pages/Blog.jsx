@@ -6,7 +6,7 @@ import Layout from "../components/layout/SettingLayout";
 import Featured from "../components/blog/Featured";
 import CategoryPills from "../components/blog/CategoryPills";
 import PostGrid from "../components/blog/PostGrid";
-import { getAllBlogs } from "../apis/blog";
+import { getAllBlogs, getFeaturedBlog } from "../apis/blog";
 import "../pages/style/blog.css";
 
 const { Title } = Typography;
@@ -34,35 +34,77 @@ export default function Blog() {
   const [current, setCurrent] = useState("Tất cả");
   const [currentPage, setCurrentPage] = useState(1);
   const [posts, setPosts] = useState([]);
+  const [featuredPost, setFeaturedPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const postsPerPage = 6; // Hiển thị 6 bài viết mỗi trang
+
+  // Helper function to transform blog data
+  const transformBlog = (blog) => ({
+    id: blog._id || blog.slug,
+    title: blog.title,
+    excerpt: blog.excerpt,
+    content: blog.content,
+    author: blog.author,
+    authorAvatar: blog.authorAvatar,
+    date: blog.publishedAt
+      ? new Date(blog.publishedAt).toISOString().split("T")[0]
+      : blog.date,
+    category: blog.category,
+    image: blog.imageUrl,
+    viewCount: blog.viewCount || blog.views || 0,
+  });
 
   // Fetch blogs from API
   useEffect(() => {
     const loadBlogs = async () => {
       try {
         setLoading(true);
-        const result = await getAllBlogs({
-          page: 1,
-          limit: 100, // Get all published blogs
-        });
 
-        // Transform API data to match frontend format
-        const transformedPosts = result.data.map((blog) => ({
-          id: blog._id || blog.slug,
-          title: blog.title,
-          excerpt: blog.excerpt,
-          content: blog.content,
-          author: blog.author,
-          authorAvatar: blog.authorAvatar,
-          date: blog.publishedAt
-            ? new Date(blog.publishedAt).toISOString().split("T")[0]
-            : blog.date,
-          category: blog.category,
-          image: blog.imageUrl,
-        }));
+        // Fetch featured blog and all blogs in parallel
+        const [featuredResult, blogsResult] = await Promise.all([
+          getFeaturedBlog().catch((err) => {
+            console.log("Featured blog API not available or error:", err);
+            return null;
+          }),
+          getAllBlogs({
+            page: 1,
+            limit: 100, // Get all published blogs
+          }),
+        ]);
 
-        setPosts(transformedPosts);
+        // Transform all blogs first
+        const transformedPosts = blogsResult.data.map(transformBlog);
+
+        // Try to get featured blog from API, or fallback to highest view blog
+        let featured = null;
+
+        // Check different response formats from API
+        if (featuredResult) {
+          if (featuredResult.data) {
+            featured = transformBlog(featuredResult.data);
+          } else if (featuredResult._id || featuredResult.slug) {
+            // API might return blog object directly
+            featured = transformBlog(featuredResult);
+          }
+        }
+
+        // Fallback: Get blog with highest view count from the list if no featured from API
+        if (!featured && transformedPosts.length > 0) {
+          featured = transformedPosts.reduce((max, post) =>
+            (post.viewCount || 0) > (max.viewCount || 0) ? post : max
+          );
+        }
+
+        // Get featured blog ID to exclude from list
+        const featuredId = featured ? featured.id : null;
+
+        // Filter out featured blog from posts list
+        const postsWithoutFeatured = featuredId
+          ? transformedPosts.filter((post) => post.id !== featuredId)
+          : transformedPosts;
+
+        setFeaturedPost(featured);
+        setPosts(postsWithoutFeatured);
       } catch (error) {
         console.error("Error loading blogs:", error);
       } finally {
@@ -125,9 +167,9 @@ export default function Blog() {
       <Layout>
         <Container className="py-5 blog-container">
           {/* Hero Section - Bài viết nổi bật */}
-          {posts.length > 0 && (
+          {featuredPost && (
             <div className="mb-5 blog-fade-in">
-              <Featured post={posts[1] || posts[0]} />
+              <Featured post={featuredPost} />
             </div>
           )}
 
