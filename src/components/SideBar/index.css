@@ -1,0 +1,79 @@
+/* 1. Màu sắc: Cập nhật biến root với màu xanh ngọc */
+:root {
+  --primary-color: #004d40; /* Chữ xanh đậm */
+  --primary-hover-color: #00695c; /* Chữ xanh đậm hơn khi hover */
+  --primary-hover-bg: #b2dfdb; /* Nền xanh vừa khi hover */
+  --primary-selected-bg: #00695c; /* Nền xanh đậm khi chọn */
+  --primary-selected-color: #ffffff; /* Chữ trắng khi chọn */
+}
+
+/* Ant Design Sidebar Customization */
+.ant-layout-sider .ant-layout-sider-children .ant-menu.ant-menu-inline-collapsed {
+  width: 4rem !important;
+}
+
+.ant-menu-inline-collapsed .ant-menu-item-icon {
+  width: 24px !important;
+  height: 24px !important;
+  margin-top: 5px !important;
+  margin-right: 5px !important;
+}
+
+/* Menu text wrapping for expanded sidebar */
+.ant-menu-inline:not(.ant-menu-inline-collapsed) .ant-menu-item {
+  white-space: normal !important;
+  line-height: 1.4 !important;
+  height: auto !important;
+  min-height: 40px !important;
+}
+
+.ant-menu-inline:not(.ant-menu-inline-collapsed) .ant-menu-item a {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  display: block !important;
+  line-height: 1.4 !important;
+}
+
+/* 3. Dropdown: Xóa bỏ các CSS tùy chỉnh không cần thiết */
+
+/* Logo Container */
+.logo-container {
+  max-width: 100% !important;
+  overflow: hidden !important;
+  height: auto !important;
+  min-height: 60px !important;
+}
+
+.logo-container .ant-flex {
+  max-width: 100% !important;
+  flex-wrap: nowrap !important;
+  height: 100% !important;
+}
+
+.logo-container img,
+.logo-container p {
+  margin: 0 !important;
+}
+
+.logo-container p {
+  line-height: 1 !important;
+}
+
+/* Subscription menu item styling */
+.ant-menu-item a {
+  width: 100%;
+}
+
+.ant-menu-item-selected a span[style*="linear-gradient"],
+.ant-menu-item-selected a span[style*="background"] {
+  opacity: 1 !important;
+}
+
+/* Ensure badges don't break on smaller widths */
+.ant-menu-inline:not(.ant-menu-inline-collapsed) .ant-menu-item a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+

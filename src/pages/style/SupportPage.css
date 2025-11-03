@@ -1,291 +1,434 @@
 .support-page {
-    font-family: "Inter", sans-serif;
-    background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
-    min-height: 100vh;
-    padding: 40px 20px;
-    position: relative;
-  }
-  
-  /* Logo */
-  .support-logo {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 10;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #bae2d9 0%, #e2f4ef 50%, #ffffff 100%);
+  min-height: 100vh;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.support-page::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.support-page::after {
+  content: "";
+  position: absolute;
+  bottom: -150px;
+  left: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Logo */
+.support-logo {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.support-logo:hover {
+  transform: scale(1.05);
+}
+
+.logo-image {
+  width: 40px;
+  height: 40px;
+  transition: all 0.3s ease;
+}
+
+.support-logo:hover .logo-image {
+  transform: rotate(5deg);
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+}
+
+.support-logo:hover .logo-text {
+  transform: translateX(2px);
+}
+
+/* Container */
+.support-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 60px;
+}
+
+/* Header */
+.support-header {
+  text-align: center;
+  margin-bottom: 50px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.support-header h1 {
+  font-size: 48px;
+  font-weight: 700;
+  color: #1f4e47;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+  line-height: 1.2;
+}
+
+.support-header p {
+  font-size: 18px;
+  color: #4b6460;
+  margin: 0;
+  font-weight: 400;
+}
+
+.browse-text {
+  font-size: 16px;
+  color: #4b6460;
+  margin-top: 20px;
+}
+
+.browse-link {
+  color: #34d399;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.browse-link:hover {
+  color: #10b981;
+  text-decoration: underline;
+}
+
+/* Search box */
+.support-search {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto 60px;
+  animation: slideUp 0.6s ease-out 0.2s both;
+}
+
+.support-search input {
+  width: 100%;
+  padding: 18px 24px;
+  padding-left: 50px;
+  border: 2px solid #cde9e2;
+  border-radius: 12px;
+  outline: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(52, 211, 153, 0.08);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='m21 21-4.35-4.35'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 20px center;
+}
+
+.support-search input:focus {
+  border-color: #34d399;
+  box-shadow: 0 4px 30px rgba(52, 211, 153, 0.25);
+  transform: translateY(-2px);
+}
+
+.support-search input::placeholder {
+  color: #7fa9a0;
+}
+
+/* Grid - Fixed 3 columns */
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.6s ease-out 0.4s both;
+}
+
+/* Card */
+.support-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px 32px;
+  text-align: center;
+  border: 2px solid #d9f0eb;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 320px;
+}
+
+.support-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(186, 226, 217, 0.15) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.support-card:hover::before {
+  opacity: 1;
+}
+
+.support-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(52, 211, 153, 0.15);
+  border-color: #34d399;
+}
+
+.support-card .icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+  color: #34d399;
+  display: inline-block;
+  transition: transform 0.4s ease;
+  line-height: 1;
+}
+
+.support-card:hover .icon {
+  transform: scale(1.15);
+}
+
+.support-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #1f4e47;
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+}
+
+.support-card .description,
+.support-card p {
+  font-size: 14px;
+  color: #4b6460;
+  margin-bottom: 24px;
+  line-height: 1.6;
+  min-height: 42px;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.support-card a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  font-size: 14px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+  margin-top: auto;
+}
+
+.support-card a:hover {
+  background: linear-gradient(135deg, #10b981, #0b7a66);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(52, 211, 153, 0.4);
+}
+
+/* Empty state */
+.support-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #7fa9a0;
+  padding: 60px 20px;
+  font-size: 16px;
+}
+
+.support-empty::before {
+  content: "🔍";
+  display: block;
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .support-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
   }
 
-  .support-logo:hover {
-    transform: scale(1.05);
+  .support-card {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .support-logo {
+    top: 20px;
+    left: 20px;
   }
 
   .logo-image {
-    width: 40px;
-    height: 40px;
-    transition: all 0.3s ease;
-  }
-
-  .support-logo:hover .logo-image {
-    transform: rotate(5deg);
+    width: 36px;
+    height: 36px;
   }
 
   .logo-text {
-    font-size: 24px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #F8B602 0%, #ffd04d 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.5px;
-    transition: all 0.3s ease;
+    font-size: 22px;
   }
 
-  .support-logo:hover .logo-text {
-    transform: translateX(2px);
+  .support-container {
+    padding-top: 40px;
   }
-  
-  /* Header */
+
   .support-header {
-    text-align: center;
-    margin-bottom: 50px;
-    animation: fadeIn 0.6s ease-out;
+    margin-bottom: 40px;
   }
-  
+
   .support-header h1 {
-    font-size: 42px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #F8B602 0%, #ffd04d 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 36px;
     margin-bottom: 12px;
-    letter-spacing: -0.5px;
   }
-  
+
   .support-header p {
-    font-size: 18px;
-    color: #666;
-    font-weight: 400;
-  }
-  
-  /* Search box */
-  .support-search {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 50px;
-    animation: slideUp 0.6s ease-out 0.2s both;
-  }
-  
-  .support-search input {
-    width: 100%;
-    max-width: 500px;
-    padding: 16px 24px;
-    padding-left: 50px;
-    border: 2px solid #f0f0f0;
-    border-radius: 50px;
-    outline: none;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    background: #fff;
-    box-shadow: 0 2px 10px rgba(248, 182, 2, 0.1);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23F8B602' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='m21 21-4.35-4.35'%3E%3C/path%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: 20px center;
-  }
-  
-  .support-search input:focus {
-    border-color: #F8B602;
-    box-shadow: 0 4px 20px rgba(248, 182, 2, 0.25);
-    transform: translateY(-2px);
-  }
-  
-  .support-search input::placeholder {
-    color: #aaa;
-  }
-  
-  /* Grid - Cố định 3 cột */
-  .support-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    max-width: 1200px;
-    margin: 0 auto;
-    animation: fadeIn 0.6s ease-out 0.4s both;
-  }
-  
-  /* Card */
-  .support-card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 32px 24px;
-    text-align: center;
-    border: 2px solid #f5f5f5;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-  }
-  
-  .support-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #F8B602 0%, #ffd04d 100%);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-  }
-  
-  .support-card:hover::before {
-    transform: scaleX(1);
-  }
-  
-  .support-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(248, 182, 2, 0.2);
-    border-color: #F8B602;
-  }
-  
-  .support-card .icon {
-    font-size: 48px;
-    margin-bottom: 20px;
-    display: inline-block;
-    transition: transform 0.3s ease;
-    filter: grayscale(0.3);
-  }
-  
-  .support-card:hover .icon {
-    transform: scale(1.1) rotate(5deg);
-    filter: grayscale(0);
-  }
-  
-  .support-card h3 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: #2c3e50;
-    letter-spacing: -0.3px;
-  }
-  
-  .support-card .description {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 16px;
-    line-height: 1.6;
-    min-height: 45px;
-  }
-  
-  .support-card a {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 8px;
-    padding: 10px 24px;
-    font-size: 14px;
-    color: #fff;
-    background: linear-gradient(135deg, #F8B602 0%, #ffc107 100%);
-    text-decoration: none;
-    font-weight: 600;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(248, 182, 2, 0.3);
-  }
-  
-  .support-card a::after {
-    content: "→";
-    transition: transform 0.3s ease;
-  }
-  
-  .support-card a:hover {
-    transform: translateX(4px);
-    box-shadow: 0 6px 16px rgba(248, 182, 2, 0.4);
-    text-decoration: none;
-  }
-  
-  .support-card a:hover::after {
-    transform: translateX(4px);
-  }
-  
-  /* Empty state */
-  .support-empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: #999;
-    padding: 60px 20px;
     font-size: 16px;
   }
-  
-  .support-empty::before {
-    content: "🔍";
-    display: block;
-    font-size: 48px;
-    margin-bottom: 16px;
-    opacity: 0.5;
+
+  .support-search {
+    margin-bottom: 40px;
   }
-  
-  /* Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+
+  .support-search input {
+    padding: 16px 20px;
+    padding-left: 45px;
+    font-size: 15px;
   }
-  
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+
+  .support-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
-  
-  /* Responsive */
-  @media (max-width: 1024px) {
-    .support-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+
+  .support-card {
+    padding: 32px 24px;
+    min-height: 280px;
   }
-  
-  @media (max-width: 768px) {
-    .support-logo {
-      top: 15px;
-      left: 15px;
-    }
-    
-    .logo-image {
-      width: 32px;
-      height: 32px;
-    }
-    
-    .logo-text {
-      font-size: 20px;
-    }
-    
-    .support-header h1 {
-      font-size: 32px;
-    }
-    
-    .support-header p {
-      font-size: 16px;
-    }
-    
-    .support-grid {
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-    
-    .support-search input {
-      max-width: 100%;
-    }
+
+  .support-card .icon {
+    font-size: 56px;
+    margin-bottom: 20px;
   }
+
+  .support-card h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .support-card .description,
+  .support-card p {
+    font-size: 13px;
+    min-height: 38px;
+  }
+
+  .support-card a {
+    padding: 10px 24px;
+    font-size: 13px;
+  }
+}
+/* === Override: đổi màu logo & nút bấm sang #2c6e63 === */
+
+/* Logo text gradient -> dùng tông #2c6e63 */
+.logo-text {
+  background: linear-gradient(135deg, #2c6e63 0%, #214f47 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Logo image (nếu muốn đổi màu stroke/overlay) */
+.logo-image {
+  /* nếu logo là SVG inline, bạn có thể đổi filter; 
+     nếu là img raster, thay bằng ảnh màu mới hoặc dùng tint bằng filter */
+  /* ví dụ nhẹ: */
+  filter: hue-rotate(140deg) saturate(80%);
+}
+
+/* Support card icon (màu biểu tượng trong thẻ) */
+.support-card .icon {
+  color: #2c6e63;
+}
+
+/* Nút action trong card -> nền chính và hover */
+.support-card a {
+  background: linear-gradient(135deg, #2c6e63 0%, #1f5a52 100%);
+  box-shadow: 0 4px 12px rgba(44, 110, 99, 0.28);
+}
+
+.support-card a:hover {
+  background: linear-gradient(135deg, #1f5a52 0%, #163f39 100%);
+  box-shadow: 0 6px 16px rgba(44, 110, 99, 0.38);
+}
+
+/* Link nhỏ (browse-link) để đồng bộ */
+.browse-link {
+  color: #2c6e63;
+}
+
+.browse-link:hover {
+  color: #194a41;
+}
+
+/* Search icon (SVG trong background-image) đổi stroke thành #2c6e63
+   Lưu ý: chuỗi SVG đã URL-encode; nếu bạn thay SVG khác cũng tương tự. */
+.support-search input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232c6e63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='m21 21-4.35-4.35'%3E%3C/path%3E%3C/svg%3E");
+}
+
+/* Tăng cường tương phản viền khi focus (màu mới) */
+.support-search input:focus {
+  border-color: #2c6e63;
+  box-shadow: 0 4px 30px rgba(44, 110, 99, 0.18);
+}
+

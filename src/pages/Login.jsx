@@ -177,21 +177,34 @@ function Login() {
 
   return (
     <div className="login-container">
+      {/* Decorative Fruits/Vegetables */}
+      <div className="decorative-fruit fruit-1">🥕</div>
+      <div className="decorative-fruit fruit-2">🥦</div>
+      <div className="decorative-fruit fruit-3">🍎</div>
+      <div className="decorative-fruit fruit-4">🍊</div>
+
       <div className="login-card">
         {/* Logo Section */}
         <div className="logo-section">
           <div className="logo">
             <Logo collapsed={false} />
           </div>
+          
         </div>
 
         {/* Title */}
         <div className="page-title">
-          <h1>Đăng ký hoặc Đăng nhập</h1>
+          <h1>{isLogin ? 'Đăng nhập' : 'Đăng ký'}</h1>
         </div>
 
         {/* Form Container with dotted border */}
         <div className="form-container">
+          {/* Decorative corner fruits */}
+          <div className="corner-fruit corner-tl">🍓</div>
+          <div className="corner-fruit corner-tr">🥑</div>
+          <div className="corner-fruit corner-bl">🍋</div>
+          <div className="corner-fruit corner-br">🥬</div>
+
           {error && <div className="alert alert-error">{error}</div>}
           {success && <div className="alert alert-success">{success}</div>}
 
@@ -294,22 +307,34 @@ function Login() {
               {/* Password Requirements */}
               <div className="password-requirements">
                 <div className="requirement-item">
-                  <span className="requirement-circle"></span>
+                  <span className="requirement-check">✓</span>
                   <span>Tối thiểu phải 8 kí tự</span>
                 </div>
                 <div className="requirement-item">
-                  <span className="requirement-circle"></span>
+                  <span className="requirement-check">✓</span>
                   <span>Bao gồm 1 kí tự in hoa</span>
                 </div>
                 <div className="requirement-item">
-                  <span className="requirement-circle"></span>
+                  <span className="requirement-check">✓</span>
                   <span>Bao gồm 1 chữ số</span>
                 </div>
                 <div className="requirement-item">
+<<<<<<< Updated upstream
                   <span className="requirement-circle"></span>
                   <span>Bao gồm 1 kí tự đặc biệt</span>_{" "}
                 </div>
                 <a href="/" className="back-link">
+=======
+                  <span className="requirement-check">✓</span>
+                  <span>Bao gồm 1 kí tự đặc biệt</span>
+                </div>
+                <a href="#" onClick={(e) => {
+                  e.preventDefault();
+                  setIsLogin(true);
+                  setError('');
+                  setSuccess('');
+                }} className="back-link">
+>>>>>>> Stashed changes
                   ← Quay lại đăng nhập
                 </a>
               </div>
@@ -348,6 +373,7 @@ function Login() {
             </div>
             Tiếp tục với Google
           </button>
+<<<<<<< Updated upstream
 
           <button
             className="btn-register-external"
@@ -359,10 +385,29 @@ function Login() {
           >
             Đăng ký tài khoản{" "}
           </button>
+=======
+          
+          {isLogin && (
+            <button 
+              className="btn-register-external"
+              onClick={() => {
+                setIsLogin(false);
+                setError('');
+                setSuccess('');
+              }}
+            >
+              Đăng ký tài khoản mới
+            </button>
+          )}
+>>>>>>> Stashed changes
         </div>
       </div>
     </div>
   );
 }
 
+<<<<<<< Updated upstream
 export default Login;
+=======
+export default Login;
+>>>>>>> Stashed changes

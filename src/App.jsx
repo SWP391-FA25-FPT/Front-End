@@ -10,6 +10,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import TakeSurvey from "./pages/TakeSurvey";
+import Profile from "./pages/Profile";
 import ProfilePage from "./pages/ProfilePage";
 import SupportPage from "./pages/SupportPage";
 import Challenge from "./pages/Challenge";
@@ -20,7 +21,24 @@ import AdminPage from "./pages/admin/AdminPage";
 import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
+<<<<<<< Updated upstream
 
+=======
+import ProgressTracking from "./pages/ProgressTracking";
+import TopMealPlans from "./pages/TopMealPlans";
+import SearchingPage from "./pages/SearchingPage";
+import RecipeDetail from "./pages/RecipeDetail";
+import RecipeCreate from "./pages/RecipeCreate";
+import RecipeUpdate from "./pages/RecipeUpdate";
+import MyRecipes from "./pages/MyRecipes";
+import AllRecipes from "./pages/AllRecipes";
+import DraftRecipes from "./pages/DraftRecipes";
+import PrivateRecipes from "./pages/PrivateRecipes";
+import PublishedRecipes from "./pages/PublishedRecipes";
+import SavedRecipes from "./pages/SavedRecipes";
+import Subscription from "./pages/Subscription";
+import CreateRecipe from "./pages/CreateRecipe";
+>>>>>>> Stashed changes
 
 function App() {
   return (
@@ -60,8 +78,30 @@ function App() {
               </SurveyCheckRoute>
             } 
           />
+<<<<<<< Updated upstream
           <Route 
             path="/support" 
+=======
+          <Route
+            path="/user"
+            element={
+              <SurveyCheckRoute>
+                <Profile />
+              </SurveyCheckRoute>
+            }
+          />
+            <Route
+            path="/create-recipe"
+            element={
+              <SurveyCheckRoute>
+                <CreateRecipe />
+              </SurveyCheckRoute>
+            }
+          />
+
+          <Route
+            path="/support"
+>>>>>>> Stashed changes
             element={
               <SurveyCheckRoute>
                 <SupportPage />
