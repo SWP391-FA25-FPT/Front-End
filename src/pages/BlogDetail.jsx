@@ -1,18 +1,23 @@
 // src/pages/BlogDetail.jsx
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { Row, Col } from "antd";
 import { getBlogById } from "../apis/blog";
+import { getAllRecipes } from "../apis/recipe";
 import ReactionBar from "../components/blog/ReactionBar";
 import Comments from "../components/blog/Comments";
 import Rating from "../components/blog/Rating";
+import CardRecent from "../components/CardRecent/CardRecent";
 import Layout from "../components/layout/SettingLayout";
 import "../pages/style/blogdetail.css";
 
 export default function BlogDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [relatedRecipes, setRelatedRecipes] = useState([]);
   const fetchedIds = React.useRef(new Set());
 
   useEffect(() => {
@@ -26,6 +31,30 @@ export default function BlogDetail() {
         const response = await getBlogById(id);
         if (response.success && response.data) {
           setPost(response.data);
+
+          // Fetch related recipes - use blog's relatedRecipes first, then fallback to tags
+          if (
+            response.data.relatedRecipes &&
+            response.data.relatedRecipes.length > 0
+          ) {
+            // Blog has directly linked recipes
+            setRelatedRecipes(response.data.relatedRecipes);
+          } else if (response.data.tags && response.data.tags.length > 0) {
+            // Fallback to recipes based on tags
+            const recipesResponse = await getAllRecipes({
+              tags: response.data.tags.slice(0, 2).join(","),
+              limit: 4,
+            });
+            if (recipesResponse.success && recipesResponse.data) {
+              setRelatedRecipes(recipesResponse.data);
+            }
+          } else {
+            // If no tags, just get random recipes
+            const recipesResponse = await getAllRecipes({ limit: 4 });
+            if (recipesResponse.success && recipesResponse.data) {
+              setRelatedRecipes(recipesResponse.data);
+            }
+          }
         } else {
           setError("Không tìm thấy blog");
         }
@@ -212,6 +241,40 @@ export default function BlogDetail() {
           <div className="blogdetail-comments-section">
             <Comments postId={post._id || post.id} />
           </div>
+
+          {/* Related Recipes Section */}
+          {relatedRecipes.length > 0 && (
+            <div className="blogdetail-related-recipes-section">
+              <h2
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: 700,
+                  marginBottom: "1.5rem",
+                  color: "#1a1a1a",
+                }}
+              >
+                Công thức liên quan
+              </h2>
+              <Row gutter={[16, 16]}>
+                {relatedRecipes.map((recipe) => (
+                  <Col xs={24} sm={12} md={12} lg={6} key={recipe._id}>
+                    <div
+                      onClick={() => navigate(`/recipe/${recipe._id}`)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <CardRecent
+                        title={recipe.name}
+                        src={recipe.image}
+                        avatar={recipe.authorAvatar}
+                        userName={recipe.author}
+                        subtitle={recipe.description}
+                      />
+                    </div>
+                  </Col>
+                ))}
+              </Row>
+            </div>
+          )}
         </div>
       </Layout>
     </React.Fragment>

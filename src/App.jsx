@@ -20,6 +20,7 @@ import Challenge from "./pages/Challenge";
 import ChallengeDetail from "./pages/ChallengeDetail";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
+import BlogCreate from "./pages/BlogCreate";
 import AdminPage from "./pages/admin/AdminPage";
 import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
@@ -108,6 +109,14 @@ function App() {
             }
           />
           <Route
+            path="/blog/create"
+            element={
+              <ProtectedRoute>
+                <BlogCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/blog/:id"
             element={
               <SurveyCheckRoute>
@@ -171,7 +180,7 @@ function App() {
               </SurveyCheckRoute>
             }
           />
-          
+
           {/* Recipe routes */}
           <Route
             path="/recipe/:id"
@@ -205,7 +214,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          
+
           {/* My Recipes routes */}
           <Route
             path="/my-recipes"
@@ -255,7 +264,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          
+
           {/* Subscription route */}
           <Route
             path="/subscription"
