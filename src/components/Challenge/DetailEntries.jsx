@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Row, Col, Card, Avatar, Space, Tag, Empty, Select } from "antd";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
+import guest from "../../assets/guest.png";
 
 const { Option } = Select;
 
@@ -94,10 +95,10 @@ const DetailEntries = ({ entries }) => {
                         style={{ width: "100%" }}
                       >
                         <div className="entry-author">
-                          <Avatar size="small" src={entry.author.avatar}>
-                            {entry.author.name[0]}
+                          <Avatar size="small" src={entry.author?.avatar || guest}>
+                            {entry.author?.name?.[0]}
                           </Avatar>
-                          <span>{entry.author.name}</span>
+                          <span>{entry.author?.name}</span>
                         </div>
 
                         <div className="entry-stats">

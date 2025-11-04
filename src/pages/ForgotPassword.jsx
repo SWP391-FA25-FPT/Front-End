@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import emailjs from '@emailjs/browser';
-import Logo from '../components/Logo';
+import Logo from '../components/Logo/Logo';
 import './style/ForgotPassword.css';
 
 function ForgotPassword() {

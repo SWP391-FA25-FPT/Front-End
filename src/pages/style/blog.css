@@ -38,11 +38,26 @@
 
 .blog-hero-meta {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.4rem;
   font-size: 0.8rem;
   line-height: 1.4;
+  flex-wrap: wrap;
+}
+
+.blog-hero-meta .flex {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.blog-hero-meta svg {
+  color: #6b7280;
+}
+
+.blog-hero-meta .flex svg {
+  color: #f8b602;
 }
 
 /* 🌱 Category Tag */
@@ -81,16 +96,21 @@
 .blog-read-more-btn {
   background: #2c6e63;
   color: white;
-  padding: 0.7rem 1.3rem;
+  padding: 0.7rem 2rem;
   border-radius: 25px;
   font-weight: 500;
   text-decoration: none;
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   transition: all 0.3s ease;
   border: none;
-  font-size: 0.85rem;
+  font-size: 1rem;
+  white-space: nowrap;
+  margin: 0;
+  width: fit-content;
+  min-width: 140px;
 }
 
 .blog-read-more-btn:hover {
@@ -178,6 +198,22 @@
   font-size: 0.875rem;
   color: #6b7280;
   line-height: 1.4;
+  flex-wrap: wrap;
+}
+
+.blog-post-meta .flex {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.blog-post-meta svg {
+  color: #9ca3af;
+  opacity: 0.8;
+}
+
+.blog-post-meta .flex svg {
+  color: #f8b602;
 }
 
 /* 🌿 Post Category Tag */
@@ -308,23 +344,28 @@
     gap: 1.5rem;
   }
 
+
   .blog-hero-content {
     padding-left: 0;
     margin-top: 0;
   }
 
+
   .blog-title {
     font-size: 2rem;
   }
+
 
   .blog-post-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
+
   .blog-category-pills {
     gap: 0.5rem;
   }
+
 
   .blog-category-pill {
     padding: 0.375rem 1rem;

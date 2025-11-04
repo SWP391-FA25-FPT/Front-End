@@ -1,0 +1,129 @@
+/* Blog Create Page Styles */
+.blog-create-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  background-color: #fff;
+  min-height: 100vh;
+}
+
+.blog-header {
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e8e8e8;
+}
+
+.blog-header h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+/* Form Container */
+.recipe-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Form Section */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Image Upload */
+.image-uploader {
+  width: 100%;
+}
+
+.upload-area {
+  width: 100%;
+  min-height: 400px;
+  aspect-ratio: 16 / 9;
+  border: 2px dashed #d9d9d9;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background-color: #fafafa;
+  overflow: hidden;
+}
+
+.upload-area:hover {
+  border-color: var(--primary-selected-color, #ff9500);
+  background-color: #fff9f0;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px;
+}
+
+.upload-placeholder svg {
+  color: #bbb;
+}
+
+.upload-area:hover .upload-placeholder svg {
+  color: var(--primary-selected-color, #ff9500);
+}
+
+.upload-placeholder p {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+  text-align: center;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding-top: 24px;
+  border-top: 2px solid #e8e8e8;
+  margin-top: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .blog-create-container {
+    padding: 24px 16px;
+  }
+
+  .blog-header h2 {
+    font-size: 24px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}

@@ -21,12 +21,24 @@ import Challenge from "./pages/Challenge";
 import ChallengeDetail from "./pages/ChallengeDetail";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
+import BlogCreate from "./pages/BlogCreate";
 import AdminPage from "./pages/admin/AdminPage";
 import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
 import ProgressTracking from "./pages/ProgressTracking";
 import TopMealPlans from "./pages/TopMealPlans";
+import SearchingPage from "./pages/SearchingPage";
+import RecipeDetail from "./pages/RecipeDetail";
+import RecipeCreate from "./pages/RecipeCreate";
+import RecipeUpdate from "./pages/RecipeUpdate";
+import MyRecipes from "./pages/MyRecipes";
+import AllRecipes from "./pages/AllRecipes";
+import DraftRecipes from "./pages/DraftRecipes";
+import PrivateRecipes from "./pages/PrivateRecipes";
+import PublishedRecipes from "./pages/PublishedRecipes";
+import SavedRecipes from "./pages/SavedRecipes";
+import Subscription from "./pages/Subscription";
 import CreateRecipe from "./pages/CreateRecipe";
 
 function App() {
@@ -116,6 +128,14 @@ function App() {
             }
           />
           <Route
+            path="/blog/create"
+            element={
+              <ProtectedRoute>
+                <BlogCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/blog/:id"
             element={
               <SurveyCheckRoute>
@@ -169,6 +189,108 @@ function App() {
               <SurveyCheckRoute>
                 <TopMealPlans />
               </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <SurveyCheckRoute>
+                <SearchingPage />
+              </SurveyCheckRoute>
+            }
+          />
+
+          {/* Recipe routes */}
+          <Route
+            path="/recipe/:id"
+            element={
+              <SurveyCheckRoute>
+                <RecipeDetail />
+              </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/recipe/create"
+            element={
+              <ProtectedRoute>
+                <RecipeCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recipe/create/:draftId"
+            element={
+              <ProtectedRoute>
+                <RecipeCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recipe/:id/edit"
+            element={
+              <ProtectedRoute>
+                <RecipeUpdate />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* My Recipes routes */}
+          <Route
+            path="/my-recipes"
+            element={
+              <ProtectedRoute>
+                <MyRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-recipes/all"
+            element={
+              <ProtectedRoute>
+                <AllRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-recipes/drafts"
+            element={
+              <ProtectedRoute>
+                <DraftRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-recipes/private"
+            element={
+              <ProtectedRoute>
+                <PrivateRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-recipes/published"
+            element={
+              <ProtectedRoute>
+                <PublishedRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-recipes/saved"
+            element={
+              <ProtectedRoute>
+                <SavedRecipes />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Subscription route */}
+          <Route
+            path="/subscription"
+            element={
+              <ProtectedRoute>
+                <Subscription />
+              </ProtectedRoute>
             }
           />
 

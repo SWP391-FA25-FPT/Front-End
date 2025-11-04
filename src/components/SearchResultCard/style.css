@@ -1,0 +1,55 @@
+/* Vertical Card (Grid View) */
+.search-result-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.search-result-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.search-result-card .ant-card-body {
+  padding: 16px;
+}
+
+.search-result-card .ant-card-meta-title {
+  margin-bottom: 8px;
+}
+
+.search-result-card .ant-card-meta-description {
+  color: inherit;
+}
+
+/* Horizontal Card (List View) */
+.search-result-card-horizontal {
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+}
+
+.search-result-card-horizontal:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border-color: #faad14;
+}
+
+.search-result-card-horizontal .ant-card-body {
+  padding: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-result-card-horizontal .d-flex {
+    flex-direction: column;
+  }
+  
+  .search-result-card-horizontal img {
+    width: 100%;
+    height: 200px;
+  }
+}
+

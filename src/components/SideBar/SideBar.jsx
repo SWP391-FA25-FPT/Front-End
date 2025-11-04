@@ -1,10 +1,11 @@
 import React from "react";
-import Logo from "../Logo";
+import Logo from "../Logo/Logo";
 import { Container } from "react-bootstrap";
 import { Button, ConfigProvider, Flex, Menu, Dropdown } from "antd";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/useAuth";
 import { useLocation } from "react-router-dom";
+import "./index.css";
 
 const Index = ({ collapsed, toggleCollapsed }) => {
   const { user } = useAuth();
@@ -24,6 +25,15 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     if (path === '/profile') return '6';
     if (path === '/support') return '7';
     if (path === '/admin') return '9';
+    // My Recipes routes
+    if (path.startsWith('/my-recipes/')) {
+      if (path === '/my-recipes/all') return '8-1';
+      if (path === '/my-recipes/saved') return '8-2';
+      if (path === '/my-recipes/private') return '8-3';
+      if (path === '/my-recipes/published') return '8-4';
+      if (path === '/my-recipes/drafts') return '8-5';
+      return '8'; // default to parent
+    }
     return '1'; // default to home
   };
 
@@ -140,27 +150,27 @@ const Index = ({ collapsed, toggleCollapsed }) => {
               height="24"
             />
           ),
-          label: <a href="#">Tất Cả</a>,
+          label: <a href="/my-recipes/all">Tất Cả</a>,
         },
         {
           key: "8-2",
           icon: <Icon icon="mdi:bookmark-outline" width="24" height="24" />,
-          label: <a href="#">Đã Lưu</a>,
+          label: <a href="/my-recipes/saved">Đã Lưu</a>,
         },
         {
           key: "8-3",
           icon: <Icon icon="mdi:account-outline" width="24" height="24" />,
-          label: <a href="#">Món Của Tôi</a>,
+          label: <a href="/my-recipes/private">Món Của Tôi</a>,
         },
         {
           key: "8-4",
           icon: <Icon icon="et:global" width="24" height="24" />,
-          label: <a href="#">Đã Chia Sẻ</a>,
+          label: <a href="/my-recipes/published">Đã Chia Sẻ</a>,
         },
         {
           key: "8-5",
           icon: <Icon icon="mdi:file-document-outline" width="24" height="24" />,
-          label: <a href="#">Món Nháp</a>,
+          label: <a href="/my-recipes/drafts">Món Nháp</a>,
         },
       ],
     },
@@ -184,13 +194,13 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         theme={{
           components: {
             Menu: {
-              itemColor: "#606060",
-              itemHoverColor: "#000",
-              itemHoverBg: "#fff",
-              itemSelectedBg: "#fff",
-              itemSelectedColor: "#f93",
+              itemColor: "var(--primary-color)",
+              itemHoverColor: "var(--primary-hover-color)",
+              itemHoverBg: "var(--primary-hover-bg)",
+              itemSelectedBg: "var(--primary-selected-bg)",
+              itemSelectedColor: "var(--primary-selected-color)",
               subMenuItemBg: "#fff",
-              subMenuItemSelectedColor: "#f93",
+              subMenuItemSelectedColor: "var(--primary-selected-color)",
             },
           },
           token: {
@@ -238,3 +248,5 @@ const Index = ({ collapsed, toggleCollapsed }) => {
 };
 
 export default Index;
+
+

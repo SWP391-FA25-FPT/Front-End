@@ -1,14 +1,12 @@
 import React from "react";
-import SearchBar from "../SearchBar/Index";
-import User from "../User/Index";
-import CreateButton from "../CreateButton/Index";
+import User from "../User/User";
+import CreateButton from "../CreateButton/CreateButton";
 import { Flex } from "antd";
 
 const Header = () => {
   return (
     <React.Fragment>
       <Flex justify="center" align="center" gap={"16px"}>
-        <SearchBar />
         <Flex gap="16px" align="center" justify="space-between">
           <User />
           <CreateButton />

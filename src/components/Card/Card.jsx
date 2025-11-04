@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, ConfigProvider } from "antd";
+import blank4x3 from "../../assets/blank4x3.png";
 
 const Index = ({ title, description, src }) => {
   return (
@@ -9,8 +10,11 @@ const Index = ({ title, description, src }) => {
         hoverable
           cover={
             <img 
-              src={src} 
-              alt={title} 
+              src={src || blank4x3} 
+              alt={title}
+              onError={(e) => {
+                e.target.src = blank4x3;
+              }}
               style={{
                 height: '200px',
                 width: '100%',
@@ -20,17 +24,17 @@ const Index = ({ title, description, src }) => {
             />
           }
           style={{
-            height: 'auto',
+            height: '100%',
             display: 'flex',
             flexDirection: 'column'
           }}
           styles={{
             body: {
-              flex: 'none',
+              flex: '1',
               display: 'flex',
               flexDirection: 'column',
               padding: '16px',
-              height: 'auto'
+              minHeight: '140px'
             }
           }}
         >
@@ -40,11 +44,15 @@ const Index = ({ title, description, src }) => {
                 fontSize: '16px',
                 fontWeight: '600',
                 lineHeight: '1.4',
-                marginBottom: description ? '8px' : '0',
+                marginBottom: '8px',
                 wordWrap: 'break-word',
                 whiteSpace: 'normal',
-                overflow: 'visible',
-                height: 'auto'
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                height: '44px',
+                minHeight: '44px'
               }}>
                 {title}
               </div>
@@ -53,17 +61,21 @@ const Index = ({ title, description, src }) => {
               description ? (
                 <div style={{
                   fontSize: '14px',
-                  lineHeight: '1.4',
+                  lineHeight: '1.5',
                   color: '#666',
                   wordWrap: 'break-word',
                   overflow: 'hidden',
                   display: '-webkit-box',
                   WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical'
+                  WebkitBoxOrient: 'vertical',
+                  height: '63px',
+                  minHeight: '63px'
                 }}>
                   {description}
                 </div>
-              ) : null
+              ) : (
+                <div style={{ height: '63px', minHeight: '63px' }}></div>
+              )
             }
           />
         </Card>
@@ -73,3 +85,5 @@ const Index = ({ title, description, src }) => {
 };
 
 export default Index;
+
+

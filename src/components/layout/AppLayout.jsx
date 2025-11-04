@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Layout, Typography } from "antd";
 import { useAuth } from "../../context/useAuth";
-import SideBar from "../SideBar";
+import SideBar from "../SideBar/SideBar";
 import Head from "./Header";
 import Foot from "./Footer";
 import { Icon } from "@iconify/react";
-
+import SearchBar from "../SearchBar/SearchBar";
 const AppLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
   const { Title } = Typography;
@@ -40,7 +40,7 @@ const AppLayout = ({ children }) => {
             style={{ 
               backgroundColor: "white",
               borderRadius: "8px",
-              margin: "8px 8px 0 8px"
+              margin: "0 8px 0 8px"
             }}
             className="d-flex justify-content-between align-items-center"
           >
@@ -56,6 +56,7 @@ const AppLayout = ({ children }) => {
                 Hello, {user?.username || "User"}
               </Title>
             </div>
+            <SearchBar />
             <Head />
           </Header>
           <Content

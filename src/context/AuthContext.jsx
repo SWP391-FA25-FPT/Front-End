@@ -1,5 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
-import { getCookie } from "../utils/cookie";
+import { getCookie, setCookie, removeCookie } from "../utils/cookie";
+import apiHelper from "../utils/apiHelper";
+import { apiUrls } from "../utils/constants";
 
 const AuthContext = createContext(null);
 
@@ -27,8 +29,8 @@ export const AuthProvider = ({ children }) => {
     setUser(newUser);
     if (newToken) {
       localStorage.setItem("token", newToken);
-      // Also set cookie for apiHelper
-      document.cookie = `token=${newToken}; path=/`;
+      // Also set cookie for apiHelper using js-cookie
+      setCookie("token", newToken, { path: "/" });
     }
     if (newUser) localStorage.setItem("user", JSON.stringify(newUser));
   };
@@ -38,8 +40,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    // Also clear cookie
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // Also clear cookie using js-cookie
+    removeCookie("token");
   };
 
   const updateUser = (updatedUser) => {
@@ -47,10 +49,24 @@ export const AuthProvider = ({ children }) => {
     if (updatedUser) localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
+  const refreshUser = async () => {
+    try {
+      const response = await apiHelper.get(apiUrls.getMe);
+      if (response.success && response.data) {
+        setUser(response.data);
+        localStorage.setItem("user", JSON.stringify(response.data));
+        return response.data;
+      }
+    } catch (error) {
+      console.error("Refresh user error:", error);
+    }
+    return null;
+  };
+
   const isAuthenticated = () => Boolean(token);
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, updateUser, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, updateUser, refreshUser, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

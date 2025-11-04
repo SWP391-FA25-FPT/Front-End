@@ -1,16 +1,73 @@
 // src/pages/BlogDetail.jsx
-import React from "react";
-import { useParams, Link } from "react-router-dom";
-import POSTS from "../data/posts.json";
+import React, { useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { Row, Col } from "antd";
+import { getBlogById } from "../apis/blog";
+import { getAllRecipes } from "../apis/recipe";
 import ReactionBar from "../components/blog/ReactionBar";
 import Comments from "../components/blog/Comments";
 import Rating from "../components/blog/Rating";
+import CardRecent from "../components/CardRecent/CardRecent";
 import Layout from "../components/layout/SettingLayout";
 import "../pages/style/blogdetail.css";
 
 export default function BlogDetail() {
   const { id } = useParams();
-  const post = POSTS.find((p) => Number(p.id) === Number(id));
+  const navigate = useNavigate();
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [relatedRecipes, setRelatedRecipes] = useState([]);
+  const fetchedIds = React.useRef(new Set());
+
+  useEffect(() => {
+    // Prevent double fetch in React StrictMode for the same id
+    if (fetchedIds.current.has(id)) return;
+    fetchedIds.current.add(id);
+
+    const fetchBlog = async () => {
+      try {
+        setLoading(true);
+        const response = await getBlogById(id);
+        if (response.success && response.data) {
+          setPost(response.data);
+
+          // Fetch related recipes - use blog's relatedRecipes first, then fallback to tags
+          if (
+            response.data.relatedRecipes &&
+            response.data.relatedRecipes.length > 0
+          ) {
+            // Blog has directly linked recipes
+            setRelatedRecipes(response.data.relatedRecipes);
+          } else if (response.data.tags && response.data.tags.length > 0) {
+            // Fallback to recipes based on tags
+            const recipesResponse = await getAllRecipes({
+              tags: response.data.tags.slice(0, 2).join(","),
+              limit: 4,
+            });
+            if (recipesResponse.success && recipesResponse.data) {
+              setRelatedRecipes(recipesResponse.data);
+            }
+          } else {
+            // If no tags, just get random recipes
+            const recipesResponse = await getAllRecipes({ limit: 4 });
+            if (recipesResponse.success && recipesResponse.data) {
+              setRelatedRecipes(recipesResponse.data);
+            }
+          }
+        } else {
+          setError("Không tìm thấy blog");
+        }
+      } catch (err) {
+        console.error("Error fetching blog:", err);
+        setError("Đã xảy ra lỗi khi tải dữ liệu");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlog();
+  }, [id]);
 
   function getTopEmotes(postId) {
     try {
@@ -59,19 +116,35 @@ export default function BlogDetail() {
       window.removeEventListener("storage", onStorageChange);
     };
   }, [id]);
-  if (!post) {
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold">Bài viết không tìm thấy</h2>
-          <Link
-            to="/blog"
-            className="text-sm text-neutral-600 mt-2 inline-block"
-          >
-            Quay về danh sách bài viết
-          </Link>
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <p>Đang tải dữ liệu...</p>
+          </div>
         </div>
-      </div>
+      </Layout>
+    );
+  }
+
+  if (error || !post) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold">
+              {error || "Bài viết không tìm thấy"}
+            </h2>
+            <Link
+              to="/blog"
+              className="text-sm text-neutral-600 mt-2 inline-block"
+            >
+              Quay về danh sách bài viết
+            </Link>
+          </div>
+        </div>
+      </Layout>
     );
   }
 
@@ -104,7 +177,26 @@ export default function BlogDetail() {
             {/* Article Content (Left Column ~65%) */}
             <div className="blogdetail-article-content">
               <div className="blogdetail-meta-info">
-                {post.category} • {post.date}
+                {post.category} •{" "}
+                {post.createdAt
+                  ? new Date(post.createdAt).toLocaleDateString("vi-VN", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })
+                  : post.publishedAt
+                  ? new Date(post.publishedAt).toLocaleDateString("vi-VN", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })
+                  : post.updatedAt
+                  ? new Date(post.updatedAt).toLocaleDateString("vi-VN", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })
+                  : post.date || "N/A"}
               </div>
               <h1 className="blogdetail-title">{post.title}</h1>
               <p className="blogdetail-description">{post.content}</p>
@@ -113,15 +205,15 @@ export default function BlogDetail() {
             {/* Article Image (Right Column ~35%) */}
             <div className="blogdetail-image-container">
               <img
-                src={post.image}
+                src={post.imageUrl || post.image}
                 className="blogdetail-image"
                 alt={post.title}
               />
 
               {/* Emote Display Below Image */}
-              {getTopEmotes(post.id).length > 0 && (
+              {getTopEmotes(post._id || post.id).length > 0 && (
                 <div className="blogdetail-emote-overlay">
-                  {getTopEmotes(post.id).map((e) => (
+                  {getTopEmotes(post._id || post.id).map((e) => (
                     <div
                       key={`${e.key}-${tick}`}
                       className="blogdetail-emote-item"
@@ -137,18 +229,52 @@ export default function BlogDetail() {
 
           {/* Reaction Bar */}
           <div className="blogdetail-reaction-section">
-            <ReactionBar postId={post.id} />
+            <ReactionBar postId={post._id || post.id} />
           </div>
 
           {/* Rating Section */}
           <div className="blogdetail-rating-section">
-            <Rating postId={post.id} />
+            <Rating postId={post._id || post.id} />
           </div>
 
           {/* Comments Section */}
           <div className="blogdetail-comments-section">
-            <Comments postId={post.id} />
+            <Comments postId={post._id || post.id} />
           </div>
+
+          {/* Related Recipes Section */}
+          {relatedRecipes.length > 0 && (
+            <div className="blogdetail-related-recipes-section">
+              <h2
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: 700,
+                  marginBottom: "1.5rem",
+                  color: "#1a1a1a",
+                }}
+              >
+                Công thức liên quan
+              </h2>
+              <Row gutter={[16, 16]}>
+                {relatedRecipes.map((recipe) => (
+                  <Col xs={24} sm={12} md={12} lg={6} key={recipe._id}>
+                    <div
+                      onClick={() => navigate(`/recipe/${recipe._id}`)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <CardRecent
+                        title={recipe.name}
+                        src={recipe.image}
+                        avatar={recipe.authorAvatar}
+                        userName={recipe.author}
+                        subtitle={recipe.description}
+                      />
+                    </div>
+                  </Col>
+                ))}
+              </Row>
+            </div>
+          )}
         </div>
       </Layout>
     </React.Fragment>

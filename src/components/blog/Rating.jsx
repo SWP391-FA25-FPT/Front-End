@@ -27,12 +27,12 @@ export default function Rating({ postId }) {
       if (prevState.user === r) {
         return { user: 0, count: Math.max(0, prevState.count - 1) };
       }
-      
+
       // Otherwise, set new rating
       const wasRated = prevState.user > 0;
-      return { 
-        user: r, 
-        count: wasRated ? prevState.count : prevState.count + 1 
+      return {
+        user: r,
+        count: wasRated ? prevState.count : prevState.count + 1,
       };
     });
   }
@@ -52,21 +52,26 @@ export default function Rating({ postId }) {
           const isActive = state.user >= n;
           const isHovered = hoverRating >= n;
           const shouldHighlight = isActive || isHovered;
-          
+
           return (
-            <button
+            <span
               key={n}
               onClick={() => setRating(n)}
               onMouseEnter={() => setHoverRating(n)}
               onMouseLeave={() => setHoverRating(0)}
-              className="p-0 bg-transparent border-none"
+              className={`blogdetail-star ${shouldHighlight ? "active" : ""}`}
               title={`Đánh ${n} sao`}
-              aria-label={`Đánh ${n} sao`}
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setRating(n);
+                }
+              }}
             >
-              <span className={`blogdetail-star ${shouldHighlight ? 'active' : ''}`}>
-                {shouldHighlight ? '★' : '☆'}
-              </span>
-            </button>
+              {shouldHighlight ? "★" : "☆"}
+            </span>
           );
         })}
       </div>

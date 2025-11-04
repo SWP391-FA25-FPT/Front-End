@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, ConfigProvider } from "antd";
+import blank4x3 from "../../assets/blank4x3.png";
 
 const Index = ({ title, src }) => {
   return (
@@ -20,7 +21,10 @@ const Index = ({ title, src }) => {
             <div className="position-relative">
               <img
                 alt={title}
-                src={src}
+                src={src || blank4x3}
+                onError={(e) => {
+                  e.target.src = blank4x3;
+                }}
                 className="h-48 w-100 object-fit-cover rounded-3"
               />
               <div className="position-absolute bottom-0 start-0 end-0 bg-gradient-to-top p-3" style={{background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)'}}>
@@ -37,3 +41,5 @@ const Index = ({ title, src }) => {
 };
 
 export default Index;
+
+

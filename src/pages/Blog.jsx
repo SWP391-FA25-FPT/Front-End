@@ -1,12 +1,12 @@
 // src/pages/Blog.jsx
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "antd";
 import { Container } from "react-bootstrap";
 import Layout from "../components/layout/SettingLayout";
 import Featured from "../components/blog/Featured";
 import CategoryPills from "../components/blog/CategoryPills";
 import PostGrid from "../components/blog/PostGrid";
-import POSTS from "../data/posts.json";
+import { getAllBlogs, getTopBlogsByViews } from "../apis/blog";
 import "../pages/style/blog.css";
 
 const { Title } = Typography;
@@ -22,25 +22,80 @@ const CATEGORIES = [
 ];
 
 function formatDate(iso) {
-  const d = new Date(iso);
-  return d.toLocaleDateString("vi-VN", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  if (!iso) return "N/A";
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return "N/A";
+    return d.toLocaleDateString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  } catch (error) {
+    console.error("Error formatting date:", error, iso);
+    return "N/A";
+  }
 }
 
 export default function Blog() {
   const [current, setCurrent] = useState("Tất cả");
   const [currentPage, setCurrentPage] = useState(1);
+  const [blogs, setBlogs] = useState([]);
+  const [featuredBlog, setFeaturedBlog] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const postsPerPage = 6; // Hiển thị 6 bài viết mỗi trang
 
-  const filtered = useMemo(
+  // Fetch blogs from backend
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setLoading(true);
+        console.log("Fetching blogs from API...");
+
+        // Fetch featured blog (top views) and all blogs
+        const [featuredResponse, blogsResponse] = await Promise.all([
+          getTopBlogsByViews(1),
+          getAllBlogs({ limit: 100 }),
+        ]);
+
+        console.log("Featured Response:", featuredResponse);
+        console.log("Blogs Response:", blogsResponse);
+
+        if (
+          featuredResponse.success &&
+          featuredResponse.data &&
+          featuredResponse.data.length > 0
+        ) {
+          console.log("Featured blog loaded:", featuredResponse.data[0]);
+          setFeaturedBlog(featuredResponse.data[0]);
+        }
+
+        if (blogsResponse.success && blogsResponse.data) {
+          console.log("Blogs loaded successfully:", blogsResponse.data.length);
+          setBlogs(blogsResponse.data);
+        } else {
+          console.error("Invalid response format:", blogsResponse);
+          setError("Không thể tải danh sách blog");
+        }
+      } catch (err) {
+        console.error("Error fetching blogs:", err);
+        setError(`Đã xảy ra lỗi khi tải dữ liệu: ${err.message || err}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  // Filter blogs by category
+  const filtered = React.useMemo(
     () =>
       current === "Tất cả"
-        ? POSTS
-        : POSTS.filter((p) => p.category === current),
-    [current]
+        ? blogs
+        : blogs.filter((p) => p.category === current),
+    [current, blogs]
   );
 
   // Tính toán pagination
@@ -55,14 +110,40 @@ export default function Blog() {
     setCurrentPage(1);
   };
 
+  if (loading) {
+    return (
+      <Layout>
+        <Container className="py-5 blog-container">
+          <div className="text-center">
+            <p>Đang tải dữ liệu...</p>
+          </div>
+        </Container>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <Container className="py-5 blog-container">
+          <div className="text-center">
+            <p className="text-red-500">{error}</p>
+          </div>
+        </Container>
+      </Layout>
+    );
+  }
+
   return (
     <React.Fragment>
       <Layout>
         <Container className="py-5 blog-container">
           {/* Hero Section - Bài viết nổi bật */}
-          <div className="mb-5 blog-fade-in">
-            <Featured post={POSTS[1]} />
-          </div>
+          {featuredBlog && (
+            <div className="mb-5 blog-fade-in">
+              <Featured post={featuredBlog} />
+            </div>
+          )}
 
           {/* Phần bài viết khác */}
           <div className="mb-4">
