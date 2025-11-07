@@ -1,5 +1,5 @@
-// export const baseUrl = "http://localhost:7860";
-export const baseUrl = "https://toan215-Meta-Meal.hf.space";
+export const baseUrl = "http://localhost:7860";
+// export const baseUrl = "https://toan215-Meta-Meal.hf.space";
 
 export const apiUrls = {
   // Auth endpoints
