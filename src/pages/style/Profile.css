@@ -1,0 +1,349 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============================= */
+/* 🔹 PAGE CONTAINER */
+/* ============================= */
+.profile-page-container {
+  /* 🎨 THAY ĐỔI: Dùng nền xám rất nhạt để làm nổi bật nội dung trắng */
+  background-color: #f9fafb;
+  padding: 40px 80px;
+  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ============================= */
+/* 🔹 PROFILE HEADER */
+/* ============================= */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+}
+
+.profile-avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #F8B602;
+  /* 🎨 THAY ĐỔI: Thêm 1 viền trắng bên trong cho avatar nổi hơn */
+  outline: 4px solid #fff;
+  /* 🎨 THAY ĐỔI: Shadow tinh tế hơn */
+  box-shadow: 0 6px 18px rgba(248, 182, 2, 0.2);
+  flex-shrink: 0;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-info h2 {
+  font-size: 34px; /* Tăng 1 chút */
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.profile-info .username {
+  color: #6b7280;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.edit-btn {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600; /* Đậm hơn 1 chút */
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  /* 🎨 THAY ĐỔI: Thêm shadow nhẹ cho nút */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.edit-btn:hover {
+  background-color: #f9fafb;
+  border-color: #adb5bd;
+  /* 🎨 THAY ĐỔI: Nâng nút lên 1 chút khi hover */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================= */
+/* 🔹 STATS BAR */
+/* ============================= */
+.profile-stats-bar {
+  display: flex;
+  gap: 48px;
+  margin-bottom: 40px;
+  /* 🎨 THAY ĐỔI: Biến thanh stats thành 1 "thẻ" (card) */
+  background-color: #ffffff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.profile-stats-bar > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-stats-bar .icon {
+  font-size: 20px; /* To hơn 1 chút */
+  color: #888;
+}
+
+.profile-stats-bar p {
+  font-size: 15px;
+  color: #374151;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ============================= */
+/* 🔹 PROFILE TABS (NÂNG CẤP LỚN) */
+/* ============================= */
+.profile-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.tab-buttons {
+  display: flex;
+  gap: 12px; /* 🎨 THAY ĐỔI: Đổi từ gap 32px thành 12px */
+  /* 🎨 THAY ĐỔI: Bỏ đường viền gạch chân của cả thanh tab */
+  /* border-bottom: 2px solid #e5e7eb; (XÓA) */
+  flex: 1;
+}
+
+.tab-buttons button {
+  /* 🎨 THAY ĐỔI: Biến tab thành dạng "nút" (pill) */
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 20px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px; /* Bo góc */
+}
+
+.tab-buttons button:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.tab-buttons button.active-tab {
+  /* 🎨 THAY ĐỔI: Dùng màu thương hiệu cho tab active */
+  color: #111827; /* Chữ đậm trên nền vàng */
+  background-color: #F8B602;
+  border-color: #F8B602;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Profile Search */
+.profile-search {
+  max-width: 320px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db; /* Đậm hơn 1 chút */
+  font-size: 14px;
+  /* 🎨 THÊM: Padding cho đẹp */
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+}
+
+.profile-search:focus {
+  /* 🎨 THAY ĐỔI: Dùng màu thương hiệu khi focus */
+  border-color: #F8B602;
+  box-shadow: 0 0 0 3px rgba(248, 182, 2, 0.2);
+}
+
+.profile-search::placeholder {
+  color: #9ca3af;
+}
+
+/* ============================= */
+/* 🔹 PROFILE CONTENT */
+/* ============================= */
+.profile-content {
+  margin-top: 24px;
+}
+
+/* ============================= */
+/* 🔹 RECIPE CARD */
+/* ============================= */
+.recipe-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  /* 🎨 THAY ĐỔI: Thêm border và shadow tinh tế hơn */
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe-card:hover {
+  /* 🎨 THAY ĐỔI: Nâng card lên nhiều hơn */
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  border-color: #d1d5db;
+}
+
+.recipe-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  /* 🎨 THÊM: Hiệu ứng zoom ảnh khi hover card */
+  transition: transform 0.3s ease;
+}
+
+/* 🎨 THÊM: Kích hoạt hiệu ứng zoom ảnh */
+.recipe-card:hover .recipe-img {
+  transform: scale(1.03);
+}
+
+.recipe-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 16px 16px 8px 16px;
+  line-height: 1.4;
+}
+
+.recipe-card p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 16px 16px 16px;
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* ============================= */
+/* 🔹 EMPTY STATE */
+/* ============================= */
+.ant-empty {
+  padding: 60px 0;
+  /* 🎨 THÊM: Làm cho nó "trong suốt" với nền xám */
+  background-color: #f9fafb;
+}
+
+.ant-empty-description {
+  color: #9ca3af;
+  font-size: 15px;
+}
+
+/* ============================= */
+/* 🔹 RESPONSIVE (Giữ nguyên) */
+/* ============================= */
+@media (max-width: 1024px) {
+  .profile-page-container {
+    padding: 32px 40px;
+  }
+
+  .profile-stats-bar {
+    gap: 32px;
+    flex-wrap: wrap; /* Cho phép rớt hàng */
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page-container {
+    padding: 24px 20px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-info h2 {
+    font-size: 26px;
+  }
+
+  .profile-stats-bar {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 20px 24px; /* Giảm padding */
+  }
+
+  .profile-tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tab-buttons {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px; /* Giảm gap cho mobile */
+    /* 🎨 THÊM: Cho phép cuộn ngang nếu quá chật */
+    overflow-x: auto;
+    padding-bottom: 4px; /* Thêm padding để bóng (shadow) không bị cắt */
+  }
+
+  .tab-buttons button {
+    padding: 8px 16px; /* Giảm padding nút */
+    flex-shrink: 0; /* Không cho nút bị bóp */
+  }
+
+  .profile-search {
+    max-width: 100%;
+  }
+
+  .recipe-img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-info h2 {
+    font-size: 22px;
+  }
+
+  .tab-buttons {
+    gap: 8px;
+  }
+
+  .tab-buttons button {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}

@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import TakeSurvey from "./pages/TakeSurvey";
+import Profile from "./pages/Profile";
 import ProfilePage from "./pages/ProfilePage";
 import SupportPage from "./pages/SupportPage";
 import Challenge from "./pages/Challenge";
@@ -38,6 +39,7 @@ import PrivateRecipes from "./pages/PrivateRecipes";
 import PublishedRecipes from "./pages/PublishedRecipes";
 import SavedRecipes from "./pages/SavedRecipes";
 import Subscription from "./pages/Subscription";
+import CreateRecipe from "./pages/CreateRecipe";
 
 function App() {
   return (
@@ -76,6 +78,23 @@ function App() {
               </SurveyCheckRoute>
             }
           />
+          <Route
+            path="/user"
+            element={
+              <SurveyCheckRoute>
+                <Profile />
+              </SurveyCheckRoute>
+            }
+          />
+            <Route
+            path="/create-recipe"
+            element={
+              <SurveyCheckRoute>
+                <CreateRecipe />
+              </SurveyCheckRoute>
+            }
+          />
+
           <Route
             path="/support"
             element={
