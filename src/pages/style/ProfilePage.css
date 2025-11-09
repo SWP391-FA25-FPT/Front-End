@@ -1,6 +1,6 @@
 /* 🌿 Profile Page - M&M Healthy Mint Style - Two Column Layout */
 body {
-  background: linear-gradient(135deg, #eaf7f3 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: #2f3e46;
 }
@@ -40,7 +40,7 @@ body {
   justify-content: flex-start;
   gap: 0.8rem;
   padding-right: 1.5rem;
-  border-right: 2px solid #e8f5f1;
+  border-right: 2px solid #f8b60233; /* đổi màu chủ đạo */
   height: 100%;
   margin-top: 0.5rem;
 }
@@ -50,8 +50,8 @@ body {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: #d9d9d9; /* nền xám nhẹ */
-  color: #6b7280; /* màu icon 👤 */
+  background: #d9d9d9;
+  color: #6b7280;
   font-size: 54px;
   display: flex;
   justify-content: center;
@@ -70,22 +70,13 @@ body {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+  transition: all 0.3s ease;
 }
 
 /* Hiệu ứng nhẹ khi hover */
 .profile-avatar-large:hover {
   transform: scale(1.03);
   box-shadow: 0 10px 25px rgba(44, 110, 99, 0.25);
-}
-
-
-/* Nếu có ảnh thật (preview) */
-.profile-avatar-large img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  transition: all 0.3s ease;
 }
 
 /* Nhóm input cột trái */
@@ -108,7 +99,7 @@ body {
 .profile-form-group input {
   width: 100%;
   padding: 9px 12px;
-  border: 1.5px solid #d6ebe5;
+  border: 1.5px solid #f8b60233; /* đổi màu chủ đạo */
   border-radius: 10px;
   background: #f9fdfc;
   font-size: 13.5px;
@@ -117,9 +108,9 @@ body {
 }
 
 .profile-form-group input:focus {
-  border-color: #2c6e63;
+  border-color: #f8b602; /* đổi màu chủ đạo */
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(44, 110, 99, 0.1);
+  box-shadow: 0 0 0 3px rgba(248, 182, 2, 0.2); /* đổi màu chủ đạo */
   outline: none;
 }
 
@@ -147,7 +138,7 @@ body {
 .profile-form-group select {
   padding: 8px 12px;
   border-radius: 10px;
-  border: 1.5px solid #d6ebe5;
+  border: 1.5px solid #f8b60233; /* đổi màu chủ đạo */
   background: #f9fdfc;
   font-size: 13.5px;
 }
@@ -156,9 +147,9 @@ body {
 .profile-section-title {
   font-size: 14px;
   font-weight: 700;
-  color: #2c6e63;
+  color: #f8b602; /* đổi màu chủ đạo */
   margin: 0.75rem 0;
-  border-left: 3px solid #2c6e63;
+  border-left: 3px solid #f8b602; /* đổi màu chủ đạo */
   padding-left: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -170,7 +161,7 @@ body {
   gap: 0.8rem;
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 2px solid #e8f5f1;
+  border-top: 2px solid #f8b60233; /* đổi màu chủ đạo */
 }
 
 .profile-btn {
@@ -186,25 +177,25 @@ body {
 }
 
 .profile-btn-primary {
-  background: linear-gradient(135deg, #2c6e63, #1f4e47);
+  background: linear-gradient(135deg, #f8b602, #d49d00); /* đổi màu chủ đạo */
   color: #fff;
-  box-shadow: 0 4px 12px rgba(44, 110, 99, 0.3);
+  box-shadow: 0 4px 12px rgba(248, 182, 2, 0.3); /* đổi màu chủ đạo */
 }
 
 .profile-btn-primary:hover {
-  background: linear-gradient(135deg, #1f4e47, #163833);
+  background: linear-gradient(135deg, #d49d00, #f8b602); /* đổi màu chủ đạo */
   transform: translateY(-2px);
 }
 
 .profile-btn-secondary {
   background: #fff;
-  color: #1f4e47;
-  border: 2px solid #bfe3d9;
+  color: #f8b602; /* đổi màu chủ đạo */
+  border: 2px solid #f8b60233; /* đổi màu chủ đạo */
 }
 
 .profile-btn-secondary:hover {
-  background: #eaf7f3;
-  border-color: #2c6e63;
+  background: #fff8e6;
+  border-color: #f8b602; /* đổi màu chủ đạo */
   transform: translateY(-2px);
 }
 
@@ -246,7 +237,7 @@ body {
 
   .profile-left-column {
     border-right: none;
-    border-bottom: 2px solid #e8f5f1;
+    border-bottom: 2px solid #f8b60233; /* đổi màu chủ đạo */
     padding-bottom: 1.5rem;
   }
 
