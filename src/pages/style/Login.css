@@ -200,6 +200,7 @@ body {
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   box-shadow: var(--shadow-main); /* thêm để nhìn nổi khối hơn */
   transition: 0.3s;
@@ -254,5 +255,3 @@ body {
   .left-panel, .right-panel { width: 100%; padding: 40px 30px; }
   .form-wrapper { padding: 34px; }
 }
-
-

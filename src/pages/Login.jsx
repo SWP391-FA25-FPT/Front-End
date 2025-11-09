@@ -406,35 +406,9 @@ function Login() {
           </div>
 
         </div>
-
-        {/* Tab Buttons for switching
-        <div className="tab-buttons">
-          <button
-            className={isLogin ? 'active' : ''}
-            onClick={() => {
-              setIsLogin(true);
-              setError('');
-              setSuccess('');
-            }}
-          >
-            Đăng nhập
-          </button>
-          <button
-            className={!isLogin ? 'active' : ''}
-            onClick={() => {
-              setIsLogin(false);
-              setError('');
-              setSuccess('');
-            }}
-          >
-            Đăng ký
-          </button>
-        </div> */}
       </div>
     </div>
   );
 }
 
 export default Login;
-
-
