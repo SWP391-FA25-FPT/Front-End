@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Row, Col, Card, Input, Button, Typography, Avatar, Space, Tag, message } from "antd";
+import { Row, Col, Card, Input, Button, Typography, Avatar, Space, Tag, message, List, Spin } from "antd";
 import { Container } from "react-bootstrap";
-import { SendOutlined, RobotOutlined, UserOutlined, CameraOutlined, FileTextOutlined, HeartOutlined } from "@ant-design/icons";
+import { SendOutlined, RobotOutlined, UserOutlined, CameraOutlined, FileTextOutlined, HeartOutlined, HistoryOutlined, PlusOutlined } from "@ant-design/icons";
 import Layout from "../components/layout/SettingLayout";
-import { sendMessageToAI } from "../services/geminiAI";
+import { sendMessageToAI, getConversations, getConversationHistory } from "../services/geminiAI";
 import "../pages/style/AIConsultation.css";
 
 const { Title, Text, Paragraph } = Typography;
@@ -20,8 +20,11 @@ export default function AIConsultation() {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [conversationId, setConversationId] = useState(null);
+  const [conversations, setConversations] = useState([]);
+  const [loadingConversations, setLoadingConversations] = useState(false);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   const messagesEndRef = useRef(null);
-  const chatContainerRef = useRef(null);
 
   // Auto scroll to bottom smoothly
   const scrollToBottom = () => {
@@ -48,6 +51,76 @@ export default function AIConsultation() {
     }
   }, [isTyping]);
 
+  // Load conversations on mount
+  useEffect(() => {
+    loadConversations();
+  }, []);
+
+  const loadConversations = async () => {
+    try {
+      setLoadingConversations(true);
+      const data = await getConversations();
+      setConversations(data || []);
+    } catch (error) {
+      console.error("Failed to load conversations:", error);
+      // Don't show error message, just log it
+    } finally {
+      setLoadingConversations(false);
+    }
+  };
+
+  const handleSelectConversation = async (selectedConvId) => {
+    if (selectedConvId === conversationId) return;
+    
+    try {
+      setLoadingHistory(true);
+      const history = await getConversationHistory(selectedConvId);
+      
+      // Convert Qdrant messages to UI format
+      const formattedMessages = history.map((msg, idx) => ({
+        id: idx + 1,
+        type: msg.role === "user" ? "user" : "ai",
+        content: msg.content,
+        timestamp: msg.timestamp 
+          ? new Date(msg.timestamp).toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit' })
+          : new Date().toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit' })
+      }));
+
+      // If no messages, show welcome message
+      if (formattedMessages.length === 0) {
+        setMessages([
+          {
+            id: 1,
+            type: "ai",
+            content: "Xin chào! Tôi là AI Tư Vấn M&M. Tôi có thể giúp bạn tư vấn về dinh dưỡng, thực đơn, và các mẹo nấu ăn. Bạn cần hỗ trợ gì hôm nay? 😊",
+            timestamp: new Date().toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit' })
+          }
+        ]);
+      } else {
+        setMessages(formattedMessages);
+      }
+      
+      setConversationId(selectedConvId);
+    } catch (error) {
+      console.error("Failed to load conversation history:", error);
+      message.error("Không thể tải lịch sử hội thoại");
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
+
+  const handleNewConversation = () => {
+    setConversationId(null);
+    setMessages([
+      {
+        id: 1,
+        type: "ai",
+        content: "Xin chào! Tôi là AI Tư Vấn M&M. Tôi có thể giúp bạn tư vấn về dinh dưỡng, thực đơn, và các mẹo nấu ăn. Bạn cần hỗ trợ gì hôm nay? 😊",
+        timestamp: new Date().toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit' })
+      }
+    ]);
+  };
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
@@ -72,13 +145,22 @@ export default function AIConsultation() {
           content: msg.content
         }));
 
-      // Call Gemini AI
-      const aiResponseText = await sendMessageToAI(userMessageContent, conversationHistory);
+      // Call Gemini AI (with persistent conversationId)
+      const aiResponseData = await sendMessageToAI(
+        userMessageContent,
+        conversationHistory,
+        conversationId
+      );
+      if (aiResponseData?.conversationId && aiResponseData.conversationId !== conversationId) {
+        setConversationId(aiResponseData.conversationId);
+        // Reload conversations list to include new conversation
+        loadConversations();
+      }
 
       const aiResponse = {
         id: messages.length + 2,
         type: "ai",
-        content: aiResponseText,
+        content: aiResponseData?.message,
         timestamp: new Date().toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit' })
       };
 
@@ -147,7 +229,12 @@ export default function AIConsultation() {
           {/* Chat Section */}
           <Col xs={24} lg={16}>
             <Card className="chat-container">
-              <div className="chat-messages">
+              {loadingHistory && (
+                <div style={{ textAlign: 'center', padding: '20px' }}>
+                  <Spin tip="Đang tải lịch sử..." />
+                </div>
+              )}
+              <div className="chat-messages" style={{ opacity: loadingHistory ? 0.5 : 1 }}>
                 {messages.map((message) => (
                   <div key={message.id} className={`message ${message.type}`}>
                     <div className="message-avatar">
@@ -214,6 +301,78 @@ export default function AIConsultation() {
           {/* Sidebar */}
           <Col xs={24} lg={8}>
             <div className="ai-sidebar">
+              {/* Conversations History */}
+              <Card 
+                title={
+                  <Space>
+                    <HistoryOutlined />
+                    <span>Lịch sử hội thoại</span>
+                  </Space>
+                }
+                className="conversations-card"
+                extra={
+                  <Button 
+                    type="text" 
+                    icon={<PlusOutlined />} 
+                    size="small"
+                    onClick={handleNewConversation}
+                  >
+                    Mới
+                  </Button>
+                }
+              >
+                {loadingConversations ? (
+                  <div style={{ textAlign: 'center', padding: '20px' }}>
+                    <Spin />
+                  </div>
+                ) : conversations.length === 0 ? (
+                  <Text type="secondary" style={{ display: 'block', textAlign: 'center', padding: '20px' }}>
+                    Chưa có hội thoại nào
+                  </Text>
+                ) : (
+                  <List
+                    dataSource={conversations}
+                    renderItem={(conv) => (
+                      <List.Item
+                        style={{
+                          cursor: 'pointer',
+                          backgroundColor: conv.conversationId === conversationId ? '#e6f7ff' : 'transparent',
+                          padding: '8px 12px',
+                          borderRadius: '4px',
+                          marginBottom: '4px'
+                        }}
+                        onClick={() => handleSelectConversation(conv.conversationId)}
+                      >
+                        <List.Item.Meta
+                          title={
+                            <Text ellipsis style={{ maxWidth: '200px' }}>
+                              {conv.conversationId?.split('-').pop() || 'Hội thoại'}
+                            </Text>
+                          }
+                          description={
+                            <Space>
+                              <Text type="secondary" style={{ fontSize: '12px' }}>
+                                {conv.messageCount || 0} tin nhắn
+                              </Text>
+                              {conv.lastTimestamp && (
+                                <Text type="secondary" style={{ fontSize: '12px' }}>
+                                  {new Date(conv.lastTimestamp).toLocaleDateString("vi-VN", {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </Text>
+                              )}
+                            </Space>
+                          }
+                        />
+                      </List.Item>
+                    )}
+                  />
+                )}
+              </Card>
+
               {/* Quick Actions */}
               <Card title="Tính năng nhanh" className="quick-actions-card">
                 {quickActions.map((action, index) => (
