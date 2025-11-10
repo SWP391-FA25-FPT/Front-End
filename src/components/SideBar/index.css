@@ -1,73 +1,88 @@
 /* Ant Design Sidebar Customization */
-.ant-layout-sider .ant-layout-sider-children .ant-menu.ant-menu-inline-collapsed {
-  width: 4rem !important;
+.ant-layout-sider {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.ant-layout-sider .ant-layout-sider-children {
+  position: relative;
+  height: 100%;
+}
+
+/* Collapsed menu width - needs important due to Ant Design specificity */
+.ant-layout-sider
+  .ant-layout-sider-children
+  .ant-menu.ant-menu-inline-collapsed {
+  width: 4rem;
 }
 
 .ant-menu-inline-collapsed .ant-menu-item-icon {
-  width: 24px !important;
-  height: 24px !important;
-  margin-top: 5px !important;
-  margin-right: 5px !important;
+  width: 24px;
+  height: 24px;
+  margin-top: 5px;
+  margin-right: 5px;
 }
 
 /* Menu text wrapping for expanded sidebar */
 .ant-menu-inline:not(.ant-menu-inline-collapsed) .ant-menu-item {
-  white-space: normal !important;
-  line-height: 1.4 !important;
-  height: auto !important;
-  min-height: 40px !important;
+  white-space: normal;
+  line-height: 1.4;
+  height: auto;
+  min-height: 40px;
 }
 
 .ant-menu-inline:not(.ant-menu-inline-collapsed) .ant-menu-item a {
-  white-space: normal !important;
-  word-wrap: break-word !important;
-  overflow-wrap: break-word !important;
-  display: block !important;
-  line-height: 1.4 !important;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: block;
+  line-height: 1.4;
 }
 
 /* Premium Link Styling */
 .premium-link:hover,
 .premium-link.selected {
-  color: var(--primary-hover-color, #000) !important;
+  color: var(--primary-hover-color, #000);
 }
 
 /* Premium Dropdown Items */
 .ant-dropdown-menu-item {
-  color: #6c757d !important;
-  transition: color 0.3s ease !important;
+  color: #6c757d;
+  transition: color 0.3s ease;
 }
 
 .ant-dropdown-menu-item:hover {
-  color: #495057 !important;
-  background-color: #f8f9fa !important;
+  color: #495057;
+  background-color: #f8f9fa;
 }
 
 .ant-dropdown-menu-item a {
-  color: inherit !important;
+  color: inherit;
 }
 
 /* Logo Container */
 .logo-container {
-  max-width: 100% !important;
-  overflow: hidden !important;
-  height: auto !important;
-  min-height: 60px !important;
+  max-width: 100%;
+  overflow: hidden;
+  height: auto;
+  min-height: 60px;
 }
 
 .logo-container .ant-flex {
-  max-width: 100% !important;
-  flex-wrap: nowrap !important;
-  height: 100% !important;
+  max-width: 100%;
+  flex-wrap: nowrap;
+  height: 100%;
 }
 
 .logo-container img,
 .logo-container p {
-  margin: 0 !important;
+  margin: 0;
 }
 
 .logo-container p {
-  line-height: 1 !important;
+  line-height: 1;
 }
 
 /* Subscription menu item styling */
@@ -77,14 +92,14 @@
 
 .ant-menu-item-selected a span[style*="linear-gradient"],
 .ant-menu-item-selected a span[style*="background"] {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 /* Ensure badges don't break on smaller widths */
 .ant-menu-inline:not(.ant-menu-inline-collapsed) .ant-menu-item a {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .premium-cta-expanded {
