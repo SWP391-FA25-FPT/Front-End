@@ -7,15 +7,9 @@
 }
 
 body {
-<<<<<<< HEAD
-  font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-=======
   background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: #2f3e46;
->>>>>>> db19d30 (update giao dien user va login)
 }
 
 /* Optional: Add smooth scrolling */
@@ -32,16 +26,6 @@ html {
   background: #f1f1f1;
 }
 
-<<<<<<< HEAD
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-=======
 /* 🌸 Cột trái – Gọn gàng, cân đối */
 .profile-left-column {
   display: flex;
@@ -264,4 +248,3 @@ html {
     flex-direction: column;
   }
 }
->>>>>>> db19d30 (update giao dien user va login)

@@ -209,26 +209,6 @@ function Login() {
 
   // ----------------- RENDER -----------------
   return (
-<<<<<<< HEAD
-    <div className="login-container">
-      <div className="login-card">
-        {/* Logo Section */}
-        <div className="logo-section">
-          <div className="logo">
-            <Logo collapsed={false} />
-          </div>
-        </div>
-
-        {/* Title */}
-        <div className="page-title">
-          <h1>Đăng ký hoặc Đăng nhập</h1>
-        </div>
-
-        {/* Form Container with dotted border */}
-        <div className="form-container">
-          {error && <div className="alert alert-error">{error}</div>}
-          {success && <div className="alert alert-success">{success}</div>}
-=======
     <div className="login-wrapper">
       <div className="login-container">
         {/* LEFT PANEL */}
@@ -290,7 +270,6 @@ function Login() {
                     autoComplete="new-email"
                   />
                 </div>
->>>>>>> db19d30 (update giao dien user va login)
 
                 <div className="input-group">
                   <input
@@ -369,34 +348,6 @@ function Login() {
                   autoComplete="new-password"
                 />
 
-<<<<<<< HEAD
-              {/* Password Requirements */}
-              <div className="password-requirements">
-                <div className="requirement-item">
-                  <span className="requirement-circle"></span>
-                  <span>Tối thiểu phải 8 kí tự</span>
-                </div>
-                <div className="requirement-item">
-                  <span className="requirement-circle"></span>
-                  <span>Bao gồm 1 kí tự in hoa</span>
-                </div>
-                <div className="requirement-item">
-                  <span className="requirement-circle"></span>
-                  <span>Bao gồm 1 chữ số</span>
-                </div>
-                <div className="requirement-item">
-                  <span className="requirement-circle"></span>
-                  <span>Bao gồm 1 kí tự đặc biệt</span>
-                </div>
-                <a href="/" className="back-link">
-                                ← Quay lại đăng nhập
-                            </a>
-              </div>
-
-
-              <button type="submit" className="btn-register" disabled={loading}>
-                {loading ? 'Đang đăng ký...' : 'Đăng ký'}
-=======
                 {/* Password Requirements */}
                 <div className="password-requirements">
                   <div className={`requirement-item ${registerData.password.length >= 8 ? 'valid' : ''}`}>
@@ -450,27 +401,10 @@ function Login() {
                   </svg>
                 </div>
                 Tiếp tục với Google
->>>>>>> db19d30 (update giao dien user va login)
               </button>
             </div>
-<<<<<<< HEAD
-            Tiếp tục với Google
-          </button>
-          
-          <button 
-            className="btn-register-external"
-            onClick={() => {
-              setIsLogin(false);
-              setError('');
-              setSuccess('');
-            }}
-          >
-            Đăng ký
-          </button>
-=======
           </div>
 
->>>>>>> db19d30 (update giao dien user va login)
         </div>
 
         {/* Tab Buttons for switching
@@ -502,8 +436,5 @@ function Login() {
 }
 
 export default Login;
-<<<<<<< HEAD
 
 
-=======
->>>>>>> db19d30 (update giao dien user va login)
