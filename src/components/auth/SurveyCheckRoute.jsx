@@ -20,10 +20,9 @@ const SurveyCheckRoute = ({ children }) => {
   }
 
   if (!isAuthenticated()) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
-  // Check if user is first time login and needs to complete survey
   if (user && user.isFirstLogin) {
     return <Navigate to="/survey" replace />;
   }

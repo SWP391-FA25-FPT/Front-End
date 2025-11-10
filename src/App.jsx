@@ -9,13 +9,23 @@ import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import SurveyCheckRoute from "./components/auth/SurveyCheckRoute";
 import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
+
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import TakeSurvey from "./pages/TakeSurvey";
 import ProfilePage from "./pages/ProfilePage";
-import SupportPage from "./pages/SupportPage";
+import SupportPage from "./pages/SupportPage"; // Trang support chính
+
+// Thêm 6 import mới cho 6 trang support
+import GettingStarted from "./pages/support/GettingStarted";
+import NutritionTracking from "./pages/support/NutritionTracking";
+import MealPlanner from "./pages/support/MealPlanner";
+import AccountBilling from "./pages/support/AccountBilling";
+import ChallengesCommunity from "./pages/support/ChallengesCommunity";
+import PrivacySecurity from "./pages/support/PrivacySecurity";
+
 import Challenge from "./pages/Challenge";
 import ChallengeDetail from "./pages/ChallengeDetail";
 import Blog from "./pages/Blog";
@@ -50,8 +60,18 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
+          {/* --- CÁC ROUTE CÔNG KHAI (Guest có thể xem) --- */}
           <Route path="/" element={<HomePage />} />
           <Route path="/support" element={<SupportPage />} />
+          
+          {/* NOTE: Thêm 6 route tĩnh mới (BẮT BUỘC PHẢI CÓ) */}
+          <Route path="/support/getting-started" element={<GettingStarted />} />
+          <Route path="/support/nutrition-tracking" element={<NutritionTracking />} />
+          <Route path="/support/meal-planner" element={<MealPlanner />} />
+          <Route path="/support/account-billing" element={<AccountBilling />} />
+          <Route path="/support/challenges-community" element={<ChallengesCommunity />} />
+          <Route path="/support/privacy-security" element={<PrivacySecurity />} />
+
           <Route path="/challenge" element={<Challenge />} />
           <Route path="/challenge/:id" element={<ChallengeDetail />} />
           <Route path="/blog" element={<Blog />} />
@@ -125,8 +145,6 @@ function App() {
               </SurveyCheckRoute>
             }
           />
-
-          {/* Recipe protected routes */}
           <Route
             path="/recipe/create"
             element={
@@ -151,8 +169,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* My Recipes routes */}
           <Route
             path="/my-recipes"
             element={
@@ -201,8 +217,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* Subscription route */}
           <Route
             path="/subscription"
             element={
@@ -211,7 +225,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/notifications"
             element={
@@ -221,7 +234,6 @@ function App() {
             }
           />
 
-          {/* Redirect to home if route not found */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>

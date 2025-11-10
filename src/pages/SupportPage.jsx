@@ -1,46 +1,48 @@
 import React, { useState } from "react";
 import Layout from "../components/layout/AppLayout";
-import { Container } from "react-bootstrap"
+import { Container } from "react-bootstrap";
 import SupportCard from "../components/support/SupportCard";
-import Logo from "../assets/icon.svg";
+// import Logo from "../assets/icon.svg"; // Logo không được sử dụng, có thể xóa
 import "./style/SupportPage.css";
 
 export default function SupportPage() {
   const [search, setSearch] = useState("");
 
+  // NOTE: Đã SỬA LẠI icon từ Emoji sang tên Iconify
   const items = [
     {
-      icon: "🍎",
+      icon: "ph:apple-logo-bold", // <-- Sửa 1
       title: "Bắt đầu với M&M",
-      description: "Hướng dẫn chi tiết để bắt đầu hành trình dinh dưỡng của bạn",
+      description:
+        "Hướng dẫn chi tiết để bắt đầu hành trình dinh dưỡng của bạn",
       link: "/support/getting-started",
     },
     {
-      icon: "🥗",
+      icon: "ph:chart-pie-slice-bold", // <-- Sửa 2
       title: "Theo dõi dinh dưỡng",
       description: "Ghi chép và phân tích chế độ ăn uống hàng ngày",
       link: "/support/nutrition-tracking",
     },
     {
-      icon: "📅",
+      icon: "ph:calendar-check-bold", // <-- Sửa 3
       title: "Lên kế hoạch bữa ăn",
       description: "Tạo thực đơn cân bằng và phù hợp với mục tiêu",
       link: "/support/meal-planner",
     },
     {
-      icon: "💳",
+      icon: "ph:credit-card-bold", // <-- Sửa 4
       title: "Tài khoản & Thanh toán",
       description: "Quản lý thông tin cá nhân và phương thức thanh toán",
       link: "/support/account-billing",
     },
     {
-      icon: "🏆",
+      icon: "ph:trophy-bold", // <-- Sửa 5
       title: "Thử thách & Cộng đồng",
       description: "Tham gia cộng đồng và chinh phục các thử thách",
       link: "/support/challenges-community",
     },
     {
-      icon: "🔒",
+      icon: "ph:lock-key-bold", // <-- Sửa 6
       title: "Quyền riêng tư & Bảo mật",
       description: "Bảo vệ dữ liệu và quyền riêng tư của bạn",
       link: "/support/privacy-security",
@@ -52,10 +54,9 @@ export default function SupportPage() {
   );
 
   return (
-    <Layout> 
-      <Container className="py-4"> 
+    <Layout>
+      <Container className="py-4">
         <div className="support-page">
-
           {/* Phần tiêu đề */}
           <section className="support-header">
             <h1>Trung Tâm Hỗ Trợ</h1>
@@ -76,7 +77,7 @@ export default function SupportPage() {
             {filtered.map((item, index) => (
               <SupportCard
                 key={index}
-                icon={item.icon}
+                icon={item.icon} // Sẽ truyền "ph:apple-logo-bold"
                 title={item.title}
                 description={item.description}
                 link={item.link}

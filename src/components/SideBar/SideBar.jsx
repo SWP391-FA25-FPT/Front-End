@@ -4,14 +4,16 @@ import { Container } from "react-bootstrap";
 import { Button, ConfigProvider, Menu } from "antd";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/useAuth";
+// NOTE: Sửa import, thêm useNavigate
 import { useLocation, useNavigate } from "react-router-dom";
-import "./index.css"; 
+import "./index.css";
 
 const Index = ({ collapsed, toggleCollapsed }) => {
   const { user } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate(); // NOTE: Thêm hook
 
+  // Hàm này giữ nguyên, dùng để xác định mục nào đang active
   const getSelectedKey = () => {
     const path = location.pathname;
     if (path === "/") return "1";
@@ -43,11 +45,12 @@ const Index = ({ collapsed, toggleCollapsed }) => {
       if (path === "/my-recipes/private") return "8-3";
       if (path === "/my-recipes/published") return "8-4";
       if (path === "/my-recipes/drafts") return "8-5";
-      return "8"; 
+      return "8";
     }
-    return "1"; 
+    return "1";
   };
 
+  // NOTE: Đây là baseItems gốc
   const baseItems = [
     {
       key: "1",
@@ -162,31 +165,39 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     label: <a href="/admin">Admin</a>,
   };
 
-  const khoMonNgonIndex = baseItems.findIndex(item => item.key === "8");
-  if (khoMonNgonIndex !== -1 && !user) {
-    baseItems[khoMonNgonIndex] = {
-      ...baseItems[khoMonNgonIndex], 
-      label: "Kho Món Ngon", 
-      children: null,
-      onClick: () => navigate("/login"), 
-    };
-  }
+  // 1. Logic cho GUEST (chưa login)
+  if (!user) {
+    // Sửa "Kho Món Ngon" (key 8)
+    const khoMonNgonIndex = baseItems.findIndex(item => item.key === "8");
+    if (khoMonNgonIndex !== -1) {
+      baseItems[khoMonNgonIndex] = {
+        ...baseItems[khoMonNgonIndex],
+        label: "Kho Món Ngon",
+        children: null, // Xóa menu con
+        onClick: () => navigate("/login"), // Thêm click chuyển sang login
+      };
+    }
 
-  if (khoMonNgonIndex !== -1 && user) {
-      baseItems[khoMonNgonIndex].children.forEach(child => {
-        const href = child.label.props.href;
-        child.label = child.label.props.children;
-        child.onClick = () => navigate(href);
+    // Sửa "Premium" (key 2)
+    const premiumIndex = baseItems.findIndex(item => item.key === "2");
+    if (premiumIndex !== -1) {
+      // Sửa các mục con bên trong
+      baseItems[premiumIndex].children.forEach(childItem => {
+        // Giữ nguyên text, bỏ thẻ <a>
+        childItem.label = childItem.label.props.children; 
+        childItem.onClick = () => navigate("/login"); // Thêm click chuyển sang login
       });
+    }
   }
 
+  // 2. Logic thay thế tất cả <a href> bằng onClick (chuẩn SPA)
+  // Điều này áp dụng cho Guest (các mục còn lại) và User (tất cả các mục)
   baseItems.forEach(item => {
+    // Xử lý mục cha
     if (item.label && typeof item.label === 'object' && item.label.type === 'a') {
       const href = item.label.props.href;
-      const labelText = item.label.props.children;
-      
-      item.label = labelText;
-      if (!item.onClick) {
+      item.label = item.label.props.children; // Chuyển <a>Text</a> thành "Text"
+      if (!item.onClick) { // Chỉ thêm nếu chưa có onClick (tránh ghi đè guest logic)
         item.onClick = () => navigate(href);
       }
     }
@@ -195,16 +206,15 @@ const Index = ({ collapsed, toggleCollapsed }) => {
       item.children.forEach(child => {
         if (child.label && typeof child.label === 'object' && child.label.type === 'a') {
           const href = child.label.props.href;
-          const labelText = child.label.props.children;
-          
-          child.label = labelText;
-          child.onClick = () => navigate(href);
+          child.label = child.label.props.children;
+          if (!child.onClick) { 
+            child.onClick = () => navigate(href);
+          }
         }
       });
     }
   });
-  
-  // Mục Admin
+
   if (adminItem.label && typeof adminItem.label === 'object' && adminItem.label.type === 'a') {
     const href = adminItem.label.props.href;
     adminItem.label = adminItem.label.props.children;
@@ -219,8 +229,17 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   useEffect(() => {
     if (collapsed) {
       setOpenKeys([]);
+    } else {
+      const currentKey = getSelectedKey();
+      if (currentKey.includes("-")) {
+        const parentKey = currentKey.split("-")[0];
+        setOpenKeys([parentKey]);
+      } else {
+        setOpenKeys([]); 
+      }
     }
-  }, [collapsed]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collapsed, location.pathname]); 
 
   const PremiumCTA = () => {
     if (collapsed) {
@@ -253,7 +272,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         >
           <Button
             type="primary"
-            href="/subscription"
+            href="/subscription" 
             size="large"
             block
             className="premium-cta-button"
@@ -329,7 +348,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
             selectedKeys={[getSelectedKey()]}
             mode="inline"
             items={items} 
-            openKeys={openKeys}
+            openKeys={openKeys} 
             onOpenChange={setOpenKeys}
             className="font-sans fw-semibold"
             inlineCollapsed={collapsed}
