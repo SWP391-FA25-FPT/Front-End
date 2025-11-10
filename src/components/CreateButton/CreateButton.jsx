@@ -2,12 +2,13 @@ import React from "react";
 import { Button } from "antd";
 import { Icon } from "@iconify/react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 
 const Index = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check if we're on the blog page
   const isBlogPage =
     location.pathname.startsWith("/blog") &&
     location.pathname !== "/blog/create";
@@ -20,15 +21,35 @@ const Index = () => {
     }
   };
 
+  if (user) {
+    return (
+      <React.Fragment>
+        <Button
+          type="primary"
+          style={{ backgroundColor: "#FFBA33" }}
+          onClick={handleCreate}
+        >
+          <Icon icon="ic:baseline-plus" width="24" height="24" />
+          {isBlogPage ? "Tạo Blog" : "Viết món mới"}
+        </Button>
+      </React.Fragment>
+    );
+  }
+
   return (
     <React.Fragment>
       <Button
         type="primary"
-        style={{ backgroundColor: "#FFBA33" }}
-        onClick={handleCreate}
+        style={{ backgroundColor: "#FFBA33" }} 
+        onClick={() => navigate("/login")} 
       >
-        <Icon icon="ic:baseline-plus" width="24" height="24" />
-        {isBlogPage ? "Tạo Blog" : "Viết món mới"}
+        <Icon 
+          icon="mdi:login-variant" 
+          width="20" 
+          height="20" 
+          style={{ marginRight: '4px' }}
+        />
+        Đăng nhập
       </Button>
     </React.Fragment>
   );

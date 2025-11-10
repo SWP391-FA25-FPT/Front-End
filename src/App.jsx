@@ -38,7 +38,7 @@ import PrivateRecipes from "./pages/PrivateRecipes";
 import PublishedRecipes from "./pages/PublishedRecipes";
 import SavedRecipes from "./pages/SavedRecipes";
 import Subscription from "./pages/Subscription";
-import NotificationPage from "./pages/NotificationPage"; 
+import NotificationPage from "./pages/NotificationPage";
 
 function App() {
   return (
@@ -50,7 +50,16 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
-          {/* Survey route */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/support" element={<SupportPage />} />
+          <Route path="/challenge" element={<Challenge />} />
+          <Route path="/challenge/:id" element={<ChallengeDetail />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogDetail />} />
+          <Route path="/top-meal-plans" element={<TopMealPlans />} />
+          <Route path="/search" element={<SearchingPage />} />
+          <Route path="/recipe/:id" element={<RecipeDetail />} />
+
           <Route
             path="/survey"
             element={
@@ -60,15 +69,6 @@ function App() {
             }
           />
 
-          {/* Protected routes that require survey completion */}
-          <Route
-            path="/"
-            element={
-              <SurveyCheckRoute>
-                <HomePage />
-              </SurveyCheckRoute>
-            }
-          />
           <Route
             path="/profile"
             element={
@@ -78,51 +78,11 @@ function App() {
             }
           />
           <Route
-            path="/support"
-            element={
-              <SurveyCheckRoute>
-                <SupportPage />
-              </SurveyCheckRoute>
-            }
-          />
-          <Route
-            path="/challenge"
-            element={
-              <SurveyCheckRoute>
-                <Challenge />
-              </SurveyCheckRoute>
-            }
-          />
-          <Route
-            path="/challenge/:id"
-            element={
-              <SurveyCheckRoute>
-                <ChallengeDetail />
-              </SurveyCheckRoute>
-            }
-          />
-          <Route
-            path="/blog"
-            element={
-              <SurveyCheckRoute>
-                <Blog />
-              </SurveyCheckRoute>
-            }
-          />
-          <Route
             path="/blog/create"
             element={
               <ProtectedRoute>
                 <BlogCreate />
               </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/blog/:id"
-            element={
-              <SurveyCheckRoute>
-                <BlogDetail />
-              </SurveyCheckRoute>
             }
           />
           <Route
@@ -165,32 +125,8 @@ function App() {
               </SurveyCheckRoute>
             }
           />
-          <Route
-            path="/top-meal-plans"
-            element={
-              <SurveyCheckRoute>
-                <TopMealPlans />
-              </SurveyCheckRoute>
-            }
-          />
-          <Route
-            path="/search"
-            element={
-              <SurveyCheckRoute>
-                <SearchingPage />
-              </SurveyCheckRoute>
-            }
-          />
 
-          {/* Recipe routes */}
-          <Route
-            path="/recipe/:id"
-            element={
-              <SurveyCheckRoute>
-                <RecipeDetail />
-              </SurveyCheckRoute>
-            }
-          />
+          {/* Recipe protected routes */}
           <Route
             path="/recipe/create"
             element={

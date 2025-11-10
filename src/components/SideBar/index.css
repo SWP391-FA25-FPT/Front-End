@@ -191,19 +191,15 @@
   box-shadow: 0 6px 15px -3px rgba(251, 191, 36, 0.6);
 }
 
-/* === BẮT ĐẦU PHẦN CSS CHO THANH CUỘN === */
-/* Class này được thêm vào <Container> trong Index.js */
 .sidebar-scroll-container {
-  height: 100%; /* Lấp đầy 100% chiều cao của Sider */
-  overflow-y: auto; /* Tự động thêm thanh cuộn dọc KHI CẦN */
-  overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+  height: 100%; 
+  overflow-y: auto; 
+  overflow-x: hidden; 
 
-  /* Tùy chỉnh thanh cuộn cho đẹp hơn (cho Firefox) */
   scrollbar-width: thin;
   scrollbar-color: #e0e0e0 transparent;
 }
 
-/* (Cho Chrome/Safari) */
 .sidebar-scroll-container::-webkit-scrollbar {
   width: 6px;
 }

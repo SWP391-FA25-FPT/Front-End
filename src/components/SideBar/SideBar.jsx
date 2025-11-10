@@ -4,14 +4,14 @@ import { Container } from "react-bootstrap";
 import { Button, ConfigProvider, Menu } from "antd";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/useAuth";
-import { useLocation } from "react-router-dom";
-import "./index.css"; // Import file CSS
+import { useLocation, useNavigate } from "react-router-dom";
+import "./index.css"; 
 
 const Index = ({ collapsed, toggleCollapsed }) => {
   const { user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate(); 
 
-  // Determine selected key based on current location
   const getSelectedKey = () => {
     const path = location.pathname;
     if (path === "/") return "1";
@@ -37,16 +37,15 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     if (path === "/support") return "7";
     if (path === "/admin") return "9";
 
-    // My Recipes routes
     if (path.startsWith("/my-recipes/")) {
       if (path === "/my-recipes/all") return "8-1";
       if (path === "/my-recipes/saved") return "8-2";
       if (path === "/my-recipes/private") return "8-3";
       if (path === "/my-recipes/published") return "8-4";
       if (path === "/my-recipes/drafts") return "8-5";
-      return "8"; // default to parent
+      return "8"; 
     }
-    return "1"; // default to home
+    return "1"; 
   };
 
   const baseItems = [
@@ -162,6 +161,55 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     icon: <Icon icon="mdi:shield-account" width="24" height="24" />,
     label: <a href="/admin">Admin</a>,
   };
+
+  const khoMonNgonIndex = baseItems.findIndex(item => item.key === "8");
+  if (khoMonNgonIndex !== -1 && !user) {
+    baseItems[khoMonNgonIndex] = {
+      ...baseItems[khoMonNgonIndex], 
+      label: "Kho Món Ngon", 
+      children: null,
+      onClick: () => navigate("/login"), 
+    };
+  }
+
+  if (khoMonNgonIndex !== -1 && user) {
+      baseItems[khoMonNgonIndex].children.forEach(child => {
+        const href = child.label.props.href;
+        child.label = child.label.props.children;
+        child.onClick = () => navigate(href);
+      });
+  }
+
+  baseItems.forEach(item => {
+    if (item.label && typeof item.label === 'object' && item.label.type === 'a') {
+      const href = item.label.props.href;
+      const labelText = item.label.props.children;
+      
+      item.label = labelText;
+      if (!item.onClick) {
+        item.onClick = () => navigate(href);
+      }
+    }
+
+    if (item.children) {
+      item.children.forEach(child => {
+        if (child.label && typeof child.label === 'object' && child.label.type === 'a') {
+          const href = child.label.props.href;
+          const labelText = child.label.props.children;
+          
+          child.label = labelText;
+          child.onClick = () => navigate(href);
+        }
+      });
+    }
+  });
+  
+  // Mục Admin
+  if (adminItem.label && typeof adminItem.label === 'object' && adminItem.label.type === 'a') {
+    const href = adminItem.label.props.href;
+    adminItem.label = adminItem.label.props.children;
+    adminItem.onClick = () => navigate(href);
+  }
 
   const items =
     user && user.role === "admin" ? [...baseItems, adminItem] : baseItems;
@@ -280,7 +328,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
           <Menu
             selectedKeys={[getSelectedKey()]}
             mode="inline"
-            items={items}
+            items={items} 
             openKeys={openKeys}
             onOpenChange={setOpenKeys}
             className="font-sans fw-semibold"

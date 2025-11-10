@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-// === NOTE 1: IMPORT LAYOUT CỦA BẠN ===
-import AppLayout from '../components/layout/AppLayout'; 
 import {
-  // Layout, // (Xóa 'Layout' của antd để tránh trùng)
+  Layout,
   Typography,
   Card,
   Tabs,
@@ -12,7 +10,7 @@ import {
   Space,
   Empty,
   Spin,
-  Tooltip,
+  Tooltip, // NOTE: Đã xóa Tooltip khỏi import (nếu bạn không dùng nữa)
 } from 'antd';
 import { Icon } from '@iconify/react';
 
@@ -110,71 +108,64 @@ const NotificationPage = () => {
   );
 
   return (
-    // === NOTE 2: BỌC TOÀN BỘ NỘI DUNG TRONG <AppLayout> ===
-    <AppLayout>
-      <div style={{ padding: '16px 24px' }}>
-        <Card
-          title={<Title level={3}>Trung tâm thông báo</Title>}
-          extra={markAllButton}
-          style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)' }}
-        >
-          <Tabs activeKey={filter} onChange={(key) => setFilter(key)}>
-            <TabPane tab={`Tất cả (${notifications.length})`} key="all" />
-            <TabPane
-              tab={`Chưa đọc (${notifications.filter(n => !n.read).length})`}
-              key="unread"
-            />
-          </Tabs>
+    <div style={{ padding: '16px 24px' }}>
+      <Card
+        title={<Title level={3}>Trung tâm thông báo</Title>}
+        extra={markAllButton}
+        style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)' }}
+      >
+        <Tabs activeKey={filter} onChange={(key) => setFilter(key)}>
+          <TabPane tab={`Tất cả (${notifications.length})`} key="all" />
+          <TabPane
+            tab={`Chưa đọc (${notifications.filter(n => !n.read).length})`}
+            key="unread"
+          />
+        </Tabs>
 
-          {loading ? (
-            <div style={{ textAlign: 'center', padding: '50px' }}>
-              <Spin size="large" />
-            </div>
-          ) : filteredNotifications.length === 0 ? (
-            <Empty description="Bạn không có thông báo nào" />
-          ) : (
-            <List
-              itemLayout="horizontal"
-              dataSource={filteredNotifications}
-              renderItem={(item) => (
-                // === NOTE: THAY ĐỔI LỚN Ở ĐÂY ===
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            <Spin size="large" />
+          </div>
+        ) : filteredNotifications.length === 0 ? (
+          <Empty description="Bạn không có thông báo nào" />
+        ) : (
+          <List
+            itemLayout="horizontal"
+            dataSource={filteredNotifications}
+            renderItem={(item) => (
                 <List.Item
-                  // 1. Thêm onClick vào đây
-                  onClick={() => handleMarkAsRead(item.id)}
-                  // 2. Xóa 'actions' (nút check)
-                  // 3. Thêm style (con trỏ chuột + làm mờ)
-                  style={{ 
-                    opacity: item.read ? 0.6 : 1,
-                    cursor: item.read ? 'default' : 'pointer'
-                  }} 
-                >
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        icon={<Icon icon={item.icon} />}
-                        style={{
-                          backgroundColor: item.bgColor,
-                          color: item.color,
-                        }}
-                      />
-                    }
-                    title={
-                      <span style={{ fontWeight: item.read ? 400 : 600 }}>
-                        {item.title}
-                      </span>
-                    }
-                    description={item.description}
-                  />
-                  <div style={{ color: '#9CA3AF', fontSize: '12px' }}>
-                    {new Date(item.date).toLocaleDateString('vi-VN')}
-                  </div>
-                </List.Item>
-              )}
-            />
-          )}
-        </Card>
-      </div>
-    </AppLayout>
+                onClick={() => handleMarkAsRead(item.id)}
+                style={{ 
+                  opacity: item.read ? 0.6 : 1,
+                  cursor: item.read ? 'default' : 'pointer'
+                }} 
+              >
+                <List.Item.Meta
+                  avatar={
+                    <Avatar
+                      icon={<Icon icon={item.icon} />}
+                      style={{
+                        backgroundColor: item.bgColor,
+                        color: item.color,
+                      }}
+                    />
+                  }
+                  title={
+                    <span style={{ fontWeight: item.read ? 400 : 600 }}>
+                      {item.title}
+                    </span>
+                  }
+                  description={item.description}
+                />
+                <div style={{ color: '#9CA3AF', fontSize: '12px' }}>
+                  {new Date(item.date).toLocaleDateString('vi-VN')}
+                </div>
+              </List.Item>
+            )}
+          />
+        )}
+      </Card>
+    </div>
   );
 };
 

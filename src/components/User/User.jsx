@@ -7,31 +7,37 @@ const Index = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
+  if (!user) {
+    return null;
+  }
+
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/');
   };
 
   const items = [
     {
       key: "1",
       label: "Profile",
-      onClick: () => navigate('/user'),
+      onClick: () => navigate('/profile'),
     },
     {
       key: "2",
       label: "Settings",
+      onClick: () => navigate('/profile'),
     },
     {
       key: "3",
       label: "Logout",
       onClick: handleLogout,
+      danger: true, 
     },
   ];
 
   return (
     <React.Fragment>
-      <Dropdown trigger={["click"]} menu={{items}}>
+      <Dropdown trigger={["click"]} menu={{ items }}>
         <a>
           <img
             src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
@@ -45,5 +51,3 @@ const Index = () => {
 };
 
 export default Index;
-
-
