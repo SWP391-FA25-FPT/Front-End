@@ -21,12 +21,14 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const data = await getProfile();
+
         // Fallback cho recipes và user
         setProfileData({
-          user: data.user || {},
+          user: data || {},      // lấy trực tiếp object API trả về
           stats: data.stats || {},
           recipes: data.recipes || [],
         });
+
       } catch (err) {
         console.error(err);
         message.error("Không thể tải dữ liệu người dùng");

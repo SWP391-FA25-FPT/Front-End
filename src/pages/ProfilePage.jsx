@@ -9,16 +9,23 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const loadProfile = async () => {
+    try {
+      const response = await getProfile();
+      if (response) {
+        setUserProfile(response);
+      }
+    } catch (err) {
+      console.error("Lỗi tải profile:", err);
+      setError("Failed to fetch profile");
+    }
+  };
+
+    useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         setLoading(true);
-        const response = await getProfile();
-        if (response) {
-          setUserProfile(response);
-        } else {
-          setError("Failed to fetch profile");
-        }
+        await loadProfile();  // Gọi lại hàm loadProfile ở đây
       } catch (err) {
         console.error("Error fetching user profile:", err);
         setError("Failed to fetch user profile");
@@ -84,6 +91,7 @@ const ProfilePage = () => {
         <ProfileForm 
           userProfile={userProfile} 
           onProfileUpdate={handleProfileUpdate}
+          reloadProfile={loadProfile}
         />
       </div>
     </Layout>

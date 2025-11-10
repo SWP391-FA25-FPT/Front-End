@@ -1,47 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-const ProfileForm = ({ userProfile, onProfileUpdate }) => {
+const ProfileForm = ({ userProfile, onProfileUpdate, reloadProfile }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    birthdate: '',
-    gender: '',
-    weight: '',
-    height: '',
-    phone: '',
-    email: '',
-    workHabits: '',
-    eatingHabits: '',
-    diet: '',
-    allergies: ''
+    name: "",
+    birthdate: "",
+    gender: "",
+    weight: "",
+    height: "",
+    phone: "",
+    email: "",
+    workHabits: "",
+    eatingHabits: "",
+    diet: "",
+    allergies: "",
   });
 
   const [avatar, setAvatar] = useState(null); // ảnh preview
+  const [updateStatus, setUpdateStatus] = useState(null); // 'success' | 'error' | null
 
   // Khi userProfile thay đổi → cập nhật form
   useEffect(() => {
     if (userProfile) {
       setFormData({
-        name: userProfile.name || '',
-        birthdate: userProfile.profile?.age
-          ? new Date(new Date().getFullYear() - userProfile.profile.age, 0, 1)
-            .toISOString()
-            .split('T')[0]
-          : '2025-01-01',
+        name: userProfile.name || "",
+        birthdate: userProfile.profile?.birthdate
+          ? userProfile.profile.birthdate.substring(0, 10)
+          : "",
         gender:
-          userProfile.profile?.gender === 'male'
-            ? 'Nam'
-            : userProfile.profile?.gender === 'female'
-              ? 'Nữ'
-              : 'Khác',
-        weight: userProfile.profile?.weight || '',
-        height: userProfile.profile?.height || '',
-        phone: '',
-        email: userProfile.email || '',
-        workHabits: userProfile.profile?.workHabits || '',
-        eatingHabits: userProfile.profile?.eatingHabits || '',
-        diet: userProfile.profile?.diet || '',
-        allergies:
-          userProfile.profile?.allergies?.join(', ') || ''
+          userProfile.profile?.gender === "male"
+            ? "Nam"
+            : userProfile.profile?.gender === "female"
+              ? "Nữ"
+              : "Khác",
+        weight: userProfile.profile?.weight || "",
+        height: userProfile.profile?.height || "",
+        phone: userProfile.phone || "",
+        email: userProfile.email || "",
+        workHabits: userProfile.profile?.workHabits || "",
+        eatingHabits: userProfile.profile?.eatingHabits || "",
+        diet: userProfile.profile?.diet || "",
+        allergies: userProfile.profile?.allergies?.join(", ") || "",
       });
     }
   }, [userProfile]);
@@ -51,11 +49,11 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  // ✅ Xử lý chọn ảnh mới
+  // Xử lý chọn ảnh mới
   const handleAvatarUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -69,53 +67,77 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
     try {
       const updateData = {
         name: formData.name,
+        phone: formData.phone,
         profile: {
           weight: formData.weight ? Number(formData.weight) : undefined,
           height: formData.height ? Number(formData.height) : undefined,
           gender:
-            formData.gender === 'Nam'
-              ? 'male'
-              : formData.gender === 'Nữ'
-                ? 'female'
-                : 'other',
-          age: formData.birthdate
-            ? new Date().getFullYear() -
-            new Date(formData.birthdate).getFullYear()
-            : undefined,
+            formData.gender === "Nam"
+              ? "male"
+              : formData.gender === "Nữ"
+                ? "female"
+                : "other",
+          birthdate: formData.birthdate,
           workHabits: formData.workHabits || undefined,
           eatingHabits: formData.eatingHabits || undefined,
           diet: formData.diet || undefined,
           allergies: formData.allergies
             ? formData.allergies
-              .split(',')
+              .split(",")
               .map((a) => a.trim())
               .filter((a) => a)
-            : undefined
-        }
+            : undefined,
+        },
       };
 
       const result = await onProfileUpdate(updateData);
 
       if (result.success) {
-        alert('Cập nhật thông tin thành công!');
+        setUpdateStatus("success");
+        if (typeof reloadProfile === "function") {
+          reloadProfile(); // thêm dấu ngoặc để gọi hàm
+        }
+        setTimeout(() => setUpdateStatus(null), 3000);
       } else {
-        alert(`Lỗi: ${result.message}`);
+        setUpdateStatus("error");
+        setTimeout(() => setUpdateStatus(null), 3000);
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
-      alert('Có lỗi xảy ra khi cập nhật thông tin!');
+      console.error("Error updating profile:", error);
+      alert("Có lỗi xảy ra khi cập nhật thông tin!");
     }
   };
 
   const handleSkip = () => {
-    console.log('Skip profile update');
-    alert('Đã bỏ qua cập nhật thông tin');
+    console.log("Skip profile update");
+    alert("Đã bỏ qua cập nhật thông tin");
   };
 
   return (
     <div className="profile-form-container">
+      {updateStatus && (
+        <div className="profile-toast-overlay">
+          <div className="profile-toast-card">
+            <div className="confetti"></div>
+
+            <h2 className="toast-title">
+              {updateStatus === "success"
+                ? "Cập nhật thành công!"
+                : "Có lỗi xảy ra rồi!"}
+            </h2>
+
+            <p className="toast-subtext">
+              {updateStatus === "success"
+                ? "Thông tin của bạn đã được lưu lại."
+                : "Vui lòng thử lại sau nhé."}
+            </p>
+          </div>
+        </div>
+      )}
+
+
       <div className="profile-layout">
-        {/* 🌿 Cột trái - Avatar & thông tin cơ bản */}
+        {/* Cột trái - Avatar & thông tin cơ bản */}
         <div className="profile-left-column">
           <div
             className="profile-avatar-large"
@@ -124,8 +146,9 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
             {formData.avatar ? (
               <img src={formData.avatar} alt="Avatar" />
             ) : (
-              <span>👤</span>
+              <span></span>
             )}
+
             <input
               id="avatarUpload"
               type="file"
@@ -136,14 +159,16 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
                 if (file) {
                   const reader = new FileReader();
                   reader.onloadend = () => {
-                    setFormData((prev) => ({ ...prev, avatar: reader.result }));
+                    setFormData((prev) => ({
+                      ...prev,
+                      avatar: reader.result,
+                    }));
                   };
                   reader.readAsDataURL(file);
                 }
               }}
             />
           </div>
-
 
           {/* Thông tin cơ bản */}
           <div className="profile-form-group">
@@ -232,9 +257,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
               </div>
             </div>
 
-            <h3 className="profile-section-title">
-              Thông tin chế độ sinh hoạt
-            </h3>
+            <h3 className="profile-section-title">Thông tin chế độ sinh hoạt</h3>
 
             <div className="profile-form-group">
               <label>Thói quen làm việc</label>
@@ -287,10 +310,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
             </div>
 
             <div className="profile-button-group">
-              <button
-                type="submit"
-                className="profile-btn profile-btn-primary"
-              >
+              <button type="submit" className="profile-btn profile-btn-primary">
                 Cập nhật
               </button>
               <button

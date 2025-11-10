@@ -1,4 +1,4 @@
-/* 🌿 Blog Custom Styles - Mint Theme */
+/* Blog Custom Styles */
 
 /* Hero Section */
 .blog-hero {
@@ -60,10 +60,9 @@
   color: #f8b602;
 }
 
-/* 🌱 Category Tag */
 .blog-category-tag {
-  background: #eaf7f3;
-  color: #2c6e63;
+  background: #fff8ee;
+  color: #f8b602;
   padding: 0.4rem 0.8rem;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -92,9 +91,8 @@
   margin-bottom: 1.2rem;
 }
 
-/* 🌿 Read More Button */
 .blog-read-more-btn {
-  background: #2c6e63;
+  background: #f8b602;
   color: white;
   padding: 0.7rem 2rem;
   border-radius: 25px;
@@ -114,13 +112,13 @@
 }
 
 .blog-read-more-btn:hover {
-  background: #1f4e47;
+  background: #ffa30f;
   color: white;
   text-decoration: none;
   transform: translateY(-1px);
 }
 
-/* 🌿 Category Pills */
+/* Category Pills */
 .blog-category-pills {
   display: flex;
   flex-wrap: wrap;
@@ -135,25 +133,25 @@
   font-weight: 500;
   font-size: 0.875rem;
   transition: all 0.3s ease;
-  border: 1px solid #bfe3d9;
+  border: 1px solid #e5e7eb;
   cursor: pointer;
   background: #ffffff;
-  color: #2c6e63;
+  color: #6b7280;
 }
 
 .blog-category-pill:hover {
-  background: #2c6e63;
+  background: #f8b602;
   color: #ffffff;
-  border-color: #2c6e63;
+  border-color: #d1d5db;
   transform: translateY(-1px);
 }
 
 .blog-category-pill.active {
-  background: #2c6e63;
+  background: #f8b602;
   color: white;
 }
 
-/* 🌿 Post Grid */
+/* Post Grid */
 .blog-post-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -216,10 +214,9 @@
   color: #f8b602;
 }
 
-/* 🌿 Post Category Tag */
 .blog-post-category {
-  background: #eaf7f3;
-  color: #2c6e63;
+  background: #fff8ee;
+  color: #f8b602;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-weight: 500;
@@ -240,7 +237,7 @@
 }
 
 .blog-post-title:hover {
-  color: #2c6e63;
+  color: #f8b602;
 }
 
 .blog-post-title a {
@@ -249,7 +246,7 @@
 }
 
 .blog-post-title a:hover {
-  color: #2c6e63;
+  color: #f8b602;
 }
 
 .blog-post-excerpt {
@@ -263,7 +260,7 @@
   overflow: hidden;
 }
 
-/* 🌿 Pagination */
+/* Pagination */
 .blog-pagination {
   display: flex;
   justify-content: center;
@@ -275,9 +272,9 @@
 
 .blog-pagination-btn {
   padding: 0.6rem 1.2rem;
-  border: 1px solid #bfe3d9;
+  border: 1px solid #e5e7eb;
   background: white;
-  color: #2c6e63;
+  color: #6b7280;
   border-radius: 16px;
   font-weight: 500;
   font-size: 0.9rem;
@@ -292,25 +289,25 @@
 }
 
 .blog-pagination-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2c6e63 0%, #1f4e47 100%);
+  background: linear-gradient(135deg, #f8b602 0%, #ffa30f 100%);
   color: white;
   border-color: transparent;
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(44, 110, 99, 0.3);
+  box-shadow: 0 4px 16px rgba(248, 182, 2, 0.3);
 }
 
 .blog-pagination-btn.active {
-  background: linear-gradient(135deg, #2c6e63 0%, #1f4e47 100%);
+  background: linear-gradient(135deg, #f8b602 0%);
   color: white;
   border-color: transparent;
-  box-shadow: 0 4px 16px rgba(44, 110, 99, 0.3);
+  box-shadow: 0 4px 16px rgba(180, 89, 41, 0.3);
   transform: translateY(-1px);
 }
 
 .blog-pagination-btn.active:hover {
-  background: linear-gradient(135deg, #1f4e47 0%, #163833 100%);
+  background: linear-gradient(135deg, #ffa30f 0%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(44, 110, 99, 0.4);
+  box-shadow: 0 6px 20px rgba(52, 50, 50, 0.4);
 }
 
 .blog-pagination-btn:disabled {
@@ -327,7 +324,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* 🌿 Responsive Design */
+/* Responsive Design */
 @media (max-width: 1024px) {
   .blog-post-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -344,28 +341,23 @@
     gap: 1.5rem;
   }
 
-
   .blog-hero-content {
     padding-left: 0;
     margin-top: 0;
   }
 
-
   .blog-title {
     font-size: 2rem;
   }
-
 
   .blog-post-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
-
   .blog-category-pills {
     gap: 0.5rem;
   }
-
 
   .blog-category-pill {
     padding: 0.375rem 1rem;
@@ -373,7 +365,7 @@
   }
 }
 
-/* 🌿 Animation */
+/* Animation */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -389,20 +381,20 @@
   animation: fadeInUp 0.6s ease-out;
 }
 
-/* 🌿 Custom Scrollbar */
+/* Custom Scrollbar */
 .blog-container::-webkit-scrollbar {
   width: 6px;
 }
 
 .blog-container::-webkit-scrollbar-track {
-  background: #eaf7f3;
+  background: #f1f5f9;
 }
 
 .blog-container::-webkit-scrollbar-thumb {
-  background: #2c6e63;
+  background: #ff6b35;
   border-radius: 3px;
 }
 
 .blog-container::-webkit-scrollbar-thumb:hover {
-  background: #1f4e47;
+  background: #f7931e;
 }
