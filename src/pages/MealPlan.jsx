@@ -1,108 +1,412 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { styles } from "./style/styles";
-import Header from "../components/MealPlan/Header";
-import MealSection from "../components/MealPlan/MealSection";
-import TotalsFooter from "../components/MealPlan/TotalsFooter";
-import DEFAULT_MEALS from "../data/mealData.json";
 import Layout from "../components/layout/SettingLayout";
 import "./style/MealPlan.css";
-
-function multiplyByGrams(baseValue, grams) {
-  return (baseValue * grams) / 100;
-}
+import { 
+  getMealPlans,
+  generateMealPlan, 
+  regenerateMealPlan,
+  deleteMealPlan as deleteMealPlanAPI,
+  generateWeeklyMealPlan 
+} from "../apis/mealplan";
 
 export default function MealPlan() {
-  const [meals, setMeals] = useState(DEFAULT_MEALS);
+  const [mealPlanData, setMealPlanData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const navigate = useNavigate();
 
-  const totals = useMemo(() => {
-    let cals = 0,
-      proteins = 0,
-      carbs = 0,
-      fats = 0;
-    meals.forEach((meal) => {
-      meal.items.forEach((it) => {
-        const ratio = it.grams / 100;
-        cals += it.cals * ratio;
-        proteins += it.proteins * ratio;
-        carbs += it.carbs * ratio;
-        fats += it.fats * ratio;
-      });
+  // Check for meal plan on mount and when date changes
+  useEffect(() => {
+    checkMealPlanForDate();
+  }, [selectedDate]);
+
+  // Check if we need to refresh when day changes
+  useEffect(() => {
+    const checkDayChange = setInterval(() => {
+      const now = new Date();
+      const currentDateStr = now.toISOString().split('T')[0];
+      const selectedDateStr = selectedDate.toISOString().split('T')[0];
+      
+      // If selected date is not today, don't auto-refresh
+      if (selectedDateStr !== currentDateStr) return;
+      
+      // Check if meal plan date is different from today
+      if (mealPlanData) {
+        const mealPlanDateStr = new Date(mealPlanData.date).toISOString().split('T')[0];
+        if (mealPlanDateStr !== currentDateStr) {
+          // New day, clear meal plan
+          setMealPlanData(null);
+        }
+      }
+    }, 60000); // Check every minute
+
+    return () => clearInterval(checkDayChange);
+  }, [mealPlanData, selectedDate]);
+
+  const checkMealPlanForDate = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const dateStr = selectedDate.toISOString().split('T')[0];
+      const response = await getMealPlans({ date: dateStr });
+      
+      if (response.success && response.data && response.data.length > 0) {
+        setMealPlanData(response.data[0]);
+      } else {
+        setMealPlanData(null);
+      }
+    } catch (err) {
+      console.error('Error loading meal plan:', err);
+      setMealPlanData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Get all unique ingredients from meal plan
+  const getAllIngredients = useMemo(() => {
+    if (!mealPlanData || !mealPlanData.meals) return [];
+    
+    const ingredientMap = new Map();
+    
+    mealPlanData.meals.forEach(meal => {
+      if (meal.ingredients) {
+        meal.ingredients.forEach(ingredient => {
+          if (ingredientMap.has(ingredient.name)) {
+            // Ingredient exists, we might want to combine amounts later
+            const existing = ingredientMap.get(ingredient.name);
+            ingredientMap.set(ingredient.name, {
+              ...existing,
+              amount: `${existing.amount}, ${ingredient.amount}`
+            });
+          } else {
+            ingredientMap.set(ingredient.name, { ...ingredient });
+          }
+        });
+      }
     });
-    return {
-      cals: Math.round(cals),
-      proteins: Math.round(proteins),
-      carbs: Math.round(carbs),
-      fats: Math.round(fats),
-    };
-  }, [meals]);
+    
+    return Array.from(ingredientMap.values());
+  }, [mealPlanData]);
 
-  function updateGrams(mealIndex, itemIndex, grams) {
-    setMeals((prev) => {
-      const next = [...prev];
-      const meal = { ...next[mealIndex] };
-      const items = [...meal.items];
-      items[itemIndex] = { ...items[itemIndex], grams };
-      meal.items = items;
-      next[mealIndex] = meal;
-      return next;
+  // Format date for display
+  const formatDate = (date) => {
+    return date.toLocaleDateString('vi-VN', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
     });
-  }
+  };
 
-  function generatePlan() {
-    // Simple randomization of grams for demo purposes
-    setMeals((prev) =>
-      prev.map((m) => ({
-        ...m,
-        items: m.items.map((it) => ({
-          ...it,
-          grams: Math.max(
-            20,
-            Math.min(300, Math.round(it.grams * (0.7 + Math.random() * 0.8)))
-          ),
-        })),
-      }))
-    );
-  }
+  const formatDateShort = (date) => {
+    return date.toLocaleDateString('vi-VN', { 
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
 
-  function deletePlan() {
-    setMeals([]);
-  }
+  const getDayName = (date) => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
+  };
 
-  function resetPlan() {
-    setMeals(DEFAULT_MEALS);
-  }
+  const changeDate = (days) => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(newDate.getDate() + days);
+    setSelectedDate(newDate);
+  };
+
+  const handleGeneratePlan = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const dateStr = selectedDate.toISOString().split('T')[0];
+      const response = mealPlanData 
+        ? await regenerateMealPlan(dateStr)
+        : await generateMealPlan(dateStr);
+      
+      if (response.success && response.data) {
+        setMealPlanData(response.data);
+      }
+    } catch (err) {
+      console.error('Error generating meal plan:', err);
+      setError(err.message || 'Không thể tạo kế hoạch bữa ăn. Vui lòng hoàn thiện hồ sơ của bạn.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateWeeklyPlan = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const dateStr = selectedDate.toISOString().split('T')[0];
+      const response = await generateWeeklyMealPlan(dateStr);
+      
+      if (response.success && response.data) {
+        // Load the first day's meal plan
+        setMealPlanData(response.data[0]);
+        alert('Đã tạo kế hoạch bữa ăn cho 7 ngày thành công!');
+      }
+    } catch (err) {
+      console.error('Error generating weekly meal plan:', err);
+      setError(err.message || 'Không thể tạo kế hoạch bữa ăn tuần.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeletePlan = async () => {
+    if (!mealPlanData || !mealPlanData._id) {
+      return;
+    }
+
+    if (!window.confirm('Bạn có chắc muốn xóa kế hoạch bữa ăn này?')) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      
+      await deleteMealPlanAPI(mealPlanData._id);
+      setMealPlanData(null);
+    } catch (err) {
+      console.error('Error deleting meal plan:', err);
+      setError(err.message || 'Không thể xóa kế hoạch bữa ăn');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Navigate to recipe detail
+  const handleRecipeClick = (recipeId) => {
+    // Convert to string in case it's an ObjectId object
+    const id = typeof recipeId === 'object' ? recipeId._id || recipeId.toString() : recipeId;
+    navigate(`/recipe/${id}`);
+  };
 
   return (
     <Layout>
-      <div style={styles.page}>
-        <div className="title-container">
-          <h2 className="premium-title">Tạo Thực Đơn Premium</h2>
-        </div>
-        <Header
-          onGenerate={generatePlan}
-          onDelete={deletePlan}
-          onReset={resetPlan}
-        />
-
-        {meals.length === 0 ? (
-          <div style={styles.empty}>
-            No meals. Click "Generate Meal Plan" or "Reset".
+      <div className="mealplan-container">
+        {/* Header Section */}
+        <div className="mealplan-header">
+          <div className="header-left">
+            <h1 className="mealplan-title">
+              <span className="icon">📋</span> Kế hoạch bữa ăn của bạn
+            </h1>
+            <p className="mealplan-date">Cho ngày {formatDateShort(selectedDate)}.</p>
           </div>
-        ) : (
-          <div style={styles.stack}>
-            {meals.map((meal, mi) => (
-              <MealSection
-                key={meal.name}
-                meal={meal}
-                onUpdateItem={(ii, grams) => updateGrams(mi, ii, grams)}
-              />
-            ))}
+          <div className="header-actions">
+            <button className="btn-secondary" disabled={!mealPlanData}>
+              <span className="icon">📝</span> Danh sách mua sắm
+            </button>
+            <button 
+              className="btn-primary" 
+              onClick={handleGeneratePlan}
+              disabled={loading}
+            >
+              <span className="icon">🔄</span> 
+              {loading ? 'Đang tạo...' : (mealPlanData ? 'Tạo lại kế hoạch' : 'Tạo kế hoạch mới')}
+            </button>
+            <button className="btn-ai" disabled>
+              <span className="icon">✨</span> AI
+            </button>
+          </div>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="error-message">
+            {error}
           </div>
         )}
 
-        <TotalsFooter totals={totals} />
+        {/* Date Navigation */}
+        <div className="date-navigation">
+          <button className="date-nav-btn" onClick={() => changeDate(-1)}>
+            &lt;
+          </button>
+          <span className="current-date">{getDayName(selectedDate)}</span>
+          <button className="date-nav-btn" onClick={() => changeDate(1)}>
+            &gt;
+          </button>
+          <button 
+            className="btn-week-plan" 
+            onClick={handleGenerateWeeklyPlan}
+            disabled={loading}
+          >
+            <span className="icon">📅</span> Tạo kế hoạch tuần
+          </button>
+        </div>
+
+        {/* Main Content */}
+        {loading ? (
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <p>Đang tạo kế hoạch bữa ăn...</p>
+          </div>
+        ) : !mealPlanData ? (
+          <div className="empty-state">
+            <div className="empty-icon">🍽️</div>
+            <h3>Chưa có kế hoạch bữa ăn</h3>
+            <p>Nhấn "Tạo kế hoạch mới" để tạo kế hoạch bữa ăn cho ngày hôm nay</p>
+          </div>
+        ) : (
+          <div className="mealplan-content">
+            {/* Left Side - Meals */}
+            <div className="meals-section">
+              {/* Group meals by type */}
+              {['Breakfast', 'Lunch', 'Dinner', 'Snack'].map(mealType => {
+                const mealsOfType = mealPlanData.meals.filter(m => m.type === mealType);
+                if (mealsOfType.length === 0) return null;
+
+                const totalCals = mealsOfType.reduce((sum, m) => sum + (m.calories || 0), 0);
+
+                return (
+                  <div key={mealType} className="meal-type-section">
+                    <div className="meal-type-header">
+                      <h2>{mealType}</h2>
+                      <span className="meal-calories">{totalCals} Calories</span>
+                    </div>
+                    <div className="meal-items">
+                      {mealsOfType.map((meal, idx) => (
+                        <div 
+                          key={idx} 
+                          className="meal-item"
+                          onClick={() => meal.recipeId && handleRecipeClick(meal.recipeId)}
+                          style={{ cursor: meal.recipeId ? 'pointer' : 'default' }}
+                        >
+                          <img 
+                            src={meal.imageUrl || '/blank4x3.png'} 
+                            alt={meal.name}
+                            className="meal-image"
+                            onError={(e) => e.target.src = '/blank4x3.png'}
+                          />
+                          <div className="meal-info">
+                            <h3>{meal.name}</h3>
+                            <p className="meal-serving">1 serving</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Right Side - Nutrition */}
+            <div className="nutrition-section">
+              <h2>Nutrition</h2>
+              <div className="nutrition-chart">
+                <svg viewBox="0 0 100 100" className="pie-chart">
+                  {(() => {
+                    const total = (mealPlanData.totalMacros?.protein || 0) + 
+                                 (mealPlanData.totalMacros?.carbs || 0) + 
+                                 (mealPlanData.totalMacros?.fat || 0);
+                    
+                    if (total === 0) return null;
+                    
+                    const protein = (mealPlanData.totalMacros?.protein || 0) / total * 100;
+                    const carbs = (mealPlanData.totalMacros?.carbs || 0) / total * 100;
+                    const fat = (mealPlanData.totalMacros?.fat || 0) / total * 100;
+                    
+                    let currentAngle = 0;
+                    const createSlice = (percentage, color) => {
+                      const angle = (percentage / 100) * 360;
+                      const startAngle = currentAngle;
+                      currentAngle += angle;
+                      
+                      const x1 = 50 + 40 * Math.cos((startAngle - 90) * Math.PI / 180);
+                      const y1 = 50 + 40 * Math.sin((startAngle - 90) * Math.PI / 180);
+                      const x2 = 50 + 40 * Math.cos((startAngle + angle - 90) * Math.PI / 180);
+                      const y2 = 50 + 40 * Math.sin((startAngle + angle - 90) * Math.PI / 180);
+                      
+                      const largeArc = angle > 180 ? 1 : 0;
+                      
+                      return (
+                        <path
+                          key={color}
+                          d={`M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                          fill={color}
+                        />
+                      );
+                    };
+                    
+                    return (
+                      <>
+                        {fat > 0 && createSlice(fat, '#6ECFBD')}
+                        {carbs > 0 && createSlice(carbs, '#FFD93D')}
+                        {protein > 0 && createSlice(protein, '#B794F6')}
+                      </>
+                    );
+                  })()}
+                </svg>
+                <div className="nutrition-legend">
+                  <div className="legend-item">
+                    <span className="legend-color" style={{backgroundColor: '#6ECFBD'}}></span>
+                    <span>Fat</span>
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-color" style={{backgroundColor: '#FFD93D'}}></span>
+                    <span>Carbs</span>
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-color" style={{backgroundColor: '#B794F6'}}></span>
+                    <span>Protein</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="nutrition-details">
+                <div className="nutrition-row">
+                  <span>Calories</span>
+                  <strong>{Math.round(mealPlanData.totalCalories || 0)} / {mealPlanData.targetCalories || 0}</strong>
+                </div>
+                <div className="nutrition-row">
+                  <span>Carbs</span>
+                  <strong>{Math.round(mealPlanData.totalMacros?.carbs || 0)}g</strong>
+                </div>
+                <div className="nutrition-row">
+                  <span>Fat</span>
+                  <strong>{Math.round(mealPlanData.totalMacros?.fat || 0)}g</strong>
+                </div>
+                <div className="nutrition-row">
+                  <span>Protein</span>
+                  <strong>{Math.round(mealPlanData.totalMacros?.protein || 0)}g</strong>
+                </div>
+              </div>
+              
+              <button className="btn-details">Detailed Nutrition Information</button>
+            </div>
+          </div>
+        )}
+
+        {/* Ingredients List */}
+        {mealPlanData && getAllIngredients.length > 0 && (
+          <div className="ingredients-section">
+            <div className="ingredients-header">
+              <h2>📋 Danh sách nguyên liệu</h2>
+              <p>Nguyên liệu cần chuẩn bị cho cả tuần</p>
+              <button className="btn-add-to-list">In danh sách</button>
+            </div>
+            <div className="ingredients-grid">
+              {getAllIngredients.map((ingredient, idx) => (
+                <div key={idx} className="ingredient-item">
+                  <span className="ingredient-name">{ingredient.name}</span>
+                  <span className="ingredient-amount">{ingredient.amount}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
