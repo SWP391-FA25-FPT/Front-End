@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import Layout from "../components/layout/AppLayout";
+import { Container } from "react-bootstrap"
 import SupportCard from "../components/support/SupportCard";
 import Logo from "../assets/icon.svg";
 import "./style/SupportPage.css";
 
 export default function SupportPage() {
   const [search, setSearch] = useState("");
-  const navigate = useNavigate();
 
   const items = [
     {
@@ -52,50 +52,44 @@ export default function SupportPage() {
   );
 
   return (
-    <div className="support-page">
-      {/* Logo */}
-      <div className="support-logo">
-        <img 
-          src={Logo} 
-          alt="M&M Logo" 
-          className="logo-image"
-          onClick={() => navigate('/')}
-        />
-        <span className="logo-text" onClick={() => navigate('/')}>M&M</span>
-      </div>
+    <Layout> 
+      <Container className="py-4"> 
+        <div className="support-page">
 
-      {/* Phần tiêu đề */}
-      <section className="support-header">
-        <h1>Trung Tâm Hỗ Trợ</h1>
-        <p>Tôi có thể giúp gì cho bạn?</p>
-      </section>
+          {/* Phần tiêu đề */}
+          <section className="support-header">
+            <h1>Trung Tâm Hỗ Trợ</h1>
+            <p>Tôi có thể giúp gì cho bạn?</p>
+          </section>
 
-      {/* Ô tìm kiếm */}
-      <div className="support-search">
-        <input
-          type="text"
-          placeholder="Tìm kiếm hỗ trợ..."
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+          {/* Ô tìm kiếm */}
+          <div className="support-search">
+            <input
+              type="text"
+              placeholder="Tìm kiếm hỗ trợ..."
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-      {/* Các mục hỗ trợ */}
-      <main className="support-grid">
-        {filtered.map((item, index) => (
-          <SupportCard
-            key={index}
-            icon={item.icon}
-            title={item.title}
-            description={item.description}
-            link={item.link}
-          />
-        ))}
-        {filtered.length === 0 && (
-          <p className="support-empty">
-            Không tìm thấy mục hỗ trợ phù hợp.
-          </p>
-        )}
-      </main>
-    </div>
+          {/* Các mục hỗ trợ */}
+          <main className="support-grid">
+            {filtered.map((item, index) => (
+              <SupportCard
+                key={index}
+                icon={item.icon}
+                title={item.title}
+                description={item.description}
+                link={item.link}
+              />
+            ))}
+            {filtered.length === 0 && (
+              <p className="support-empty">
+                Không tìm thấy mục hỗ trợ phù hợp.
+              </p>
+            )}
+          </main>
+        </div>
+      </Container>
+    </Layout>
   );
 }

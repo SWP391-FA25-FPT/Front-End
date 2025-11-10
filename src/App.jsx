@@ -38,6 +38,7 @@ import PrivateRecipes from "./pages/PrivateRecipes";
 import PublishedRecipes from "./pages/PublishedRecipes";
 import SavedRecipes from "./pages/SavedRecipes";
 import Subscription from "./pages/Subscription";
+import NotificationPage from "./pages/NotificationPage"; 
 
 function App() {
   return (
@@ -49,7 +50,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
-          {/* Survey route - only for first time users */}
+          {/* Survey route */}
           <Route
             path="/survey"
             element={
@@ -272,6 +273,15 @@ function App() {
               <ProtectedRoute>
                 <Subscription />
               </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/notifications"
+            element={
+              <SurveyCheckRoute>
+                <NotificationPage />
+              </SurveyCheckRoute>
             }
           />
 
