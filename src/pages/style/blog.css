@@ -1,8 +1,168 @@
-/* Blog Custom Styles */
+/* Blog Custom Styles (Đã refactor dùng CSS Variables) */
+
+/* Nền của các thành phần nổi bật như hero, card, nút pagination */
+.blog-hero,
+.blog-post-card {
+    /* Sẽ là màu elevated được inject từ ThemeContext */
+    background: var(--color-bg-elevated);
+    border-color: var(--color-border);
+}
+
+/* Màu chữ chính */
+.blog-title,
+.blog-post-title,
+.blog-post-title a {
+    color: var(--color-text-primary);
+}
+
+/* Màu chữ phụ và các icon */
+.blog-excerpt,
+.blog-hero-meta,
+.blog-hero-meta svg,
+.blog-post-meta,
+.blog-post-meta svg,
+.blog-post-excerpt {
+    color: var(--color-text-secondary);
+}
+
+.blog-hero-meta .flex svg,
+.blog-post-meta .flex svg,
+.blog-post-title:hover,
+.blog-post-title a:hover {
+    color: var(--color-primary);
+}
+
+/* Các thẻ tag (category-tag, post-category) */
+.blog-category-tag,
+.blog-post-category {
+    /* Nền là màu selected mờ */
+    background: var(--color-primary-selected); 
+    color: var(--color-primary); 
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: none;
+    line-height: 1.2;
+}
+
+.blog-post-category {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 12px;
+}
+
+/* Nút "Đọc tiếp" */
+.blog-read-more-btn {
+    background: var(--color-primary); 
+    color: white; 
+    padding: 0.7rem 2rem;
+    border-radius: 25px;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 1rem;
+    white-space: nowrap;
+    margin: 0;
+    width: fit-content;
+    min-width: 140px;
+}
+
+.blog-category-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem; /* Tăng khoảng cách để chống bể layout */
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+}
+
+.blog-category-pill {
+    padding: 0.5rem 1.25rem;
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    
+    /* Mặc định: Nền/chữ sẽ theo theme */
+    background: var(--color-bg-elevated);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.blog-category-pill:hover {
+    /* Nền là màu accent, chữ trắng */
+    background: var(--color-primary);
+    color: white;
+    border-color: transparent; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+}
+
+.blog-category-pill.active {
+    /* Khi active, nền là màu accent, chữ trắng */
+    background: var(--color-primary);
+    color: white;
+    border-color: transparent; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    font-weight: 600; /* Nổi bật hơn */
+}
+
+/* Pagination */
+.blog-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 3rem;
+    padding: 1rem 0;
+}
+
+.blog-pagination-btn {
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-elevated);
+    color: var(--color-text-secondary);
+    border-radius: 16px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.blog-pagination-btn:hover:not(:disabled) {
+    background: var(--color-primary);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.blog-pagination-btn.active {
+    background: var(--color-primary);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
 
 /* Hero Section */
 .blog-hero {
-  background: #ffffff;
   border-radius: 0;
   padding: 1.5rem 0;
   margin-bottom: 2rem;
@@ -11,6 +171,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   align-items: start;
+  transition: background 0.3s ease;
 }
 
 .blog-hero-image {
@@ -52,103 +213,26 @@
   gap: 0.25rem;
 }
 
-.blog-hero-meta svg {
-  color: #6b7280;
-}
-
-.blog-hero-meta .flex svg {
-  color: #f8b602;
-}
-
-.blog-category-tag {
-  background: #fff8ee;
-  color: #f8b602;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 0;
-  border: none;
-  line-height: 1.2;
-  height: fit-content;
-}
-
 .blog-title {
   font-size: 2.2rem;
   font-weight: 700;
   line-height: 1.15;
-  color: #1a1a1a;
   margin-bottom: 0.8rem;
+  transition: color 0.3s ease;
 }
 
 .blog-excerpt {
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #6b7280;
   margin-bottom: 1.2rem;
-}
-
-.blog-read-more-btn {
-  background: #f8b602;
-  color: white;
-  padding: 0.7rem 2rem;
-  border-radius: 25px;
-  font-weight: 500;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  transition: all 0.3s ease;
-  border: none;
-  font-size: 1rem;
-  white-space: nowrap;
-  margin: 0;
-  width: fit-content;
-  min-width: 140px;
+  transition: color 0.3s ease;
 }
 
 .blog-read-more-btn:hover {
-  background: #ffa30f;
+  filter: brightness(1.1);
   color: white;
   text-decoration: none;
   transform: translateY(-1px);
-}
-
-/* Category Pills */
-.blog-category-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
-  padding: 1rem 0;
-}
-
-.blog-category-pill {
-  padding: 0.5rem 1.25rem;
-  border-radius: 25px;
-  font-weight: 500;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
-  border: 1px solid #e5e7eb;
-  cursor: pointer;
-  background: #ffffff;
-  color: #6b7280;
-}
-
-.blog-category-pill:hover {
-  background: #f8b602;
-  color: #ffffff;
-  border-color: #d1d5db;
-  transform: translateY(-1px);
-}
-
-.blog-category-pill.active {
-  background: #f8b602;
-  color: white;
 }
 
 /* Post Grid */
@@ -160,12 +244,11 @@
 }
 
 .blog-post-card {
-  background: white;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--color-border);
 }
 
 .blog-post-card:hover {
@@ -194,7 +277,6 @@
   gap: 0.75rem;
   margin-bottom: 1rem;
   font-size: 0.875rem;
-  color: #6b7280;
   line-height: 1.4;
   flex-wrap: wrap;
 }
@@ -205,39 +287,12 @@
   gap: 0.25rem;
 }
 
-.blog-post-meta svg {
-  color: #9ca3af;
-  opacity: 0.8;
-}
-
-.blog-post-meta .flex svg {
-  color: #f8b602;
-}
-
-.blog-post-category {
-  background: #fff8ee;
-  color: #f8b602;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-weight: 500;
-  font-size: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  line-height: 1.2;
-}
-
 .blog-post-title {
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.4;
-  color: #000000;
   margin-bottom: 0.75rem;
   transition: color 0.3s ease;
-}
-
-.blog-post-title:hover {
-  color: #f8b602;
 }
 
 .blog-post-title a {
@@ -245,14 +300,9 @@
   text-decoration: none;
 }
 
-.blog-post-title a:hover {
-  color: #f8b602;
-}
-
 .blog-post-excerpt {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #6b7280;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -261,53 +311,10 @@
 }
 
 /* Pagination */
-.blog-pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 3rem;
-  padding: 1rem 0;
-}
-
-.blog-pagination-btn {
-  padding: 0.6rem 1.2rem;
-  border: 1px solid #e5e7eb;
-  background: white;
-  color: #6b7280;
-  border-radius: 16px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  min-width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.blog-pagination-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #f8b602 0%, #ffa30f 100%);
-  color: white;
-  border-color: transparent;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(248, 182, 2, 0.3);
-}
-
-.blog-pagination-btn.active {
-  background: linear-gradient(135deg, #f8b602 0%);
-  color: white;
-  border-color: transparent;
-  box-shadow: 0 4px 16px rgba(180, 89, 41, 0.3);
-  transform: translateY(-1px);
-}
 
 .blog-pagination-btn.active:hover {
-  background: linear-gradient(135deg, #ffa30f 0%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(52, 50, 50, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .blog-pagination-btn:disabled {
@@ -318,8 +325,9 @@
 }
 
 .blog-pagination-btn:disabled:hover {
-  border-color: #e5e7eb;
-  color: #000000;
+  background: var(--color-bg-elevated);
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
   transform: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
@@ -340,61 +348,28 @@
     flex-direction: column;
     gap: 1.5rem;
   }
-
   .blog-hero-content {
     padding-left: 0;
     margin-top: 0;
   }
-
   .blog-title {
     font-size: 2rem;
   }
-
   .blog-post-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-
   .blog-category-pills {
     gap: 0.5rem;
   }
-
   .blog-category-pill {
     padding: 0.375rem 1rem;
     font-size: 0.8rem;
   }
 }
 
-/* Animation */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.blog-fade-in {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-/* Custom Scrollbar */
-.blog-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.blog-container::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-.blog-container::-webkit-scrollbar-thumb {
-  background: #ff6b35;
-  border-radius: 3px;
-}
-
-.blog-container::-webkit-scrollbar-thumb:hover {
-  background: #f7931e;
+/* Dark mode overrides cho shadow */
+[data-theme="dark"] .blog-hero-image:hover,
+[data-theme="dark"] .blog-post-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }

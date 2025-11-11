@@ -25,7 +25,7 @@ const Index = () => {
     {
       key: "2",
       label: "Settings",
-      onClick: () => navigate('/profile'),
+      onClick: () => navigate('/settings'),
     },
     {
       key: "3",

@@ -1,9 +1,7 @@
 // src/components/blog/ui.jsx
 import React from "react";
+import { cx } from "./utils";
 
-export function cx(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export function Button({ variant = "default", className = "", ...props }) {
   const base = "inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm transition-all";
@@ -20,7 +18,7 @@ export function Input({ className = "", ...props }) {
 }
 
 export function Card({ className = "", ...props }) {
-  return <div className={cx("rounded-2xl border bg-white", className)} {...props} />;
+  return <div className={cx("rounded-2xl border", className)} {...props} />;
 }
 
 export function CardContent({ className = "", ...props }) {

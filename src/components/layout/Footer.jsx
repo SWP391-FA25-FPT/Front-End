@@ -8,7 +8,6 @@ const AppFooter = () => {
   return (
     <Footer
       style={{
-        backgroundColor: "#f9f9f9",
         padding: "60px 80px",
         textAlign: "left",
       }}
@@ -19,12 +18,12 @@ const AppFooter = () => {
           <Title level={4} style={{ marginBottom: 16 }}>
             Về M&M
           </Title>
-          <Paragraph style={{ color: "#555" }}>
+          <Paragraph>
             Sứ mệnh của <strong>M&M</strong> là làm cho việc vào bếp vui hơn mỗi
             ngày, vì chúng tôi tin rằng nấu nướng là chìa khoá cho một cuộc sống
             hạnh phúc hơn và khoẻ mạnh hơn cho con người, cộng đồng và hành tinh.
           </Paragraph>
-          <Paragraph style={{ color: "#555" }}>
+          <Paragraph>
             Đăng ký gói <strong>Premium</strong> để truy cập các chức năng và
             quyền lợi dành riêng khác!
           </Paragraph>
@@ -35,7 +34,7 @@ const AppFooter = () => {
           <Title level={4} style={{ marginBottom: 16 }}>
             Cộng Đồng M&M
           </Title>
-          <Paragraph style={{ color: "#555" }}>
+          <Paragraph>
             - Tham gia nhóm Facebook để chia sẻ công thức.
             <br />
             - Theo dõi Instagram để cập nhật món mới.
@@ -49,7 +48,7 @@ const AppFooter = () => {
           <Title level={4} style={{ marginBottom: 16 }}>
             Tìm Hiểu Thêm
           </Title>
-          <Paragraph style={{ color: "#555" }}>
+          <Paragraph>
             - Giới thiệu đội ngũ M&M.
             <br />
             - Chính sách bảo mật & điều khoản sử dụng.
@@ -61,7 +60,6 @@ const AppFooter = () => {
 
       <Divider />
 
-      {/* Dòng cuối */}
       <Text
         type="secondary"
         style={{

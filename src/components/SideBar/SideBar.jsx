@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Logo from "../Logo/Logo";
 import { Container } from "react-bootstrap";
+// NOTE: Vẫn import ConfigProvider, nhưng chỉ dùng cho nút Premium
 import { Button, ConfigProvider, Menu } from "antd";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/useAuth";
-// NOTE: Sửa import, thêm useNavigate
 import { useLocation, useNavigate } from "react-router-dom";
 import "./index.css";
 
 const Index = ({ collapsed, toggleCollapsed }) => {
   const { user } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate(); // NOTE: Thêm hook
+  const navigate = useNavigate();
 
-  // Hàm này giữ nguyên, dùng để xác định mục nào đang active
   const getSelectedKey = () => {
     const path = location.pathname;
     if (path === "/") return "1";
@@ -35,7 +34,12 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     if (path === "/challenge" || path.startsWith("/challenge/")) return "3";
     if (path === "/blog" || path.startsWith("/blog/")) return "4";
 
-    if (path === "/profile") return "6";
+    if (path === "/notifications" || path.startsWith("/notifications/"))
+      return "5";
+
+    if (path === "/profile" || path.startsWith("/profile/")) return "10";
+    if (path === "/settings" || path.startsWith("/settings/")) return "6";
+
     if (path === "/support") return "7";
     if (path === "/admin") return "9";
 
@@ -50,7 +54,6 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     return "1";
   };
 
-  // NOTE: Đây là baseItems gốc
   const baseItems = [
     {
       key: "1",
@@ -108,9 +111,19 @@ const Index = ({ collapsed, toggleCollapsed }) => {
       label: <a href="/blog">Blog</a>,
     },
     {
+      key: "5",
+      icon: <Icon icon="mdi:bell-outline" width="24" height="24" />,
+      label: <a href="/notifications">Thông Báo</a>,
+    },
+    {
+      key: "10",
+      icon: <Icon icon="mdi:account-circle-outline" width="24" height="24" />,
+      label: <a href="/profile">Hồ Sơ</a>,
+    },
+    {
       key: "6",
       icon: <Icon icon="ic:outline-settings" width="24" height="24" />,
-      label: <a href="/profile">Thiết Lập</a>,
+      label: <a href="/settings">Thiết Lập</a>,
     },
     {
       key: "7",
@@ -165,49 +178,72 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     label: <a href="/admin">Admin</a>,
   };
 
-  // 1. Logic cho GUEST (chưa login)
   if (!user) {
-    // Sửa "Kho Món Ngon" (key 8)
-    const khoMonNgonIndex = baseItems.findIndex(item => item.key === "8");
+    const khoMonNgonIndex = baseItems.findIndex((item) => item.key === "8");
     if (khoMonNgonIndex !== -1) {
       baseItems[khoMonNgonIndex] = {
         ...baseItems[khoMonNgonIndex],
         label: "Kho Món Ngon",
-        children: null, // Xóa menu con
-        onClick: () => navigate("/login"), // Thêm click chuyển sang login
+        children: null,
+        onClick: () => navigate("/login"),
       };
     }
 
-    // Sửa "Premium" (key 2)
-    const premiumIndex = baseItems.findIndex(item => item.key === "2");
+    const premiumIndex = baseItems.findIndex((item) => item.key === "2");
     if (premiumIndex !== -1) {
-      // Sửa các mục con bên trong
-      baseItems[premiumIndex].children.forEach(childItem => {
-        // Giữ nguyên text, bỏ thẻ <a>
-        childItem.label = childItem.label.props.children; 
-        childItem.onClick = () => navigate("/login"); // Thêm click chuyển sang login
+      baseItems[premiumIndex].children.forEach((childItem) => {
+        childItem.label = childItem.label.props.children;
+        childItem.onClick = () => navigate("/login");
       });
+    }
+
+    const notificationIndex = baseItems.findIndex((item) => item.key === "5");
+    if (notificationIndex !== -1) {
+      baseItems[notificationIndex] = {
+        ...baseItems[notificationIndex],
+        children: null,
+        onClick: () => navigate("/login"),
+      };
+    }
+
+    const profileIndex = baseItems.findIndex((item) => item.key === "10");
+    if (profileIndex !== -1) {
+      baseItems[profileIndex] = {
+        ...baseItems[profileIndex],
+        children: null,
+        onClick: () => navigate("/login"),
+      };
+    }
+
+    const settingsIndex = baseItems.findIndex((item) => item.key === "6");
+    if (settingsIndex !== -1) {
+      baseItems[settingsIndex] = {
+        ...baseItems[settingsIndex],
+        children: null,
+        onClick: () => navigate("/login"),
+      };
     }
   }
 
-  // 2. Logic thay thế tất cả <a href> bằng onClick (chuẩn SPA)
-  // Điều này áp dụng cho Guest (các mục còn lại) và User (tất cả các mục)
-  baseItems.forEach(item => {
-    // Xử lý mục cha
-    if (item.label && typeof item.label === 'object' && item.label.type === 'a') {
+  baseItems.forEach((item) => {
+    if (item.label && typeof item.label === "object" && item.label.type === "a") {
       const href = item.label.props.href;
-      item.label = item.label.props.children; // Chuyển <a>Text</a> thành "Text"
-      if (!item.onClick) { // Chỉ thêm nếu chưa có onClick (tránh ghi đè guest logic)
+      item.label = item.label.props.children;
+      if (!item.onClick) {
         item.onClick = () => navigate(href);
       }
     }
 
     if (item.children) {
-      item.children.forEach(child => {
-        if (child.label && typeof child.label === 'object' && child.label.type === 'a') {
+      item.children.forEach((child) => {
+        if (
+          child.label &&
+          typeof child.label === "object" &&
+          child.label.type === "a"
+        ) {
           const href = child.label.props.href;
           child.label = child.label.props.children;
-          if (!child.onClick) { 
+          if (!child.onClick) {
             child.onClick = () => navigate(href);
           }
         }
@@ -215,7 +251,11 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     }
   });
 
-  if (adminItem.label && typeof adminItem.label === 'object' && adminItem.label.type === 'a') {
+  if (
+    adminItem.label &&
+    typeof adminItem.label === "object" &&
+    adminItem.label.type === "a"
+  ) {
     const href = adminItem.label.props.href;
     adminItem.label = adminItem.label.props.children;
     adminItem.onClick = () => navigate(href);
@@ -235,11 +275,11 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         const parentKey = currentKey.split("-")[0];
         setOpenKeys([parentKey]);
       } else {
-        setOpenKeys([]); 
+        setOpenKeys([]);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collapsed, location.pathname]); 
+  }, [collapsed, location.pathname]);
 
   const PremiumCTA = () => {
     if (collapsed) {
@@ -272,7 +312,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         >
           <Button
             type="primary"
-            href="/subscription" 
+            href="/subscription"
             size="large"
             block
             className="premium-cta-button"
@@ -283,85 +323,63 @@ const Index = ({ collapsed, toggleCollapsed }) => {
       </div>
     );
   };
-  // ==========================================
 
   return (
     <React.Fragment>
-      <ConfigProvider
-        theme={{
-          components: {
-            Menu: {
-              itemColor: "#69758fff",
-              itemHoverColor: "#D97706",
-              itemHoverBg: "#FFF8E1",
-              itemSelectedBg: "#FEF3C7",
-              itemSelectedColor: "#F59E0B",
-              itemActiveBg: "#FDE68A",
-              colorPrimary: "#F59E0B",
-              subMenuItemBg: "#FFFFFF",
-              subMenuItemColor: "#5C5100",
-              subMenuItemHoverColor: "#FBBF24",
-            },
-          },
-          token: {
-            fontSize: 16,
-          },
-        }}
+      {/* NOTE: ĐÃ XÓA ConfigProvider bọc ngoài */}
+      <Container
+        className={
+          "d-flex flex-column align-items-center gap-4 p-2 sidebar-scroll-container"
+        }
       >
-        <Container
-          className={
-            "d-flex flex-column align-items-center gap-4 p-2 sidebar-scroll-container"
-          }
-        >
-          <div className="d-flex align-items-center justify-content-center w-100 position-relative">
-            <Logo collapsed={collapsed} />
-            {!collapsed && (
-              <Button
-                onClick={toggleCollapsed}
-                type="button"
-                className="position-absolute end-0"
-                size="small"
-              >
-                <Icon
-                  icon="mingcute:arrows-left-line"
-                  width="24"
-                  height="24"
-                />
-              </Button>
-            )}
-          </div>
-          {collapsed && (
+        <div className="d-flex align-items-center justify-content-center w-100 position-relative">
+          <Logo collapsed={collapsed} />
+          {!collapsed && (
             <Button
               onClick={toggleCollapsed}
               type="button"
-              className="mb-1"
+              className="position-absolute end-0"
               size="small"
             >
               <Icon
-                icon="mingcute:arrows-right-line"
+                icon="mingcute:arrows-left-line"
                 width="24"
                 height="24"
               />
             </Button>
           )}
-          <Menu
-            selectedKeys={[getSelectedKey()]}
-            mode="inline"
-            items={items} 
-            openKeys={openKeys} 
-            onOpenChange={setOpenKeys}
-            className="font-sans fw-semibold"
-            inlineCollapsed={collapsed}
-            style={{ border: "none" }}
-          />
+        </div>
+        {collapsed && (
+          <Button
+            onClick={toggleCollapsed}
+            type="button"
+            className="mb-1"
+            size="small"
+          >
+            <Icon
+              icon="mingcute:arrows-right-line"
+              width="24"
+              height="24"
+            />
+          </Button>
+        )}
+        <Menu
+          selectedKeys={[getSelectedKey()]}
+          mode="inline"
+          items={items}
+          openKeys={openKeys}
+          onOpenChange={setOpenKeys}
+          className="font-sans fw-semibold"
+          inlineCollapsed={collapsed}
+          style={{ border: "none" }}
+        />
 
-          {user && user.role !== "admin" && (
-            <div className="w-100 d-flex justify-content-center">
-              <PremiumCTA />
-            </div>
-          )}
-        </Container>
-      </ConfigProvider>
+        {user && user.role !== "admin" && (
+          <div className="w-100 d-flex justify-content-center">
+            <PremiumCTA />
+          </div>
+        )}
+      </Container>
     </React.Fragment>
   );
 };

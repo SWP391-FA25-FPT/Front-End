@@ -1,7 +1,31 @@
 /* Bootstrap CSS */
 @import "bootstrap/dist/css/bootstrap.min.css";
 
-/* CSS Variables */
+/* --- 1. FIX LỖI NỀN TỔNG THỂ (GLOBAL BODY STYLES) --- */
+
+/* Đảm bảo chiều cao và reset margin/padding */
+html, 
+body, 
+#root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* Áp dụng font family lên html */
+    font-family: "Raleway", sans-serif;
+    transition: background-color 0.3s ease; 
+}
+
+body {
+    /* FIX CẦN THIẾT: Áp dụng biến màu nền body bằng !important để chống xung đột */
+    background-color: var(--color-bg-body, #f0f2f5) !important; 
+    
+    /* Áp dụng màu chữ chính cho toàn bộ body */
+    color: var(--color-text-primary, #1f1f1f);
+    
+    transition: background-color 0.3s ease;
+}
+
+/* --- 2. CSS Variables Cũ của bạn --- */
 :root {
   --primary-color: #606060;
   --primary-hover-color: #000;
@@ -10,11 +34,7 @@
   --primary-selected-color: #f93;
 }
 
-/* Global Styles */
-html {
-  font-family: "Raleway", sans-serif;
-  background-color: #f5f5f5;
-}
+/* --- 3. Các Styles Khác (Giữ nguyên) --- */
 
 a {
   text-decoration: none !important;
