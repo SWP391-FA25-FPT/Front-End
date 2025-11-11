@@ -162,7 +162,45 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   const adminItem = {
     key: "9",
     icon: <Icon icon="mdi:shield-account" width="24" height="24" />,
-    label: <a href="/admin">Admin</a>,
+    label: "Admin",
+    children: [
+      {
+        key: "9-1",
+        icon: <Icon icon="mdi:camera-outline" width="24" height="24" />,
+        label: "Kiểm Duyệt Nội Dung",
+        onClick: () => navigate("/admin/content-moderation"),
+      },
+      {
+        key: "9-2",
+        icon: <Icon icon="mdi:credit-card-outline" width="24" height="24" />,
+        label: "Gói & Thanh Toán",
+        onClick: () => navigate("/admin/payment"),
+      },
+      {
+        key: "9-3",
+        icon: <Icon icon="mdi:chart-box-outline" width="24" height="24" />,
+        label: "Thống Kê Hệ Thống",
+        onClick: () => navigate("/admin/statistics"),
+      },
+      {
+        key: "9-4",
+        icon: <Icon icon="mdi:flag-outline" width="24" height="24" />,
+        label: "Báo Cáo Hệ Thống",
+        onClick: () => navigate("/admin/report"),
+      },
+      {
+        key: "9-5",
+        icon: <Icon icon="mdi:comment-outline" width="24" height="24" />,
+        label: "Phản Hồi Người Dùng",
+        onClick: () => navigate("/admin/feedback"),
+      },
+      {
+        key: "9-6",
+        icon: <Icon icon="mdi:account-group-outline" width="24" height="24" />,
+        label: "Quản Lý Người Dùng",
+        onClick: () => navigate("/admin/users"),
+      },
+    ],
   };
 
   // 1. Logic cho GUEST (chưa login)
@@ -184,7 +222,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
       // Sửa các mục con bên trong
       baseItems[premiumIndex].children.forEach(childItem => {
         // Giữ nguyên text, bỏ thẻ <a>
-        childItem.label = childItem.label.props.children; 
+        childItem.label = childItem.label.props.children;
         childItem.onClick = () => navigate("/login"); // Thêm click chuyển sang login
       });
     }
@@ -207,7 +245,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         if (child.label && typeof child.label === 'object' && child.label.type === 'a') {
           const href = child.label.props.href;
           child.label = child.label.props.children;
-          if (!child.onClick) { 
+          if (!child.onClick) {
             child.onClick = () => navigate(href);
           }
         }
@@ -235,11 +273,11 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         const parentKey = currentKey.split("-")[0];
         setOpenKeys([parentKey]);
       } else {
-        setOpenKeys([]); 
+        setOpenKeys([]);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collapsed, location.pathname]); 
+  }, [collapsed, location.pathname]);
 
   const PremiumCTA = () => {
     if (collapsed) {
@@ -272,7 +310,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         >
           <Button
             type="primary"
-            href="/subscription" 
+            href="/subscription"
             size="large"
             block
             className="premium-cta-button"
@@ -347,8 +385,8 @@ const Index = ({ collapsed, toggleCollapsed }) => {
           <Menu
             selectedKeys={[getSelectedKey()]}
             mode="inline"
-            items={items} 
-            openKeys={openKeys} 
+            items={items}
+            openKeys={openKeys}
             onOpenChange={setOpenKeys}
             className="font-sans fw-semibold"
             inlineCollapsed={collapsed}
