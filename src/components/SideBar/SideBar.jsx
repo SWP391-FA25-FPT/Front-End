@@ -108,7 +108,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     {
       key: "6",
       icon: <Icon icon="ic:outline-settings" width="24" height="24" />,
-      label: <a href="/profile">Thiết Lập</a>,
+      label: <a href="/profile">Hồ Sơ Cá Nhân</a>,
     },
     {
       key: "7",
@@ -166,13 +166,41 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   const items =
     user && user.role === "admin" ? [...baseItems, adminItem] : baseItems;
 
-  const [openKeys, setOpenKeys] = useState([]);
+  const [openKeys, setOpenKeys] = useState(() => {
+    const selectedKey = getSelectedKey();
+    if (selectedKey.startsWith("2-") || selectedKey === "2") {
+      return ["2"];
+    }
+    return [];
+  });
 
   useEffect(() => {
     if (collapsed) {
       setOpenKeys([]);
     }
   }, [collapsed]);
+
+  useEffect(() => {
+    if (collapsed) {
+      setOpenKeys([]);
+      return;
+    }
+
+    const selectedKey = getSelectedKey();
+    const isPremiumRoute = selectedKey === "2" || selectedKey.startsWith("2-");
+
+    setOpenKeys((prevKeys) => {
+      if (isPremiumRoute && !prevKeys.includes("2")) {
+        return [...prevKeys, "2"];
+      }
+
+      if (!isPremiumRoute && prevKeys.includes("2")) {
+        return prevKeys.filter((key) => key !== "2");
+      }
+
+      return prevKeys;
+    });
+  }, [location.pathname, collapsed]);
 
   const PremiumCTA = () => {
     if (collapsed) {
@@ -255,11 +283,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
                 className="position-absolute end-0"
                 size="small"
               >
-                <Icon
-                  icon="mingcute:arrows-left-line"
-                  width="24"
-                  height="24"
-                />
+                <Icon icon="mingcute:arrows-left-line" width="24" height="24" />
               </Button>
             )}
           </div>
@@ -270,11 +294,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
               className="mb-1"
               size="small"
             >
-              <Icon
-                icon="mingcute:arrows-right-line"
-                width="24"
-                height="24"
-              />
+              <Icon icon="mingcute:arrows-right-line" width="24" height="24" />
             </Button>
           )}
           <Menu
