@@ -55,6 +55,8 @@ export const apiUrls = {
   aiChat: "/api/ai/chat",
   aiModels: "/api/ai/models",
   aiHealth: "/api/ai/health",
+  aiConversations: "/api/ai/chat/conversations",
+  aiConversationHistory: "/api/ai/chat/conversations",
 
   // Blog endpoints
   getAllBlogs: "/api/blogs",
