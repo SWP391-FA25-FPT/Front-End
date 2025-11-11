@@ -20,22 +20,6 @@ import { useTheme } from "../context/ThemeContext";
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-// Định nghĩa CSS cần override
-const SettingsOverrideCSS = `
-    /* BUỘC ĐƯỜNG KẺ CHUYỂN MÀU */
-    .settings-list.ant-list > .ant-list-item {
-        background: transparent !important; 
-        /* Tăng cường selector để đảm bảo border color được áp dụng */
-        border-color: var(--color-border-secondary) !important;
-        border-block-end-color: var(--color-border-secondary) !important;
-    }
-    
-    /* Xóa đường kẻ cuối cùng */
-    .settings-list.ant-list > .ant-list-item:last-child {
-        border-block-end: none !important;
-    }
-`;
-
 const SettingsPage = () => {
   const { themeMode, setThemeMode, accentColorName, setAccentColorName } =
     useTheme();
@@ -52,30 +36,13 @@ const SettingsPage = () => {
 
   return (
     <AppLayout>
-        {/* FIX CÚ PHÁP: Sử dụng thẻ style chuẩn của HTML/React */}
-        <style dangerouslySetInnerHTML={{ __html: SettingsOverrideCSS }} />
-        
       <div style={{ padding: "16px 24px" }}>
         <Title level={3} style={{ marginBottom: "24px" }}>
           Thiết Lập Hệ Thống
         </Title>
 
-        {/* CARD 1: Giao diện & Ngôn ngữ */}
-        <Card 
-            title="Giao diện & Ngôn ngữ" 
-            style={{ 
-                marginBottom: 24, 
-                borderRadius: '12px',
-                // FIX: Buộc Card sử dụng biến màu nền đã inject
-                backgroundColor: 'var(--color-bg-elevated)', 
-            }} 
-        >
-          <List 
-                itemLayout="horizontal"
-                className="settings-list" // THÊM CLASS ĐỂ TẠO SELECTOR MẠNH
-                // FIX: Ép background list trong suốt
-                style={{ backgroundColor: 'transparent' }} 
-            >
+        <Card title="Giao diện & Ngôn ngữ" style={{ marginBottom: 24 }}>
+          <List itemLayout="horizontal">
             <List.Item
               actions={[
                 <Switch
@@ -89,14 +56,12 @@ const SettingsPage = () => {
               <List.Item.Meta
                 avatar={
                   <Avatar
-                    // FIX: Đảm bảo Avatar icon cũng đổi màu theo theme
-                    style={{ 
-                        backgroundColor: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : "#E5E7EB" 
-                    }}
+                    // NOTE: THÊM NỀN SÁNG CHO AVATAR
+                    style={{ backgroundColor: "#E5E7EB" }}
                     icon={
                       <Icon
                         icon="mdi:theme-light-dark"
-                        style={{ color: themeMode === 'dark' ? '#F3F4F6' : "#4B5563" }}
+                        style={{ color: "#4B5563" }}
                       />
                     }
                   />
@@ -105,8 +70,7 @@ const SettingsPage = () => {
                 description="Bật/tắt giao diện tối cho toàn hệ thống"
               />
             </List.Item>
-            
-            {/* Ngôn ngữ */}
+
             <List.Item
               actions={[
                 <Select defaultValue="vi" style={{ width: 120 }} disabled>
@@ -118,11 +82,12 @@ const SettingsPage = () => {
               <List.Item.Meta
                 avatar={
                   <Avatar
-                    style={{ backgroundColor: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : "#E5E7EB" }}
+                    // NOTE: THÊM NỀN SÁNG CHO AVATAR
+                    style={{ backgroundColor: "#E5E7EB" }}
                     icon={
                       <Icon
                         icon="mdi:translate"
-                        style={{ color: themeMode === 'dark' ? '#F3F4F6' : "#4B5563" }}
+                        style={{ color: "#4B5563" }}
                       />
                     }
                   />
@@ -131,7 +96,6 @@ const SettingsPage = () => {
               />
             </List.Item>
 
-            {/* Màu nhấn (Accent Color) */}
             <List.Item
               actions={[
                 <Radio.Group
@@ -148,11 +112,12 @@ const SettingsPage = () => {
               <List.Item.Meta
                 avatar={
                   <Avatar
-                    style={{ backgroundColor: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : "#E5E7EB" }}
+                    // NOTE: THÊM NỀN SÁNG CHO AVATAR
+                    style={{ backgroundColor: "#E5E7EB" }}
                     icon={
                       <Icon
                         icon="mdi:palette-outline"
-                        style={{ color: themeMode === 'dark' ? '#F3F4F6' : "#4B5563" }}
+                        style={{ color: "#4B5563" }}
                       />
                     }
                   />
@@ -164,22 +129,8 @@ const SettingsPage = () => {
           </List>
         </Card>
 
-        {/* CARD 2: Tài khoản & Bảo mật */}
-        <Card 
-            title="Tài khoản & Bảo mật" 
-            style={{ 
-                marginBottom: 24, 
-                borderRadius: '12px',
-                // FIX: Buộc Card sử dụng biến màu nền đã inject
-                backgroundColor: 'var(--color-bg-elevated)', 
-            }}
-        >
-          <List 
-                itemLayout="horizontal"
-                className="settings-list" // THÊM CLASS ĐỂ TẠO SELECTOR MẠNH
-                // FIX: Ép background list trong suốt
-                style={{ backgroundColor: 'transparent' }}
-            >
+        <Card title="Tài khoản & Bảo mật" style={{ marginBottom: 24 }}>
+          <List itemLayout="horizontal">
             <List.Item
               actions={[
                 <Switch
@@ -191,11 +142,12 @@ const SettingsPage = () => {
               <List.Item.Meta
                 avatar={
                   <Avatar
-                    style={{ backgroundColor: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : "#E5E7EB" }}
+                    // NOTE: THÊM NỀN SÁNG CHO AVATAR
+                    style={{ backgroundColor: "#E5E7EB" }}
                     icon={
                       <Icon
                         icon="mdi:email-outline"
-                        style={{ color: themeMode === 'dark' ? '#F3F4F6' : "#4B5563" }}
+                        style={{ color: "#4B5563" }}
                       />
                     }
                   />
@@ -210,11 +162,12 @@ const SettingsPage = () => {
               <List.Item.Meta
                 avatar={
                   <Avatar
-                    style={{ backgroundColor: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : "#E5E7EB" }}
+                    // NOTE: THÊM NỀN SÁNG CHO AVATAR
+                    style={{ backgroundColor: "#E5E7EB" }}
                     icon={
                       <Icon
                         icon="mdi:lock-outline"
-                        style={{ color: themeMode === 'dark' ? '#F3F4F6' : "#4B5563" }}
+                        style={{ color: "#4B5563" }}
                       />
                     }
                   />
@@ -226,7 +179,6 @@ const SettingsPage = () => {
           </List>
         </Card>
 
-        {/* CARD 3: Khu vực nguy hiểm */}
         <Card
           title={
             <Space>
@@ -237,15 +189,8 @@ const SettingsPage = () => {
               <span style={{ color: "#DC2626" }}>Khu vực nguy hiểm</span>
             </Space>
           }
-          // FIX: Buộc Card sử dụng biến màu nền đã inject
-          style={{ marginBottom: 24, borderRadius: '12px', backgroundColor: 'var(--color-bg-elevated)' }} 
         >
-          <List 
-                itemLayout="horizontal"
-                className="settings-list" // THÊM CLASS ĐỂ TẠO SELECTOR MẠNH
-                // FIX: Ép background list trong suốt
-                style={{ backgroundColor: 'transparent' }}
-            >
+          <List itemLayout="horizontal">
             <List.Item
               actions={[<Button danger>Vô hiệu hóa</Button>]}
             >

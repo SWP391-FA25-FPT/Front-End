@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Typography } from "antd";
 import { Container } from "react-bootstrap";
-import AppLayout from "../components/layout/AppLayout"; 
+import Layout from "../components/layout/SettingLayout";
 import Featured from "../components/blog/Featured";
 import CategoryPills from "../components/blog/CategoryPills";
 import PostGrid from "../components/blog/PostGrid";
@@ -46,6 +46,7 @@ export default function Blog() {
   const [error, setError] = useState(null);
   const postsPerPage = 6; // Hiển thị 6 bài viết mỗi trang
 
+  // Fetch blogs from backend
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -88,7 +89,7 @@ export default function Blog() {
     fetchBlogs();
   }, []);
 
-  // Filter blogs by category 
+  // Filter blogs by category
   const filtered = React.useMemo(
     () =>
       current === "Tất cả"
@@ -97,7 +98,7 @@ export default function Blog() {
     [current, blogs]
   );
 
-  // Tính toán pagination 
+  // Tính toán pagination
   const totalPages = Math.ceil(filtered.length / postsPerPage);
   const startIndex = (currentPage - 1) * postsPerPage;
   const endIndex = startIndex + postsPerPage;
@@ -111,89 +112,91 @@ export default function Blog() {
 
   if (loading) {
     return (
-      <AppLayout> 
+      <Layout>
         <Container className="py-5 blog-container">
           <div className="text-center">
             <p>Đang tải dữ liệu...</p>
           </div>
         </Container>
-      </AppLayout>
+      </Layout>
     );
   }
 
   if (error) {
     return (
-      <AppLayout>
+      <Layout>
         <Container className="py-5 blog-container">
           <div className="text-center">
             <p className="text-red-500">{error}</p>
           </div>
         </Container>
-      </AppLayout>
+      </Layout>
     );
   }
 
   return (
-    <AppLayout>
-      <Container className="py-5 blog-container">
-        {/* Hero Section - Bài viết nổi bật */}
-        {featuredBlog && (
-          <div className="mb-5 blog-fade-in">
-            <Featured post={featuredBlog} />
+    <React.Fragment>
+      <Layout>
+        <Container className="py-5 blog-container">
+          {/* Hero Section - Bài viết nổi bật */}
+          {featuredBlog && (
+            <div className="mb-5 blog-fade-in">
+              <Featured post={featuredBlog} />
+            </div>
+          )}
+
+          {/* Phần bài viết khác */}
+          <div className="mb-4">
+            <CategoryPills
+              current={current}
+              categories={CATEGORIES}
+              onPick={handleCategoryChange}
+            />
           </div>
-        )}
 
-        {/* Phần bài viết khác */}
-        <div className="mb-4">
-          <CategoryPills
-            current={current}
-            categories={CATEGORIES}
-            onPick={handleCategoryChange}
-          />
-        </div>
-
-        <div id="latest" className="blog-fade-in">
-          <PostGrid posts={currentPosts} formatDate={formatDate} />
-        </div>
-
-        {/* Pagination */}
-        {totalPages >= 1 && (
-          <div className="blog-pagination">
-            {/* Previous button */}
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-              className="blog-pagination-btn"
-            >
-              ←
-            </button>
-
-            {/* Page numbers */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`blog-pagination-btn ${
-                    currentPage === page ? "active" : ""
-                  }`}
-                >
-                  {page}
-                </button>
-              )
-            )}
-
-            {/* Next button */}
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
-              className="blog-pagination-btn"
-            >
-              →
-            </button>
+          <div id="latest" className="blog-fade-in">
+            <PostGrid posts={currentPosts} formatDate={formatDate} />
           </div>
-        )}
-      </Container>
-    </AppLayout>
+
+          {/* Pagination */}
+          {totalPages >= 1 && (
+            <div className="blog-pagination">
+              {/* Previous button */}
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+                className="blog-pagination-btn"
+              >
+                ←
+              </button>
+
+              {/* Page numbers */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`blog-pagination-btn ${
+                      currentPage === page ? "active" : ""
+                    }`}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
+
+              {/* Next button */}
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+                className="blog-pagination-btn"
+              >
+                →
+              </button>
+            </div>
+          )}
+        </Container>
+      </Layout>
+    </React.Fragment>
   );
 }

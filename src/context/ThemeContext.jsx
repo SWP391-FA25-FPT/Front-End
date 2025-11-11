@@ -1,6 +1,12 @@
-// src/context/ThemeContext.jsx (FIX HOÀN CHỈNH)
+// src/context/ThemeContext.jsx
 
-import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 import { theme as antdTheme, ConfigProvider } from "antd";
 
 // 1. TẠO CONTEXT
@@ -26,6 +32,15 @@ export const ThemeProvider = ({ children }) => {
     () => localStorage.getItem("accentColorName") || "amber"
   );
 
+  // 4. LOGIC LƯU TRỮ
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.setAttribute("data-theme", themeMode);
+    root.setAttribute("data-accent", accentColorName);
+    localStorage.setItem("themeMode", themeMode);
+    localStorage.setItem("accentColorName", accentColorName);
+  }, [themeMode, accentColorName]);
+
   // 5. NÂNG CẤP "BỘ NÃO" THEME
   const colorMap = {
     amber: "#F59E0B",
@@ -46,33 +61,16 @@ export const ThemeProvider = ({ children }) => {
     const isDark = themeMode === "dark";
     const lightHoverBg = lightModeBgColors[accentColorName].hover;
     const lightSelectedBg = lightModeBgColors[accentColorName].selected;
-    const darkHoverBg = `rgba(${hexToRgb(accentColor)}, 0.15)`;
-    const darkSelectedBg = `rgba(${hexToRgb(accentColor)}, 0.25)`;
 
     // Lấy thuật toán
-    const algorithm = isDark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm;
-    
-    // Lấy token
-    const token = antdTheme.getDesignToken({ algorithm });
-    
-    // Destructure chỉ những biến cần dùng cho ANTD config
-    const { 
-        colorBgContainer, 
-        colorBgElevated, 
-        colorBgBody,
-        // Cần colorBorderSecondary để fix List
-        colorBorderSecondary 
-    } = token; 
+    const algorithm = isDark
+      ? antdTheme.darkAlgorithm
+      : antdTheme.defaultAlgorithm;
 
-    // HÀM NÀY SẼ TRẢ VỀ CÁC TOKEN ĐỂ SỬ DỤNG TRONG useEffect
-    const themeTokens = {
-        ...token, // Pass ALL ANTD tokens here
-        lightSelectedBg,
-        darkSelectedBg,
-        lightHoverBg,
-        darkHoverBg,
-        accentColor, 
-    };
+    // NOTE: ĐÂY LÀ DÒNG ĐÃ SỬA LỖI (Bỏ dấu {} đi)
+    const token = antdTheme.getDesignToken({ algorithm });
+
+    const { colorBgContainer, colorBgElevated } = token;
 
     return {
       algorithm,
@@ -84,70 +82,41 @@ export const ThemeProvider = ({ children }) => {
         Menu: {
           itemSelectedColor: accentColor,
           itemHoverColor: accentColor,
-          itemSelectedBg: isDark ? darkSelectedBg : lightSelectedBg,
-          itemHoverBg: isDark ? darkHoverBg : lightHoverBg,
-          colorItemBg: "transparent", 
+          itemSelectedBg: isDark
+            ? `rgba(${hexToRgb(accentColor)}, 0.25)`
+            : lightSelectedBg,
+          itemHoverBg: isDark
+            ? `rgba(${hexToRgb(accentColor)}, 0.15)`
+            : lightHoverBg,
+          // Bắt Menu có nền trong suốt để "ăn" màu Sider
+          colorItemBg: "transparent",
           colorSubItemBg: "transparent",
         },
         // Config cho Layout (Header, Sider, Content)
         Layout: {
-          headerBg: colorBgElevated, 
-          siderBg: colorBgElevated,  
-          bodyBg: colorBgBody,       
+          headerBg: colorBgElevated, // Màu "nổi" (Header)
+          siderBg: colorBgElevated, // Màu "nổi" (Sider)
+          bodyBg: colorBgContainer, // Màu nền chính
         },
-        
-        // FIX CUỐI: Cấu hình List để sử dụng màu viền phụ (colorBorderSecondary)
-        List: {
-             colorBorder: colorBorderSecondary, // <-- Dùng biến màu viền phụ đã destructure
-             itemBg: 'transparent',
+        // Config cho Dropdown (Thông báo)
+        Dropdown: {
+          colorBgElevated: colorBgElevated,
         },
-        
-        // Các config khác giữ nguyên...
-        Dropdown: { colorBgElevated: colorBgElevated },
-        Card: { colorBgContainer: colorBgElevated },
-        Select: { colorBgElevated: colorBgElevated },
-        Input: { colorBgContainer: isDark ? colorBgContainer : "#ffffff" },
-        // Trả về themeTokens object cho external use (useEffect)
-        themeTokens 
+        // Config cho Card (Trang Settings, Trang Challenge)
+        Card: {
+          colorBgContainer: colorBgElevated,
+        },
+        // Config cho Select (Trang Settings)
+        Select: {
+          colorBgElevated: colorBgElevated,
+        },
+        // Config cho Input (Thanh Search)
+        Input: {
+          colorBgContainer: isDark ? colorBgContainer : "#ffffff",
+        },
       },
     };
   }, [themeMode, accentColorName, accentColor]);
-
-// (KHỐI CODE THIẾU TRƯỚC ĐÓ) KHỐI useEffect LỚN ĐỂ INJECT CSS VARIABLES VÀO :root
-  useEffect(() => {
-    const root = window.document.documentElement;
-    // Lấy themeTokens từ antdThemeConfig.components (do nó là object trả về)
-    const tokens = antdThemeConfig.components.themeTokens;
-
-    // 1. Lưu vào localStorage và set data-* attributes
-    root.setAttribute("data-theme", themeMode);
-    root.setAttribute("data-accent", accentColorName);
-    localStorage.setItem("themeMode", themeMode);
-    localStorage.setItem("accentColorName", accentColorName);
-
-    // 2. INJECT CSS VARIABLES VÀO :root
-    if (tokens) {
-        root.style.setProperty('--color-primary', tokens.accentColor);
-        // Sử dụng logic ternary cho các màu accent hover/selected để đảm bảo đúng chế độ sáng/tối
-        const isDark = themeMode === 'dark';
-        
-        root.style.setProperty('--color-primary-hover', isDark ? tokens.darkHoverBg : tokens.lightHoverBg);
-        root.style.setProperty('--color-primary-selected', isDark ? tokens.darkSelectedBg : tokens.lightSelectedBg); 
-        
-        // Backgrounds và Text
-        root.style.setProperty('--color-bg-body', tokens.colorBgBody);
-        root.style.setProperty('--color-bg-container', tokens.colorBgContainer);
-        // FIX LỖI: BIẾN NỀN ELEVATED
-        root.style.setProperty('--color-bg-elevated', tokens.colorBgElevated);
-        root.style.setProperty('--color-text-primary', tokens.colorText);
-        root.style.setProperty('--color-text-secondary', tokens.colorTextSecondary);
-        root.style.setProperty('--color-border', tokens.colorBorder);
-        // Biến Border Secondary được inject
-        root.style.setProperty('--color-border-secondary', tokens.colorBorderSecondary || tokens.colorBorder); 
-    }
-// Đã thêm antdThemeConfig vào dependencies
-  }, [themeMode, accentColorName, antdThemeConfig]);
-
 
   // 6. GIÁ TRỊ CUNG CẤP
   const value = {
@@ -159,9 +128,7 @@ export const ThemeProvider = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={value}>
-      <ConfigProvider theme={antdThemeConfig}>
-        {children}
-      </ConfigProvider>
+      <ConfigProvider theme={antdThemeConfig}>{children}</ConfigProvider>
     </ThemeContext.Provider>
   );
 };

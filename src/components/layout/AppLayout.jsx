@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Layout,
-  Typography, // Typography được import ở đây
+  Typography,
   Badge,
   Button,
   Dropdown,
@@ -21,7 +21,6 @@ import SearchBar from "../SearchBar/SearchBar";
 // NOTE: 1. Import hook useTheme
 import { useTheme } from "../../context/ThemeContext.jsx";
 
-// FIX: Destructure Typography ở đây, sau khi nó đã được import từ "antd"
 const { Title, Text, Link: AntLink } = Typography;
 
 const notifications = [
@@ -113,13 +112,7 @@ const AppLayout = ({ children }) => {
   return (
     <React.Fragment>
       {/* NOTE: 3. ĐÃ XÓA backgroundColor */}
-      <Layout 
-        style={{ 
-            minHeight: "100vh",
-            // FIX NỀN TỔNG THỂ: Áp dụng biến body
-            backgroundColor: 'var(--color-bg-body)' 
-        }}
-       >
+      <Layout style={{ minHeight: "100vh" }}>
         <Sider
           // NOTE: 3. Sửa 'theme="dark"' thành 'theme={themeMode}'
           theme={themeMode}
@@ -140,8 +133,6 @@ const AppLayout = ({ children }) => {
         <Layout
           style={{
             overflowY: "auto",
-            // FIX: Đảm bảo Layout lồng bên trong cũng dùng màu nền body (Không được trong suốt)
-            backgroundColor: 'var(--color-bg-body)' 
           }}
         >
           <Header
@@ -199,8 +190,6 @@ const AppLayout = ({ children }) => {
               borderRadius: "8px",
               padding: "16px",
               ...componentShadow,
-              // FIX MÀU CONTENT: Buộc Content dùng màu nền khối nổi
-              backgroundColor: 'var(--color-bg-elevated)', // <--- DÒNG NÀY ĐÃ FIX NỀN TRUNG TÂM
             }}
           >
             {children}
