@@ -260,7 +260,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   }
 
   const items =
-    user && user.role === "admin" ? [...baseItems, adminItem] : baseItems;
+    user && user.role === "admin" ? [adminItem] : baseItems;
 
   const [openKeys, setOpenKeys] = useState([]);
 
