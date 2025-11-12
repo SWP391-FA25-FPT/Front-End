@@ -32,7 +32,6 @@ import ChallengeDetail from "./pages/ChallengeDetail";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import BlogCreate from "./pages/BlogCreate";
-import AdminPage from "./pages/admin/AdminPage";
 import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
@@ -58,7 +57,8 @@ import UserManagementModule from "./components/admin/UserManagementModule";
 //import AIControlModule from "./components/admin/AIControlModule";
 import StatisticsModule from "./components/admin/StatisticsModule";
 import DashboardModule from "./components/admin/DashboardModule";
-
+import SystemSettingsModule from "./components/admin/SystemSettingsModule";
+import AdminLayout from "./components/admin/AdminLayout";
 
 
 function App() {
@@ -128,18 +128,21 @@ function App() {
             path="/admin"
             element={
               <AdminProtectedRoute>
-                <AdminPage />   {/* đã tự bọc AppLayout bên trong */}
+                <AdminLayout />   
               </AdminProtectedRoute>
             }
           >
-            <Route path="/admin/dashboard" element={<DashboardModule />} />
+            <Route index element={<DashboardModule />} />
+            <Route path="dashboard" element={<DashboardModule />} />
             <Route path="content-moderation" element={<ContentModerationModule />} />
             <Route path="payment" element={<PaymentModule />} />
             <Route path="statistics" element={<StatisticsModule />} />
             <Route path="report" element={<ReportModule />} />
             <Route path="feedback" element={<FeedbackModule />} />
             <Route path="users" element={<UserManagementModule />} />
+            <Route path="system-settings" element={<SystemSettingsModule />} />
           </Route>
+
 
           <Route
             path="/meal-plan"
