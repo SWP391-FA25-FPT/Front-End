@@ -7,14 +7,16 @@ import ContentModerationModule from "../../components/admin/ContentModerationMod
 import UserManagementModule from "../../components/admin/UserManagementModule";
 import AIControlModule from "../../components/admin/AIControlModule";
 import StatisticsModule from "../../components/admin/StatisticsModule";
+import BlogManagementModule from "../../components/admin/BlogManagementModule";
 import Logo from "../../assets/icon.svg";
 import "../style/AdminPage.css";
 
 export default function AdminPage() {
-  const [activeModule, setActiveModule] = useState("payment");
+  const [activeModule, setActiveModule] = useState("blogs");
   const navigate = useNavigate();
 
   const modules = {
+    blogs: { component: BlogManagementModule, label: "Blogs" },
     payment: { component: PaymentModule, label: "Plans & Billing" },
     feedback: { component: FeedbackModule, label: "Feedback" },
     report: { component: ReportModule, label: "Report" },
