@@ -57,6 +57,7 @@ import ContentModerationModule from "./components/admin/ContentModerationModule"
 import UserManagementModule from "./components/admin/UserManagementModule";
 //import AIControlModule from "./components/admin/AIControlModule";
 import StatisticsModule from "./components/admin/StatisticsModule";
+import DashboardModule from "./components/admin/DashboardModule";
 
 
 
@@ -131,6 +132,7 @@ function App() {
               </AdminProtectedRoute>
             }
           >
+            <Route path="/admin/dashboard" element={<DashboardModule />} />
             <Route path="content-moderation" element={<ContentModerationModule />} />
             <Route path="payment" element={<PaymentModule />} />
             <Route path="statistics" element={<StatisticsModule />} />

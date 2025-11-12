@@ -37,7 +37,18 @@ const Index = ({ collapsed, toggleCollapsed }) => {
 
     if (path === "/profile") return "6";
     if (path === "/support") return "7";
-    if (path === "/admin") return "9";
+    // ✅ ADD THIS (phần admin sidebar)
+if (path.startsWith("/admin")) {
+  if (path === "/admin/dashboard") return "admin-dashboard";
+  if (path === "/admin/content-moderation") return "admin-content";
+  if (path === "/admin/payment") return "admin-payment";
+  if (path === "/admin/statistics") return "admin-statistics";
+  if (path === "/admin/report") return "admin-report";
+  if (path === "/admin/feedback") return "admin-feedback";
+  if (path === "/admin/users") return "admin-users";
+  if (path === "/admin/setting") return "admin-system-setting";
+}
+
 
     if (path.startsWith("/my-recipes/")) {
       if (path === "/my-recipes/all") return "8-1";
@@ -159,50 +170,56 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     },
   ];
 
-  const adminItem = {
-    key: "9",
-    icon: <Icon icon="mdi:shield-account" width="24" height="24" />,
-    label: "Admin",
-    children: [
-      {
-        key: "9-1",
-        icon: <Icon icon="mdi:camera-outline" width="24" height="24" />,
-        label: "Kiểm Duyệt Nội Dung",
-        onClick: () => navigate("/admin/content-moderation"),
-      },
-      {
-        key: "9-2",
-        icon: <Icon icon="mdi:credit-card-outline" width="24" height="24" />,
-        label: "Gói & Thanh Toán",
-        onClick: () => navigate("/admin/payment"),
-      },
-      {
-        key: "9-3",
-        icon: <Icon icon="mdi:chart-box-outline" width="24" height="24" />,
-        label: "Thống Kê Hệ Thống",
-        onClick: () => navigate("/admin/statistics"),
-      },
-      {
-        key: "9-4",
-        icon: <Icon icon="mdi:flag-outline" width="24" height="24" />,
-        label: "Báo Cáo Hệ Thống",
-        onClick: () => navigate("/admin/report"),
-      },
-      {
-        key: "9-5",
-        icon: <Icon icon="mdi:comment-outline" width="24" height="24" />,
-        label: "Phản Hồi Người Dùng",
-        onClick: () => navigate("/admin/feedback"),
-      },
-      {
-        key: "9-6",
-        icon: <Icon icon="mdi:account-group-outline" width="24" height="24" />,
-        label: "Quản Lý Người Dùng",
-        onClick: () => navigate("/admin/users"),
-      },
-    ],
-  };
-
+  const adminMenuItems = [
+  {
+    key: "admin-dashboard",
+    icon: <Icon icon="mdi:view-dashboard-outline" width="24" height="24" />,
+    label: "Bảng Điều Khiển",
+    onClick: () => navigate("/admin/dashboard"),
+  },
+  {
+    key: "admin-content",
+    icon: <Icon icon="mdi:camera-outline" width="24" height="24" />,
+    label: "Kiểm Duyệt Nội Dung",
+    onClick: () => navigate("/admin/content-moderation"),
+  },
+  {
+    key: "admin-payment",
+    icon: <Icon icon="mdi:credit-card-outline" width="24" height="24" />,
+    label: "Gói & Thanh Toán",
+    onClick: () => navigate("/admin/payment"),
+  },
+  {
+    key: "admin-statistics",
+    icon: <Icon icon="mdi:chart-box-outline" width="24" height="24" />,
+    label: "Thống Kê Hệ Thống",
+    onClick: () => navigate("/admin/statistics"),
+  },
+  {
+    key: "admin-report",
+    icon: <Icon icon="mdi:flag-outline" width="24" height="24" />,
+    label: "Báo Cáo Hệ Thống",
+    onClick: () => navigate("/admin/report"),
+  },
+  {
+    key: "admin-feedback",
+    icon: <Icon icon="mdi:comment-outline" width="24" height="24" />,
+    label: "Phản Hồi Người Dùng",
+    onClick: () => navigate("/admin/feedback"),
+  },
+  {
+    key: "admin-users",
+    icon: <Icon icon="mdi:account-group-outline" width="24" height="24" />,
+    label: "Quản Lý Người Dùng",
+    onClick: () => navigate("/admin/users"),
+  },
+  {
+    key: "admin-system-setting",
+    icon: <Icon icon="mdi:cog-outline" width="24" height="24" />,
+    label: "Cài đặt hệ thống",
+    onClick: () => navigate("/admin/setting"),
+  },
+];
   // 1. Logic cho GUEST (chưa login)
   if (!user) {
     // Sửa "Kho Món Ngon" (key 8)
@@ -253,31 +270,26 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     }
   });
 
-  if (adminItem.label && typeof adminItem.label === 'object' && adminItem.label.type === 'a') {
-    const href = adminItem.label.props.href;
-    adminItem.label = adminItem.label.props.children;
-    adminItem.onClick = () => navigate(href);
-  }
+  const items = user && user.role === "admin"
+  ? adminMenuItems  // admin chỉ thấy menu admin
+  : baseItems;      // user thường thấy menu user
 
-  const items =
-    user && user.role === "admin" ? [adminItem] : baseItems;
 
   const [openKeys, setOpenKeys] = useState([]);
 
   useEffect(() => {
-    if (collapsed) {
-      setOpenKeys([]);
-    } else {
-      const currentKey = getSelectedKey();
-      if (currentKey.includes("-")) {
-        const parentKey = currentKey.split("-")[0];
-        setOpenKeys([parentKey]);
-      } else {
-        setOpenKeys([]);
-      }
+  if (user && user.role === "admin") {
+    setOpenKeys([]); // Admin: luôn đóng dropdown (vì không dùng children)
+  } else {
+    // user menu vẫn hoạt động dropdown bình thường
+    const currentKey = getSelectedKey();
+    if (currentKey.includes("-")) {
+      const parentKey = currentKey.split("-")[0];
+      setOpenKeys([parentKey]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collapsed, location.pathname]);
+  }
+}, [collapsed, location.pathname]);
+
 
   const PremiumCTA = () => {
     if (collapsed) {

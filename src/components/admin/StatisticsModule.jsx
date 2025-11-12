@@ -1,30 +1,53 @@
 import React from "react";
+import { Card, Statistic } from "antd";
+import { Icon } from "@iconify/react";
+import "../../pages/style/StatisticsAdmin.css";
 
 export default function StatisticsModule() {
   const stats = [
-    { name: "Active Users", value: 1200, tone: "primary" },
-    { name: "Reports", value: 45, tone: "danger" },
-    { name: "Feedbacks", value: 32, tone: "warning" },
-    { name: "Revenue ($)", value: 920, tone: "success" },
+    {
+      name: "Người dùng đang hoạt động",
+      value: 247,
+      icon: "mdi:account-multiple",
+      color: "#4f46e5",
+    },
+    {
+      name: "Công thức chờ duyệt",
+      value: 18,
+      icon: "mdi:clipboard-text-search",
+      color: "#f59e0b",
+    },
+    {
+      name: "Gói Premium đang dùng",
+      value: 92,
+      icon: "mdi:crown-outline",
+      color: "#eab308",
+    },
+    {
+      name: "Doanh thu hôm nay",
+      value: "2.860.000đ",
+      icon: "mdi:cash",
+      color: "#10b981",
+    },
   ];
 
   return (
-    <div>
-      <h4 className="fw-bold mb-3">System Statistics</h4>
-      <div className="row">
-        {stats.map((s) => (
-          <div key={s.name} className="col-md-3 mb-3">
-            <div
-              className="p-3 rounded shadow-sm text-center"
-              style={{
-                borderLeft: `4px solid var(--bs-${s.tone})`,
-                background: `var(--bs-${s.tone}-bg-subtle, #f8f9fa)`,
-              }}
-            >
-              <h6 className="text-muted mb-1">{s.name}</h6>
-              <h3 className={`fw-bold text-${s.tone}`}>{s.value}</h3>
+    <div className="admin-module-wrapper">
+      <h2 className="page-title">📊 Thống kê nhanh</h2>
+
+      <div className="statistics-grid">
+        {stats.map((item, index) => (
+          <Card key={index} bordered={false} className="statistics-card kpi-card">
+            <div className="statistics-icon" style={{ backgroundColor: item.color + "15" }}>
+              <Icon icon={item.icon} width="28" height="28" color={item.color} />
             </div>
-          </div>
+
+            <Statistic
+              title={item.name}
+              value={item.value}
+              valueStyle={{ color: item.color, fontWeight: 700, fontSize: 22 }}
+            />
+          </Card>
         ))}
       </div>
     </div>

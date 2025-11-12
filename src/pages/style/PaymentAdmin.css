@@ -1,0 +1,318 @@
+/* =========================================================
+   ADMIN LAYOUT — CHUNG
+========================================================= */
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  font-family: "Inter", sans-serif;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px 40px;
+  overflow-y: auto;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  letter-spacing: -0.5px;
+  color: #1a202c;
+}
+
+/* =========================================================
+   PAYMENT MODULE - ENHANCED STYLES
+========================================================= */
+.payment-container {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.payment-container h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #1a202c;
+  letter-spacing: -0.5px;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.payment-container h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 2px;
+}
+
+/* FILTER BAR */
+.payment-filter-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.payment-filter-bar .ant-select {
+  min-width: 220px;
+}
+
+.payment-filter-bar .ant-select-selector {
+  border-radius: 10px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.3s ease;
+  height: 40px !important;
+  padding: 4px 16px !important;
+}
+
+.payment-filter-bar .ant-select-selector:hover {
+  border-color: #6366f1 !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15) !important;
+}
+
+.payment-filter-bar .ant-select-focused .ant-select-selector {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+}
+
+/* TABLE WRAPPER */
+.ant-table-wrapper {
+  border-radius: 16px !important;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* TABLE STYLE */
+.ant-table {
+  background: transparent;
+}
+
+.ant-table-thead > tr > th {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  color: #1e293b !important;
+  font-weight: 700;
+  padding: 18px 16px !important;
+  font-size: 13px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+
+.ant-table-tbody > tr > td {
+  padding: 18px 16px !important;
+  font-size: 14px !important;
+  color: #334155;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+}
+
+.ant-table-tbody > tr:last-child > td {
+  border-bottom: none !important;
+}
+
+/* Enhanced Tags */
+.ant-tag {
+  border: none !important;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.ant-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Plan Tags */
+.ant-tag-orange {
+  background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%) !important;
+  color: #7c2d12 !important;
+}
+
+.ant-tag-blue {
+  background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%) !important;
+  color: #1e3a8a !important;
+}
+
+.ant-tag-green {
+  background: linear-gradient(135deg, #bbf7d0 0%, #86efac 100%) !important;
+  color: #14532d !important;
+}
+
+/* Type Tags */
+.ant-tag-purple {
+  background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%) !important;
+  color: #581c87 !important;
+}
+
+.ant-tag-cyan {
+  background: linear-gradient(135deg, #a5f3fc 0%, #67e8f9 100%) !important;
+  color: #164e63 !important;
+}
+
+/* Status Tags - Green (Active) */
+.ant-tag-green {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+  color: #166534 !important;
+}
+
+/* Status Tags - Gold (Pending) */
+.ant-tag-gold {
+  background: linear-gradient(135deg, #fef9c3 0%, #fde047 100%) !important;
+  color: #854d0e !important;
+}
+
+/* Status Tags - Volcano (Expired) */
+.ant-tag-volcano {
+  background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%) !important;
+  color: #991b1b !important;
+}
+
+/* Action Button in Table */
+.ant-btn[type="text"] {
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  height: auto !important;
+  color: #6366f1 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+}
+
+.ant-btn[type="text"]:hover {
+  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%) !important;
+  color: #4f46e5 !important;
+  transform: translateX(4px) !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2) !important;
+  border-color: #c7d2fe !important;
+}
+
+/* Pagination */
+.ant-pagination {
+  margin-top: 24px !important;
+}
+
+.ant-pagination-item {
+  border-radius: 10px !important;
+  border: 1px solid #e2e8f0 !important;
+  transition: all 0.3s ease !important;
+}
+
+.ant-pagination-item:hover {
+  border-color: #6366f1 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2) !important;
+}
+
+.ant-pagination-item-active {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+  border-color: transparent !important;
+}
+
+.ant-pagination-item-active a {
+  color: white !important;
+}
+
+.ant-pagination-prev:hover .ant-pagination-item-link,
+.ant-pagination-next:hover .ant-pagination-item-link {
+  color: #6366f1 !important;
+  border-color: #6366f1 !important;
+}
+
+/* Modal styling */
+.ant-modal-body p {
+  font-size: 15px !important;
+  color: #475569 !important;
+  margin-bottom: 14px !important;
+  line-height: 1.6 !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.ant-modal-body p:last-child {
+  border-bottom: none !important;
+}
+
+.ant-modal-body p strong {
+  color: #1e293b !important;
+  font-weight: 700 !important;
+  display: inline-block !important;
+  min-width: 180px !important;
+}
+
+/* Export buttons */
+.payment-export {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.payment-export .ant-btn {
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.payment-export .ant-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Responsive Payment Module */
+@media (max-width: 768px) {
+  .payment-container {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .payment-container h2 {
+    font-size: 22px;
+  }
+
+  .payment-filter-bar {
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .payment-filter-bar .ant-select {
+    width: 100%;
+  }
+
+  .ant-table-tbody > tr > td,
+  .ant-table-thead > tr > th {
+    padding: 12px 8px !important;
+    font-size: 13px !important;
+  }
+
+  .ant-tag {
+    font-size: 11px;
+    padding: 4px 12px;
+  }
+}

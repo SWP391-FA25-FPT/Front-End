@@ -1,0 +1,440 @@
+/* =========================================================
+   ADMIN LAYOUT — CHUNG
+========================================================= */
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  font-family: "Inter", sans-serif;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px 40px;
+  overflow-y: auto;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  letter-spacing: -0.5px;
+  color: #1a202c;
+}
+
+/* =========================================================
+   KPI CARDS — DASHBOARD
+========================================================= */
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  height: 100% !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+}
+
+.kpi-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.kpi-card .ant-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px !important;
+}
+
+.admin-kpi-title {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-kpi-value {
+  font-size: 36px;
+  font-weight: 700;
+  margin-top: 12px;
+  letter-spacing: -1.2px;
+  color: #1a202c;
+}
+
+.admin-kpi-change {
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.ant-col > .kpi-card {
+  height: 100% !important;
+}
+
+/* =========================================================
+   BIỂU ĐỒ — CHART WRAPPER
+========================================================= */
+.chart-container {
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.chart-container .ant-card-head-title {
+  font-size: 18px;
+  font-weight: 600;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  color: #1a202c;
+}
+
+/* =========================================================
+   CONTENT MODERATION — CARD LIST
+========================================================= */
+.admin-module-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.admin-filter-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.admin-filter-bar .ant-select {
+  min-width: 180px;
+}
+
+.admin-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.admin-card-fixed {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-card-fixed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-card-fixed:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.admin-card-fixed:hover::before {
+  opacity: 1;
+}
+
+.admin-card-title {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #1a202c;
+  line-height: 1.4;
+}
+
+.admin-card-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-card-tags .ant-tag {
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.admin-card-fixed p {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.admin-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.admin-approve-reject {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-approve-reject .ant-btn {
+  flex: 1;
+  height: 38px;
+  font-weight: 600;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.admin-card-actions .ant-btn[type="text"] {
+  width: 100%;
+  justify-content: center;
+  height: 36px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  color: white !important;
+  border: none;
+}
+
+.admin-card-actions .ant-btn[type="text"]:hover {
+  background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   SCROLLBAR — TINH TẾ
+========================================================= */
+.main-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* =========================================================
+   MODAL STYLES
+========================================================= */
+.ant-modal-content {
+  border-radius: 20px !important;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2) !important;
+}
+
+.ant-modal-header {
+  border-bottom: 2px solid #f1f5f9;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.ant-modal-title {
+  font-weight: 700;
+  font-size: 20px;
+  color: #1a202c;
+  letter-spacing: -0.3px;
+}
+
+.ant-modal-body {
+  padding: 28px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.ant-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ant-modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 8px;
+}
+
+.ant-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.ant-modal-body img {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease;
+}
+
+.ant-modal-body img:hover {
+  transform: scale(1.02);
+}
+
+.ant-modal-body h4 {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1a202c;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.ant-modal-body p {
+  color: #64748b;
+  font-size: 15px;
+  margin-bottom: 16px;
+}
+
+.ant-modal-body p strong {
+  color: #1a202c;
+  font-weight: 600;
+}
+
+.ant-modal-body ul,
+.ant-modal-body ol {
+  padding-left: 24px;
+  margin-bottom: 20px;
+}
+
+.ant-modal-body ul li,
+.ant-modal-body ol li {
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.ant-modal-body ul li::marker {
+  color: #06b6d4;
+}
+
+.ant-modal-body ol li::marker {
+  color: #6366f1;
+  font-weight: 700;
+}
+
+.ant-modal-footer {
+  border-top: 2px solid #f1f5f9;
+  padding: 20px 28px;
+  background: #f8fafc;
+}
+
+.ant-modal-close {
+  top: 16px;
+  right: 16px;
+}
+
+.ant-modal-close-x {
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  font-size: 18px;
+  color: #64748b;
+  transition: all 0.3s ease;
+}
+
+.ant-modal-close:hover .ant-modal-close-x {
+  color: #1a202c;
+  background: #f1f5f9;
+  border-radius: 12px;
+}
+
+/* =========================================================
+   BUTTONS GLOBAL
+========================================================= */
+.ant-btn-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
+}
+
+.ant-btn-primary:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+
+.ant-btn-dangerous {
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  transition: all 0.3s ease;
+}
+
+.ant-btn-dangerous:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 24px;
+  }
+
+  .admin-kpi-value {
+    font-size: 30px;
+  }
+
+  .admin-card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .admin-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-filter-bar {
+    flex-direction: column;
+  }
+
+  .admin-filter-bar .ant-select {
+    width: 100%;
+  }
+}

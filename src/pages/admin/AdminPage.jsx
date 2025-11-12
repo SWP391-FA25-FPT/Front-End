@@ -2,7 +2,6 @@ import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Logo from "../../assets/icon.svg";
 import AppLayout from "../../components/layout/AppLayout"; 
-import "../style/AdminPage.css";
 
 export default function AdminPage() {
   const navigate = useNavigate();
