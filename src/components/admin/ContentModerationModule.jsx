@@ -14,7 +14,7 @@ export default function ContentModerationModule() {
       priority: "Cao",
       user: "uyenfood",
       img: "https://images.unsplash.com/photo-1604908177321-46c77c425653?w=600",
-      status: "pending",
+      status: "pending",                                                                                                                                                                            
       ingredients: [
         "200g tôm sú",
         "Bánh tráng",
