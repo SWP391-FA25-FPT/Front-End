@@ -190,13 +190,20 @@ export const searchRecipes = async (keyword, params = {}) => {
   }
 };
 
-// Add reaction to recipe
+// Add or toggle reaction to recipe
 export const addRecipeReaction = async (recipeId, reactionType) => {
   try {
+    const token = getCookie("token");
+
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập để phản hồi công thức");
+    }
+
     const response = await fetch(`${baseUrl}${apiUrls.getRecipeById}/${recipeId}/reactions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ type: reactionType }),
     });
@@ -204,12 +211,46 @@ export const addRecipeReaction = async (recipeId, reactionType) => {
     const data = await response.json();
     
     if (!response.ok) {
-      throw new Error(data.error || "Lỗi khi thêm reaction");
+      throw new Error(data.error || "Lỗi khi cập nhật phản hồi");
     }
 
     return data;
   } catch (error) {
     console.error("Add reaction error:", error);
+    throw error;
+  }
+};
+
+// Publish draft recipe (update status to published)
+export const publishRecipeDraft = async (recipeId) => {
+  try {
+    const token = getCookie("token");
+
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập để lên sóng công thức");
+    }
+
+    const response = await fetch(
+      `${baseUrl}${apiUrls.updateRecipeStatus}/${recipeId}/status`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: "published" }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi lên sóng công thức");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Publish recipe error:", error);
     throw error;
   }
 };

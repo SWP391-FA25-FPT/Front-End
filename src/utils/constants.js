@@ -19,6 +19,7 @@ export const apiUrls = {
   updateRecipe: "/api/recipes",
   deleteRecipe: "/api/recipes",
   searchRecipes: "/api/recipes/search",
+  updateRecipeStatus: "/api/recipes",
 
   // Comment endpoints
   getCommentsByRecipeId: "/api/recipes/:recipeId/comments",
@@ -74,4 +75,9 @@ export const apiUrls = {
   getBlogStats: "/api/blogs/admin/stats",
   updateBlogAdmin: "/api/blogs/admin",
   deleteBlogAdmin: "/api/blogs/admin",
+
+  // Notification endpoints
+  notifications: "/api/notifications",
+  notificationsMarkAll: "/api/notifications/read-all",
+  notificationsAdmin: "/api/notifications/admin",
 };

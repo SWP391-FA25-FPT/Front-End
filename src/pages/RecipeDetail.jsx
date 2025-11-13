@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Spin, Alert, Divider, Card, Row, Col } from "antd";
+import { Spin, Alert, Divider, Row, Col, Button, message } from "antd";
 import { Icon } from "@iconify/react";
 import SettingLayout from "../components/layout/SettingLayout";
 import RecipeHeader from "../components/Recipe/RecipeHeader";
@@ -13,18 +13,20 @@ import TipsSection from "../components/Recipe/TipsSection";
 import RecipeRating from "../components/Recipe/RecipeRating";
 import RecipeComments from "../components/Recipe/RecipeComments";
 import RecipeReactions from "../components/Recipe/RecipeReactions";
-import { getRecipeById, getAllRecipes } from "../apis/recipe";
-import CardRecent from "../components/CardRecent/CardRecent";
+import { getRecipeById, getAllRecipes, publishRecipeDraft } from "../apis/recipe";
+import { useAuth } from "../context/useAuth";
 import guest from "../assets/guest.png";
 import "./style/RecipeDetail.css";
 
 const RecipeDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [recipe, setRecipe] = useState(null);
   const [similarRecipes, setSimilarRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [publishing, setPublishing] = useState(false);
 
   const fetchRecipe = async () => {
     try {
@@ -53,11 +55,29 @@ const RecipeDetail = () => {
     }
   };
 
+  const handlePublishDraft = async () => {
+    try {
+      setPublishing(true);
+      const response = await publishRecipeDraft(id);
+      message.success(response.message || "Đã lên sóng công thức!");
+      await fetchRecipe();
+    } catch (publishError) {
+      console.error("Publish draft error:", publishError);
+      message.error(publishError.message || "Không thể lên sóng công thức");
+    } finally {
+      setPublishing(false);
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchRecipe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  const isRecipeAuthor =
+    recipe?.authorId && user?._id && String(recipe.authorId) === String(user._id);
+  const canPublish = isRecipeAuthor && recipe?.status === "draft";
 
   if (loading) {
     return (
@@ -141,17 +161,39 @@ const RecipeDetail = () => {
 
               {/* Reactions */}
               <div className="recipe-reactions-bar">
-                <RecipeReactions 
+                <RecipeReactions
                   recipeId={id}
                   initialReactions={recipe.reactions || []}
-                  onUpdate={(updatedReactions) => {
-                    setRecipe({ ...recipe, reactions: updatedReactions });
+                  initialUserReaction={recipe.userReaction}
+                  onUpdate={(updatedReactions, updatedUserReaction) => {
+                    setRecipe((prev) => ({
+                      ...prev,
+                      reactions: updatedReactions,
+                      userReaction: updatedUserReaction,
+                    }));
                   }}
                 />
               </div>
 
               {/* Actions */}
-              <div className="recipe-actions-bar">
+              <div
+                className="recipe-actions-bar"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  flexWrap: "wrap",
+                }}
+              >
+                {canPublish && (
+                  <Button
+                    type="primary"
+                    onClick={handlePublishDraft}
+                    loading={publishing}
+                  >
+                    Lên sóng
+                  </Button>
+                )}
                 <RecipeActions recipe={recipe} onUpdate={fetchRecipe} />
               </div>
             </div>

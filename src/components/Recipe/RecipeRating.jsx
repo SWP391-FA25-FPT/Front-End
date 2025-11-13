@@ -30,6 +30,7 @@ const RecipeRating = ({ recipeId, onRatingUpdate }) => {
       setLoading(true);
       const response = await getRatingsByRecipeId(recipeId);
       setRatingData(response.data);
+      setHoverValue(0);
       if (onRatingUpdate) {
         onRatingUpdate(response.data);
       }
@@ -49,9 +50,10 @@ const RecipeRating = ({ recipeId, onRatingUpdate }) => {
 
     try {
       setSubmitting(true);
-      await createOrUpdateRating(recipeId, value);
+      const response = await createOrUpdateRating(recipeId, value);
       message.success(
-        ratingData.userRating ? "Cập nhật đánh giá thành công" : "Đánh giá thành công"
+        response.message ||
+          (ratingData.userRating ? "Cập nhật đánh giá thành công" : "Đánh giá thành công")
       );
       await fetchRatings();
     } catch (error) {
@@ -67,8 +69,8 @@ const RecipeRating = ({ recipeId, onRatingUpdate }) => {
 
     try {
       setSubmitting(true);
-      await deleteUserRating(recipeId);
-      message.success("Xóa đánh giá thành công");
+      const response = await deleteUserRating(recipeId);
+      message.success(response.message || "Xóa đánh giá thành công");
       await fetchRatings();
     } catch (error) {
       console.error("Clear rating error:", error);
