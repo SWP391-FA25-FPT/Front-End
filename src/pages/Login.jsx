@@ -135,8 +135,12 @@ function Login() {
 
         // Redirect to home page
         setTimeout(() => {
-          window.location.href = '/';
-        }, 1000);
+          if (response.data.user.role === "admin") {
+            window.location.href = "/admin"; // hoặc /admin/dashboard
+          } else {
+            window.location.href = "/";
+          }
+        }, 800);
       } else {
         setError(response.error || 'Đăng nhập thất bại!');
       }
@@ -166,21 +170,32 @@ function Login() {
         username: registerData.username,
         email: registerData.email,
         password: registerData.password,
-        onSuccess: () => {
-          setSuccess('Đăng ký thành công! Vui lòng đăng nhập.');
-          setRegisterData({
-            username: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-          });
+        onSuccess: async () => {
+          setSuccess('Đăng ký thành công! Đang đăng nhập...');
 
-          // Switch to login form after 2 seconds
-          setTimeout(() => {
-            setIsLogin(true);
-            setSuccess('');
-          }, 2000);
+          try {
+            const loginRes = await loginApi({
+              username: registerData.email,
+              password: registerData.password
+            });
+
+            if (loginRes.success) {
+              login({
+                token: loginRes.data.token,
+                user: loginRes.data.user
+              });
+
+              setTimeout(() => {
+                window.location.href = "/";
+              }, 800);
+            } else {
+              setError("Tự động đăng nhập thất bại, vui lòng đăng nhập lại!");
+            }
+          } catch {
+            setError("Có lỗi khi đăng nhập tự động!");
+          }
         },
+
         onFail: (error) => {
           setError(error || 'Đăng ký thất bại!');
         }

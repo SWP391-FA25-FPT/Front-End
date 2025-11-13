@@ -191,7 +191,10 @@ function TakeSurvey({ onComplete }) {
 
       // Update user data in context
       if (completeResponse?.success) {
-        updateUser(updateResponse.data);
+        updateUser({
+          ...completeResponse.data,   // dùng data từ completeOnboarding
+          isFirstLogin: false,        // đảm bảo luôn false
+        });
       }
 
       setSuccess('Thông tin đã được lưu thành công! Đang chuyển về trang chính...');
