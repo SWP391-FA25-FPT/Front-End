@@ -1,0 +1,186 @@
+/* =============================
+  SYSTEM SETTING PAGE — LAYOUT
+=============================*/
+.system-settings-wrapper {
+  display: flex;
+  gap: 32px;
+  padding: 36px 40px;
+  background: #f8fafc;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+}
+
+/* =============================
+  SIDEBAR
+=============================*/
+.settings-sidebar {
+  width: 260px;
+  background: white;
+  padding: 24px 18px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  height: fit-content;
+  position: sticky;
+  top: 24px;
+}
+.settings-sidebar h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  padding-left: 12px;
+  margin-bottom: 24px;
+}
+.settings-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.settings-sidebar li {
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: #4b5563;
+  transition: all 0.2s ease;
+}
+.settings-sidebar li:hover {
+  background: #f3f4f6;
+  color: #6366f1;
+}
+.settings-sidebar li.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+/* =============================
+  FORM CONTENT
+=============================*/
+.system-settings-container {
+  flex: 1;
+  max-width: 900px;
+}
+
+.page-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 28px;
+}
+
+.settings-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px 36px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.settings-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+/* Spacing giữa label và input */
+.settings-card label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-top: 18px;
+  margin-bottom: 6px;
+}
+
+/* =============================
+  INPUT / SELECT / UPLOAD
+=============================*/
+.system-settings-container .ant-input,
+.system-settings-container .ant-select-selector {
+  border-radius: 10px !important;
+  border: 1.6px solid #e5e7eb !important;
+  padding: 10px 14px !important;
+  font-size: 15px !important;
+  transition: all 0.25s ease !important;
+}
+
+.system-settings-container .ant-input:hover,
+.system-settings-container .ant-select-selector:hover {
+  border-color: #d1d5db !important;
+}
+
+.system-settings-container .ant-input:focus,
+.system-settings-container .ant-select-focused .ant-select-selector {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22) !important;
+}
+
+/* Tạo khoảng cách giữa Upload và phần dưới */
+.ant-upload {
+  margin-bottom: 20px !important;
+}
+
+/* =============================
+  TWO-COLUMN GRID (General Tab)
+=============================*/
+.settings-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px 36px; /* ⬅ spacing hợp lý */
+  margin-top: 6px;
+}
+
+/* =============================
+  SETTING ROW (switch layout)
+=============================*/
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 4px;
+  border-bottom: 1px solid #f3f4f6;
+}
+.setting-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.setting-row span {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Switch */
+.ant-switch-checked {
+  background-color: #6366f1 !important;
+}
+
+/* =============================
+  SAVE BUTTON
+=============================*/
+.settings-footer {
+  text-align: right;
+  padding-top: 24px;
+}
+.settings-footer .ant-btn-primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.28);
+  font-size: 16px;
+  border-radius: 10px;
+  padding: 10px 36px;
+}
+
+/* Fade animation */
+.fade-in {
+  animation: fadeSlide 0.3s ease-out;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

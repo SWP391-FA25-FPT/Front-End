@@ -153,22 +153,33 @@ const AppLayout = ({ children }) => {
 
             <div className="d-flex align-items-center gap-3">
               <SearchBar />
+              
               <Dropdown
-                menu={{ items: notificationItems }}
-                trigger={["click"]}
-                placement="bottomRight"
-                dropdownRender={(menu) => (
-                  <div style={{ width: 360, ...componentShadow }}>{menu}</div>
-                )}
-              >
-                <Badge count={5} size="small">
-                  <Button
-                    type="text"
-                    shape="circle"
-                    icon={<Icon icon="mdi:bell-outline" width="24" height="24" />}
-                  />
-                </Badge>
-              </Dropdown>
+  trigger={["click"]}
+  placement="bottomRight"
+  menu={{
+    items: notifications.map((item) => ({
+      key: item.id,
+      label: (
+        <div onClick={(e) => e.domEvent.stopPropagation()}>
+          <strong>{item.title}</strong>
+          <p>{item.description}</p>
+        </div>
+      ),
+    })),
+  }}
+>
+  <Badge count={5} size="small">
+    <Button
+      type="text"
+      shape="circle"
+      icon={<Icon icon="mdi:bell-outline" width="24" height="24" />}
+      style={{ color: "#4A5568" }}
+    />
+  </Badge>
+</Dropdown>
+
+
               <Head />
             </div>
           </Header>

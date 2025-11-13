@@ -14,7 +14,7 @@ const ProfileHeader = ({ user }) => {
       <img src={user.avatar} alt="Avatar" className="profile-avatar" />
       <div className="profile-info">
         <h2>{user.name}</h2>
-        <p className="username">@{user.username}</p>
+        <p className="username">@{user?.username || "..."}</p>
         <button className="edit-btn" onClick={handleEditClick}>
           <FaUserEdit /> Sửa thông tin cá nhân
         </button>

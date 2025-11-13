@@ -1,0 +1,200 @@
+/* ======================================================================
+   REPORT ADMIN MODULE — CLEAN & FIXED VERSION
+====================================================================== */
+
+/* --------------------
+   PAGE CONTAINER
+-------------------- */
+.report-admin-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 40px;
+  background: #f8f9fb;
+  min-height: 100vh;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  color: #1a202c;
+  letter-spacing: -0.3px;
+}
+
+/* --------------------
+   FILTER BAR + SEARCH
+-------------------- */
+.report-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+/* Custom Search Input */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  /* Fixed height to match Ant Select: 38px content + 2px border = 40px total */
+  padding: 0 12px;
+  flex: 1;
+  min-width: 240px;
+  box-sizing: border-box;
+}
+
+.search-box svg {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+/* Remove border + shadow when typing */
+.search-box .ant-input {
+  border: none !important;
+  box-shadow: none !important;
+  /* Match height of all elements */
+  height: 38px !important;
+  padding: 0 !important;
+}
+
+/* Style Select */
+.ant-select {
+  width: 160px !important;
+  flex-shrink: 0;
+}
+
+.ant-select-selector {
+  /* Ensure consistent height across all filter elements */
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 8px !important;
+  border: 1px solid #d1d5db !important;
+  padding: 0 12px !important;
+}
+
+.ant-select-selector:hover {
+  border-color: #3b82f6 !important;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* --------------------
+   TABLE
+-------------------- */
+.ant-table-wrapper {
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.ant-table-thead > tr > th {
+  background: #f9fafb;
+  padding: 16px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.ant-table-tbody > tr > td {
+  padding: 16px;
+  font-size: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: #f3f4f6 !important;
+}
+
+/* --------------------
+   TAG (Severity Color)
+-------------------- */
+.ant-tag {
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ant-tag-red {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.ant-tag-gold {
+  background: #fff7d6;
+  color: #a36b00;
+}
+
+.ant-tag-blue {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* --------------------
+   ACTION BUTTON
+-------------------- */
+.ant-btn-link {
+  color: #2563eb;
+  font-weight: 600;
+  padding: 0;
+}
+
+.ant-btn-link:hover {
+  color: #1d4ed8;
+}
+
+/* --------------------
+   MODAL
+-------------------- */
+.ant-modal-content {
+  border-radius: 12px;
+}
+
+.ant-modal-header {
+  background: #f9fafb;
+}
+
+.ant-modal-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.ant-modal-body p {
+  margin-bottom: 12px;
+}
+
+/* --------------------
+   PAGINATION
+-------------------- */
+.ant-pagination {
+  margin-top: 16px;
+}
+
+/* --------------------
+   RESPONSIVE
+-------------------- */
+@media (max-width: 900px) {
+  .report-filter-bar {
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .ant-select {
+    width: 100% !important;
+    flex-shrink: 1;
+  }
+}

@@ -12,6 +12,9 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Thêm quyền Admin vào menu chính (key: 9) cho mục đích hiển thị/chuyển hướng cơ bản
+  const IS_ADMIN = user && user.role === "admin";
+
   const getSelectedKey = () => {
     const path = location.pathname;
     if (path === "/") return "1";
@@ -40,7 +43,18 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     if (path === "/settings" || path.startsWith("/settings/")) return "6";
 
     if (path === "/support") return "7";
-    if (path === "/admin") return "9";
+    // Logic Admin chi tiết
+    if (path.startsWith("/admin")) {
+      if (path === "/admin/dashboard") return "admin-dashboard";
+      if (path === "/admin/content-moderation") return "admin-content";
+      if (path === "/admin/payment") return "admin-payment";
+      if (path === "/admin/statistics") return "admin-statistics";
+      if (path === "/admin/report") return "admin-report";
+      if (path === "/admin/feedback") return "admin-feedback";
+      if (path === "/admin/users") return "admin-users";
+      if (path === "/admin/setting") return "admin-system-setting";
+      return "9"; // key tổng quát cho /admin
+    }
 
     if (path.startsWith("/my-recipes/")) {
       if (path === "/my-recipes/all") return "8-1";
@@ -53,7 +67,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     return "1";
   };
 
-  const baseItems = [
+  let baseItems = [
     {
       key: "1",
       icon: <Icon icon="ion:restaurant-outline" width="24" height="24" />,
@@ -122,7 +136,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     {
       key: "6",
       icon: <Icon icon="ic:outline-settings" width="24" height="24" />,
-      label: <a href="/settings">Thiết Lập</a>,
+      label: <a href="/settings">Thiết Lập</a>, 
     },
     {
       key: "7",
@@ -171,31 +185,95 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     },
   ];
 
-  const adminItem = {
-    key: "9",
-    icon: <Icon icon="mdi:shield-account" width="24" height="24" />,
-    label: <a href="/admin">Admin</a>,
-  };
+  // Chi tiết menu Admin
+  const adminMenuItems = [
+    {
+      key: "admin-dashboard",
+      icon: <Icon icon="mdi:view-dashboard-outline" width="24" height="24" />,
+      label: "Bảng Điều Khiển",
+      onClick: () => navigate("/admin/dashboard"),
+    },
+    {
+      key: "admin-content",
+      icon: <Icon icon="mdi:camera-outline" width="24" height="24" />,
+      label: "Kiểm Duyệt Nội Dung",
+      onClick: () => navigate("/admin/content-moderation"),
+    },
+    {
+      key: "admin-payment",
+      icon: <Icon icon="mdi:credit-card-outline" width="24" height="24" />,
+      label: "Gói & Thanh Toán",
+      onClick: () => navigate("/admin/payment"),
+    },
+    {
+      key: "admin-statistics",
+      icon: <Icon icon="mdi:chart-box-outline" width="24" height="24" />,
+      label: "Thống Kê Hệ Thống",
+      onClick: () => navigate("/admin/statistics"),
+    },
+    {
+      key: "admin-report",
+      icon: <Icon icon="mdi:flag-outline" width="24" height="24" />,
+      label: "Báo Cáo Hệ Thống",
+      onClick: () => navigate("/admin/report"),
+    },
+    {
+      key: "admin-feedback",
+      icon: <Icon icon="mdi:comment-outline" width="24" height="24" />,
+      label: "Phản Hồi Người Dùng",
+      onClick: () => navigate("/admin/feedback"),
+    },
+    {
+      key: "admin-users",
+      icon: <Icon icon="mdi:account-group-outline" width="24" height="24" />,
+      label: "Quản Lý Người Dùng",
+      onClick: () => navigate("/admin/users"),
+    },
+    {
+      key: "admin-system-setting",
+      icon: <Icon icon="mdi:cog-outline" width="24" height="24" />,
+      label: "Cài đặt hệ thống",
+      onClick: () => navigate("/admin/setting"),
+    },
+  ];
 
+  // Thêm mục Admin vào menu nếu người dùng là Admin
+  if (IS_ADMIN) {
+    baseItems.push({
+      key: "9",
+      icon: <Icon icon="mdi:shield-account" width="24" height="24" />,
+      label: "Admin",
+      children: adminMenuItems,
+    });
+  }
+
+
+  // 1. Logic cho GUEST (chưa login) - Đảm bảo rằng việc sửa đổi chỉ xảy ra khi user là null
   if (!user) {
+    // Sửa đổi một bản sao của baseItems để tránh ảnh hưởng đến định nghĩa gốc
+    baseItems = baseItems.map(item => ({...item, children: item.children ? [...item.children] : item.children}));
+    
+    // Kho Món Ngon
     const khoMonNgonIndex = baseItems.findIndex((item) => item.key === "8");
     if (khoMonNgonIndex !== -1) {
       baseItems[khoMonNgonIndex] = {
         ...baseItems[khoMonNgonIndex],
-        label: "Kho Món Ngon",
         children: null,
         onClick: () => navigate("/login"),
       };
     }
 
+    // Premium
     const premiumIndex = baseItems.findIndex((item) => item.key === "2");
-    if (premiumIndex !== -1) {
+    if (premiumIndex !== -1 && baseItems[premiumIndex].children) {
+      // Hợp nhất logic chuyển hướng cho menu Premium
       baseItems[premiumIndex].children.forEach((childItem) => {
         childItem.label = childItem.label.props.children;
         childItem.onClick = () => navigate("/login");
       });
     }
 
+    // Thông Báo
     const notificationIndex = baseItems.findIndex((item) => item.key === "5");
     if (notificationIndex !== -1) {
       baseItems[notificationIndex] = {
@@ -205,6 +283,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
       };
     }
 
+    // Hồ Sơ
     const profileIndex = baseItems.findIndex((item) => item.key === "10");
     if (profileIndex !== -1) {
       baseItems[profileIndex] = {
@@ -214,6 +293,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
       };
     }
 
+    // Thiết Lập
     const settingsIndex = baseItems.findIndex((item) => item.key === "6");
     if (settingsIndex !== -1) {
       baseItems[settingsIndex] = {
@@ -224,6 +304,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     }
   }
 
+  // 2. Chuyển đổi các thẻ <a> thành onClick cho tất cả người dùng
   baseItems.forEach((item) => {
     if (
       item.label &&
@@ -254,35 +335,63 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     }
   });
 
-  if (
-    adminItem.label &&
-    typeof adminItem.label === "object" &&
-    adminItem.label.type === "a"
-  ) {
-    const href = adminItem.label.props.href;
-    adminItem.label = adminItem.label.props.children;
-    adminItem.onClick = () => navigate(href);
-  }
 
-  const items =
-    user && user.role === "admin" ? [...baseItems, adminItem] : baseItems;
+  // Chọn menu hiển thị (user thường hoặc admin)
+  const items = IS_ADMIN
+    ? baseItems.find(item => item.key === "9").children // Admin chỉ thấy menu Admin (con của key 9)
+    : baseItems; // User thường thấy menu user đầy đủ
 
-  const [openKeys, setOpenKeys] = useState([]);
 
+  const [openKeys, setOpenKeys] = useState(() => {
+    // Chỉ xử lý cho user thường
+    if (IS_ADMIN) return [];
+
+    const selectedKey = getSelectedKey();
+    if (selectedKey.startsWith("2-") || selectedKey === "2") {
+      return ["2"];
+    }
+    if (selectedKey.startsWith("8-") || selectedKey === "8") {
+      return ["8"];
+    }
+    return [];
+  });
+
+  // Hợp nhất logic useEffect từ cả hai phiên bản để xử lý mở/đóng menu khi thu gọn hoặc chuyển trang
   useEffect(() => {
+    if (IS_ADMIN) {
+      setOpenKeys([]); // Admin: luôn đóng dropdown (vì menu Admin không cần mở/đóng cấp cha)
+      return;
+    }
+
     if (collapsed) {
       setOpenKeys([]);
-    } else {
-      const currentKey = getSelectedKey();
-      if (currentKey.includes("-")) {
-        const parentKey = currentKey.split("-")[0];
-        setOpenKeys([parentKey]);
-      } else {
-        setOpenKeys([]);
-      }
+      return;
     }
+
+    const selectedKey = getSelectedKey();
+    let parentKey = null;
+
+    if (selectedKey.includes("-")) {
+      parentKey = selectedKey.split("-")[0];
+    } else if (selectedKey === "2" || selectedKey === "8" || selectedKey === "9") {
+      // Nếu đang chọn menu cha, giữ nó mở
+      parentKey = selectedKey; 
+    }
+
+    setOpenKeys((prevKeys) => {
+      // Chỉ quan tâm đến menu Premium (2) và Kho Món Ngon (8)
+      const keysToManage = ["2", "8"];
+      let newKeys = prevKeys.filter(key => !keysToManage.includes(key));
+      
+      // Mở menu cha nếu đang ở route của nó
+      if (parentKey && keysToManage.includes(parentKey) && !newKeys.includes(parentKey)) {
+        newKeys.push(parentKey);
+      }
+      return newKeys;
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collapsed, location.pathname]);
+  }, [collapsed, location.pathname, IS_ADMIN]); 
 
   const PremiumCTA = () => {
     if (collapsed) {
@@ -333,53 +442,53 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   };
 
   return (
-    <React.Fragment>
-      <Container
-        className={
-          "d-flex flex-column align-items-center gap-4 p-2 sidebar-scroll-container"
-        }
-      >
-        <div className="d-flex align-items-center justify-content-center w-100 position-relative">
-          <Logo collapsed={collapsed} />
-          {!collapsed && (
-            <Button
-              onClick={toggleCollapsed}
-              type="button"
-              className="position-absolute end-0"
-              size="small"
-            >
-              <Icon icon="mingcute:arrows-left-line" width="24" height="24" />
-            </Button>
-          )}
-        </div>
-        {collapsed && (
+    // THAY ĐỔI: Loại bỏ Container và class name
+    <div 
+      className="d-flex flex-column align-items-center gap-4 p-2 sidebar-scroll-container" 
+      style={{ backgroundColor: 'inherit' }} // Đảm bảo nền Sidebar tuân theo Ant Design Sider theme
+    >
+      <div className="d-flex align-items-center justify-content-center w-100 position-relative">
+        <Logo collapsed={collapsed} />
+        {/* Nút thu gọn / mở rộng */}
+        {!collapsed && (
           <Button
             onClick={toggleCollapsed}
             type="button"
-            className="mb-1"
+            className="position-absolute end-0"
             size="small"
           >
-            <Icon icon="mingcute:arrows-right-line" width="24" height="24" />
+            <Icon icon="mingcute:arrows-left-line" width="24" height="24" />
           </Button>
         )}
-        <Menu
-          selectedKeys={[getSelectedKey()]}
-          mode="inline"
-          items={items}
-          openKeys={openKeys}
-          onOpenChange={setOpenKeys}
-          className="font-sans fw-semibold"
-          inlineCollapsed={collapsed}
-          style={{ border: "none" }}
-        />
+      </div>
+      {collapsed && (
+        <Button
+          onClick={toggleCollapsed}
+          type="button"
+          className="mb-1"
+          size="small"
+        >
+          <Icon icon="mingcute:arrows-right-line" width="24" height="24" />
+        </Button>
+      )}
+      <Menu
+        selectedKeys={[getSelectedKey()]}
+        mode="inline"
+        items={items}
+        openKeys={openKeys}
+        onOpenChange={setOpenKeys}
+        className="font-sans fw-semibold w-100" // THAY ĐỔI: Đặt w-100 để Menu đầy đủ chiều rộng
+        inlineCollapsed={collapsed}
+        style={{ border: "none", backgroundColor: 'inherit' }} // THAY ĐỔI: Đảm bảo Menu thừa hưởng màu nền
+      />
 
-        {user && user.role !== "admin" && (
-          <div className="w-100 d-flex justify-content-center">
-            <PremiumCTA />
-          </div>
-        )}
-      </Container>
-    </React.Fragment>
+      {/* Chỉ hiển thị Premium CTA nếu không phải Admin */}
+      {user && !IS_ADMIN && ( 
+        <div className="w-100 d-flex justify-content-center">
+          <PremiumCTA />
+        </div>
+      )}
+    </div>
   );
 };
 

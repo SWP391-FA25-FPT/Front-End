@@ -20,6 +20,7 @@ import SupportPage from "./pages/SupportPage"; // Trang support chính
 import SettingsPage from "./pages/SettingsPage";
 import PinAndRecoveryPage from './pages/PinAndRecoveryPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
+import Profile from "./pages/Profile"; // Giữ cả ProfilePage và Profile (tùy vào cách dùng)
 
 import GettingStarted from "./pages/support/GettingStarted";
 import NutritionTracking from "./pages/support/NutritionTracking";
@@ -33,7 +34,6 @@ import ChallengeDetail from "./pages/ChallengeDetail";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import BlogCreate from "./pages/BlogCreate";
-import AdminPage from "./pages/admin/AdminPage";
 import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
@@ -51,6 +51,17 @@ import PublishedRecipes from "./pages/PublishedRecipes";
 import SavedRecipes from "./pages/SavedRecipes";
 import Subscription from "./pages/Subscription";
 import NotificationPage from "./pages/NotificationPage";
+import PaymentModule from "./components/admin/PaymentModule";
+import FeedbackModule from "./components/admin/FeedbackModule";
+import ReportModule from "./components/admin/ReportModule";
+import ContentModerationModule from "./components/admin/ContentModerationModule";
+import UserManagementModule from "./components/admin/UserManagementModule";
+//import AIControlModule from "./components/admin/AIControlModule";
+import StatisticsModule from "./components/admin/StatisticsModule";
+import DashboardModule from "./components/admin/DashboardModule";
+import SystemSettingsModule from "./components/admin/SystemSettingsModule";
+import AdminLayout from "./components/admin/AdminLayout";
+
 
 function App() {
   return (
@@ -62,6 +73,8 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/support" element={<SupportPage />} />
+
+          {/* NOTE: Thêm 6 route tĩnh mới (BẮT BUỘC PHẢI CÓ) */}
           <Route path="/support/getting-started" element={<GettingStarted />} />
           <Route
             path="/support/nutrition-tracking"
@@ -101,6 +114,14 @@ function App() {
             }
           />
           <Route
+            path="/user"
+            element={
+              <SurveyCheckRoute>
+                <Profile />
+              </SurveyCheckRoute>
+            }
+          />
+          <Route
             path="/blog/create"
             element={
               <ProtectedRoute>
@@ -112,10 +133,22 @@ function App() {
             path="/admin"
             element={
               <AdminProtectedRoute>
-                <AdminPage />
+                <AdminLayout />
               </AdminProtectedRoute>
             }
-          />
+          >
+            <Route index element={<DashboardModule />} />
+            <Route path="dashboard" element={<DashboardModule />} />
+            <Route path="content-moderation" element={<ContentModerationModule />} />
+            <Route path="payment" element={<PaymentModule />} />
+            <Route path="statistics" element={<StatisticsModule />} />
+            <Route path="report" element={<ReportModule />} />
+            <Route path="feedback" element={<FeedbackModule />} />
+            <Route path="users" element={<UserManagementModule />} />
+            <Route path="system-settings" element={<SystemSettingsModule />} />
+          </Route>
+
+
           <Route
             path="/meal-plan"
             element={

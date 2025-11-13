@@ -24,7 +24,7 @@ const Profile = () => {
         const data = await getProfile();
         // Fallback cho recipes và user
         setProfileData({
-          user: data.user || {},
+          user: data || {},
           stats: data.stats || {},
           recipes: data.recipes || [],
         });

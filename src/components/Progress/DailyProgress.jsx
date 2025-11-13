@@ -65,7 +65,7 @@ const DailyProgress = ({ dailyData }) => {
                     "100%": item.color,
                   }}
                   trailColor="#f0f0f0"
-                  strokeWidth={12}
+                  size={[undefined, 12]}
                   showInfo={false}
                 />
                 <div className="progress-percent">{percent}%</div>

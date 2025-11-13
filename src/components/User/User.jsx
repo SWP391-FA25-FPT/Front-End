@@ -19,17 +19,17 @@ const Index = () => {
   const items = [
     {
       key: "1",
-      label: "Profile",
+      label: "Hồ sơ",
       onClick: () => navigate('/profile'),
     },
     {
       key: "2",
-      label: "Settings",
+      label: "Cài đặt", 
       onClick: () => navigate('/settings'),
     },
     {
       key: "3",
-      label: "Logout",
+      label: "Đăng xuất",
       onClick: handleLogout,
       danger: true, 
     },

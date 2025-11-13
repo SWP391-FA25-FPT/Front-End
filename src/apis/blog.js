@@ -336,3 +336,146 @@ export const getTopBlogsByViews = async (limit = 1) => {
     throw error;
   }
 };
+
+// ============ ADMIN FUNCTIONS ============
+
+// Get all blogs (Admin only - includes unpublished)
+export const getAllBlogsAdmin = async (params = {}) => {
+  try {
+    const token = getCookie("token");
+
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập");
+    }
+
+    const queryParams = new URLSearchParams();
+
+    if (params.search) queryParams.append("search", params.search);
+    if (params.category) queryParams.append("category", params.category);
+    if (params.tags) queryParams.append("tags", params.tags);
+    if (params.published !== undefined)
+      queryParams.append("published", params.published);
+    if (params.page) queryParams.append("page", params.page);
+    if (params.limit) queryParams.append("limit", params.limit);
+    if (params.sortBy) queryParams.append("sortBy", params.sortBy);
+
+    const url = `${baseUrl}${apiUrls.getAllBlogsAdmin}${
+      queryParams.toString() ? "?" + queryParams.toString() : ""
+    }`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi lấy danh sách blog");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Get all blogs admin error:", error);
+    throw error;
+  }
+};
+
+// Update blog (Admin only - can update any blog)
+export const updateBlogAdmin = async (blogId, formData) => {
+  try {
+    const token = getCookie("token");
+
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập");
+    }
+
+    const response = await fetch(
+      `${baseUrl}${apiUrls.updateBlogAdmin}/${blogId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData, // FormData for file upload
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi cập nhật blog");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Update blog admin error:", error);
+    throw error;
+  }
+};
+
+// Delete blog (Admin only - can delete any blog)
+export const deleteBlogAdmin = async (blogId) => {
+  try {
+    const token = getCookie("token");
+
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập");
+    }
+
+    const response = await fetch(
+      `${baseUrl}${apiUrls.deleteBlogAdmin}/${blogId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi xóa blog");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Delete blog admin error:", error);
+    throw error;
+  }
+};
+
+// Get blog statistics (Admin only)
+export const getBlogStats = async () => {
+  try {
+    const token = getCookie("token");
+
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập");
+    }
+
+    const response = await fetch(`${baseUrl}${apiUrls.getBlogStats}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi lấy thống kê blog");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Get blog stats error:", error);
+    throw error;
+  }
+};
