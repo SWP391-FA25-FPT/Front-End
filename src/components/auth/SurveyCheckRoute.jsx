@@ -7,10 +7,10 @@ const SurveyCheckRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         height: '100vh',
         fontSize: '18px'
       }}>
@@ -23,8 +23,10 @@ const SurveyCheckRoute = ({ children }) => {
     return <Navigate to="/" replace />;
   }
 
-  if (user && user.isFirstLogin) {
-    return <Navigate to="/survey" replace />;
+  if (isAuthenticated() && user?.isFirstLogin) {
+    if (window.location.pathname !== "/survey") {
+      return <Navigate to="/survey" replace />;
+    }
   }
 
   return children;
