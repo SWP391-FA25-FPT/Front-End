@@ -488,7 +488,7 @@
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
-
+}
 /* Challenge Page Container */
 .challenge-page-container {
   padding: 24px;
