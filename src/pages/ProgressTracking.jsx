@@ -37,7 +37,7 @@ const ProgressTracking = () => {
   const [dailyCheckInVisible, setDailyCheckInVisible] = useState(false);
   const [form] = Form.useForm();
 
-  // State for backend data
+  // State for backend data (Đã giữ lại phần state mới kết nối API)
   const [activeGoal, setActiveGoal] = useState(null);
   const [goals, setGoals] = useState([]);
   const [todayProgress, setTodayProgress] = useState(null);
@@ -45,11 +45,11 @@ const ProgressTracking = () => {
   const [progressStats, setProgressStats] = useState(null);
   const [mealPlan, setMealPlan] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
-  
+
   const [loading, setLoading] = useState(false);
   const [mealPlanLoading, setMealPlanLoading] = useState(false);
-  
-  // Derived state for UI components
+
+  // Derived state for UI components (Đã giữ lại phần state mới kết nối API)
   const [stats, setStats] = useState({
     currentWeight: 0,
     targetWeight: 0,
@@ -83,7 +83,7 @@ const ProgressTracking = () => {
     const checkDailyCheckIn = () => {
       const today = new Date().toISOString().split('T')[0];
       const lastCheckIn = localStorage.getItem('lastDailyCheckIn');
-      
+
       // Only show if:
       // 1. Not shown today yet
       // 2. User has an active goal (to make it more meaningful)
@@ -105,7 +105,7 @@ const ProgressTracking = () => {
   const loadAllData = async () => {
     try {
       setLoading(true);
-      
+
       // Load user profile
       const profileRes = await getProfile();
       if (profileRes) {
@@ -119,7 +119,7 @@ const ProgressTracking = () => {
         if (goalRes.success) {
           setActiveGoal(goalRes.data);
           setGoals([goalRes.data]);
-          
+
           // Update stats from goal
           setStats({
             currentWeight: goalRes.data.currentWeight,
@@ -231,7 +231,7 @@ const ProgressTracking = () => {
         ...prev,
         current: newWaterCount,
       }));
-      
+
       // Update progress record if exists, otherwise do nothing (will be saved when full record is added)
       if (todayProgress) {
         try {
@@ -253,7 +253,7 @@ const ProgressTracking = () => {
         ...prev,
         current: newWaterCount,
       }));
-      
+
       if (todayProgress) {
         try {
           await updateProgressRecord(todayProgress._id, { waterIntake: newWaterCount });
@@ -378,7 +378,7 @@ const ProgressTracking = () => {
       setLoading(true);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       const recordData = {
         date: today.toISOString(),
         actualWeight: values.weight,
@@ -408,7 +408,7 @@ const ProgressTracking = () => {
       // Mark as checked in today
       const today_str = new Date().toISOString().split('T')[0];
       localStorage.setItem('lastDailyCheckIn', today_str);
-      
+
       setDailyCheckInVisible(false);
       loadAllData(); // Reload all data
     } catch (error) {
@@ -442,14 +442,14 @@ const ProgressTracking = () => {
     try {
       setLoading(true);
       const newStatus = activeGoal.status === 'paused' ? 'active' : 'paused';
-      
+
       const { updateGoal } = await import("../apis/goal");
       const response = await updateGoal(activeGoal._id, { status: newStatus });
-      
+
       if (response.success) {
         message.success(
-          newStatus === 'paused' 
-            ? 'Đã tạm dừng mục tiêu' 
+          newStatus === 'paused'
+            ? 'Đã tạm dừng mục tiêu'
             : 'Đã tiếp tục mục tiêu'
         );
         setActiveGoal({ ...activeGoal, status: newStatus });
@@ -475,11 +475,11 @@ const ProgressTracking = () => {
           <p style={{ fontSize: '15px', marginBottom: '16px' }}>
             Bạn có chắc chắn muốn hủy mục tiêu này không?
           </p>
-          
-          <div style={{ 
-            marginTop: '16px', 
-            padding: '12px', 
-            background: '#f5f5f5', 
+
+          <div style={{
+            marginTop: '16px',
+            padding: '12px',
+            background: '#f5f5f5',
             borderRadius: '4px',
             marginBottom: '16px'
           }}>
@@ -487,14 +487,14 @@ const ProgressTracking = () => {
               Mục tiêu hiện tại:
             </p>
             <p style={{ margin: '4px 0 0 0' }}>
-              {activeGoal.startWeight}kg → {activeGoal.targetWeight}kg 
+              {activeGoal.startWeight}kg → {activeGoal.targetWeight}kg
               ({activeGoal.goalType === 'weight_loss' ? 'Giảm cân' : 'Tăng cân'})
             </p>
           </div>
 
-          <div style={{ 
-            padding: '12px', 
-            background: '#fff2e8', 
+          <div style={{
+            padding: '12px',
+            background: '#fff2e8',
             border: '1px solid #ffbb96',
             borderRadius: '4px'
           }}>
@@ -540,7 +540,7 @@ const ProgressTracking = () => {
           setLoading(true);
           const { cancelGoal } = await import("../apis/goal");
           const response = await cancelGoal(activeGoal._id);
-          
+
           if (response.success) {
             message.success('Đã hủy mục tiêu (dữ liệu tracking được giữ lại)');
             setActiveGoal(null);
@@ -596,17 +596,17 @@ const ProgressTracking = () => {
       onOk: async () => {
         try {
           setLoading(true);
-          
+
           // Import APIs
           const { cancelGoal } = await import("../apis/goal");
           const { getProgressHistory, deleteProgressRecord } = await import("../apis/progressTracking");
-          
+
           // Step 1: Get all progress records for this goal
           const progressRes = await getProgressHistory({ goalId: activeGoal._id, limit: 1000 });
-          
+
           // Step 2: Delete all progress records
           if (progressRes.success && progressRes.data && progressRes.data.length > 0) {
-            const deletePromises = progressRes.data.map(record => 
+            const deletePromises = progressRes.data.map(record =>
               deleteProgressRecord(record._id).catch(err => {
                 console.error('Error deleting record:', err);
                 return null;
@@ -614,7 +614,7 @@ const ProgressTracking = () => {
             );
             await Promise.all(deletePromises);
           }
-          
+
           // Step 3: Delete all meal plans (during goal period)
           try {
             const mealPlanDeleteRes = await deleteAllUserMealPlans({
@@ -626,10 +626,10 @@ const ProgressTracking = () => {
             console.error('Error deleting meal plans:', error);
             // Continue even if meal plan deletion fails
           }
-          
+
           // Step 4: Cancel the goal
           const response = await cancelGoal(activeGoal._id);
-          
+
           if (response.success) {
             // Reset all state to default
             setActiveGoal(null);
@@ -638,7 +638,7 @@ const ProgressTracking = () => {
             setProgressHistory([]);
             setProgressStats(null);
             setMealPlan(null); // Reset meal plan state
-            
+
             // Reset UI stats
             setStats({
               currentWeight: 0,
@@ -646,32 +646,32 @@ const ProgressTracking = () => {
               weightChange: 0,
               currentStreak: 0
             });
-            
+
             setWeightData({
               labels: [],
               values: [],
               target: []
             });
-            
+
             setDailyData({
               calories: { current: 0, target: 2000 },
               protein: { current: 0, target: 120 },
               carbs: { current: 0, target: 250 },
               fat: { current: 0, target: 65 }
             });
-            
+
             setWaterData({
               current: 0,
               target: 8
             });
-            
+
             setWeeklyData([]);
-            
+
             message.success({
               content: '✅ Đã xóa mục tiêu và tất cả dữ liệu tracking (bao gồm meal plans)',
               duration: 3
             });
-            
+
             // Clear localStorage
             localStorage.removeItem('lastDailyCheckIn');
           }
@@ -700,7 +700,7 @@ const ProgressTracking = () => {
 
         <StatsOverview stats={stats} />
 
-        {/* Meal Plan Section */}
+        {/* Meal Plan Section (Đã giữ lại phần này) */}
         <MealPlanSection
           mealPlan={mealPlan}
           loading={mealPlanLoading}
@@ -722,20 +722,20 @@ const ProgressTracking = () => {
           </Col>
         </Row>
 
-        <Row gutter={[24, 24]} style={{ marginTop: "24px" }}>
+        <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
           <Col xs={24} lg={12}>
             <DailyProgress dailyData={dailyData} />
           </Col>
           <Col xs={24} lg={12}>
-            <GoalsSection 
-              goals={goals} 
+            <GoalsSection
+              goals={goals}
               onCreateGoal={handleCreateGoal}
               loading={loading}
             />
           </Col>
         </Row>
 
-        <Row gutter={[24, 24]} style={{ marginTop: "24px" }}>
+        <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
           <Col xs={24}>
             <WeeklyOverview weeklyData={weeklyData} />
           </Col>
@@ -777,7 +777,7 @@ const ProgressTracking = () => {
           form={form}
           layout="vertical"
           onFinish={handleAddRecordSubmit}
-          style={{ marginTop: "20px" }}
+          style={{ marginTop: 20 }}
         >
           <Form.Item
             label="Ngày"
@@ -792,8 +792,8 @@ const ProgressTracking = () => {
             name="weight"
             rules={[{ required: true, message: "Vui lòng nhập cân nặng!" }]}
           >
-            <InputNumber 
-              style={{ width: "100%" }} 
+            <InputNumber
+              style={{ width: "100%" }}
               placeholder="Nhập cân nặng"
               min={30}
               max={300}
@@ -802,16 +802,16 @@ const ProgressTracking = () => {
           </Form.Item>
 
           <Form.Item label="Calories tiêu thụ" name="calories">
-            <InputNumber 
-              style={{ width: "100%" }} 
+            <InputNumber
+              style={{ width: "100%" }}
               placeholder="Nhập calories"
               min={0}
             />
           </Form.Item>
 
           <Form.Item label="Số cốc nước" name="waterIntake">
-            <InputNumber 
-              style={{ width: "100%" }} 
+            <InputNumber
+              style={{ width: "100%" }}
               placeholder="Số cốc nước đã uống"
               min={0}
               max={20}
@@ -852,7 +852,7 @@ const ProgressTracking = () => {
         footer={null}
         width={800}
       >
-        <div style={{ padding: "20px" }}>
+        <div style={{ padding: 20 }}>
           <p>Danh sách lịch sử theo dõi sẽ được hiển thị ở đây...</p>
         </div>
       </Modal>

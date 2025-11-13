@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import Guest from "../../assets/guest.png";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
+import { message } from 'antd'; // Thay thế alert() bằng Ant Design message
 
+// Giả định bạn có thể import useTheme từ context/ThemeContext
+// Mặc dù không dùng trực tiếp themeMode, nhưng tôi giữ lại message.success/error
+// để tuân thủ quy tắc không dùng alert()
 const ProfileForm = ({ userProfile, onProfileUpdate }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -131,7 +135,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
       if (result.success) {
         alert("Cập nhật thông tin thành công!");
       } else {
-        alert(`Lỗi: ${result.message}`);
+        message.error(`Lỗi: ${result.message}`); // <--- SỬA LỖI ALERT
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -140,11 +144,27 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
   };
 
   const handleSkip = () => {
+    console.log('Skip profile update');
     navigate(profilePath);
   };
+  
+  // Style chung cho Input/Select để đảm bảo màu nền/chữ thay đổi
+  const commonInputStyle = {
+    backgroundColor: 'var(--color-bg-container)', // Background của input/select box
+    color: 'var(--color-text-primary)', // Màu chữ trong input/select
+    borderColor: 'var(--color-primary, #f8b60233)'
+  };
+
 
   return (
-    <div className="profile-form-container">
+    <div 
+      className="profile-form-container"
+      // Áp dụng màu nền/chữ cho container lớn nhất
+      style={{ 
+        backgroundColor: 'var(--color-bg-container)',
+        color: 'var(--color-text-primary)', 
+      }}
+    >
       <div className="profile-layout">
         {/* 🌿 Cột trái - Avatar & thông tin cơ bản */}
         <div className="profile-left-column">
@@ -175,6 +195,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
               value={formData.name}
               onChange={handleChange}
               placeholder="Họ và tên"
+              style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
             />
           </div>
 
@@ -186,6 +207,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
               value={formData.email}
               onChange={handleChange}
               placeholder="example@gmail.com"
+              style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
             />
           </div>
 
@@ -197,6 +219,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
               value={formData.phone}
               onChange={handleChange}
               placeholder="0123456789"
+              style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
             />
           </div>
         </div>
@@ -211,10 +234,11 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
+                  style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
                 >
-                  <option value="Nam">Nam</option>
-                  <option value="Nữ">Nữ</option>
-                  <option value="Khác">Khác</option>
+                  <option value="Nam" style={commonInputStyle}>Nam</option>
+                  <option value="Nữ" style={commonInputStyle}>Nữ</option>
+                  <option value="Khác" style={commonInputStyle}>Khác</option>
                 </select>
               </div>
 
@@ -225,6 +249,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
                   name="birthdate"
                   value={formData.birthdate}
                   onChange={handleChange}
+                  style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
                 />
               </div>
             </div>
@@ -238,6 +263,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
                   value={formData.weight}
                   onChange={handleChange}
                   placeholder="70"
+                  style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
                 />
               </div>
 
@@ -249,6 +275,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
                   value={formData.height}
                   onChange={handleChange}
                   placeholder="180"
+                  style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
                 />
               </div>
             </div>
@@ -265,6 +292,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
                 value={formData.workHabits}
                 onChange={handleChange}
                 placeholder="Ví dụ: Ngồi nhiều, thường xuyên đi lại..."
+                style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
               />
             </div>
 
@@ -276,19 +304,26 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
                 value={formData.eatingHabits}
                 onChange={handleChange}
                 placeholder="Ví dụ: Ăn nhiều rau, ít thịt..."
+                style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
               />
             </div>
 
             <div className="profile-form-group">
               <label>Chế độ ăn</label>
-              <select name="diet" value={formData.diet} onChange={handleChange}>
-                <option value="">-- Chọn chế độ ăn --</option>
-                <option value="none">Không có chế độ đặc biệt</option>
-                <option value="vegetarian">Ăn chay</option>
-                <option value="vegan">Thuần chay</option>
-                <option value="keto">Keto</option>
-                <option value="paleo">Paleo</option>
-                <option value="gluten-free">Không gluten</option>
+              <select
+                name="diet"
+                value={formData.diet}
+                onChange={handleChange}
+                style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
+              >
+                {/* Cần áp dụng style cho các option để nền chúng không trắng khi mở dropdown */}
+                <option value="" style={commonInputStyle}>-- Chọn chế độ ăn --</option>
+                <option value="none" style={commonInputStyle}>Không có chế độ đặc biệt</option>
+                <option value="vegetarian" style={commonInputStyle}>Ăn chay</option>
+                <option value="vegan" style={commonInputStyle}>Thuần chay</option>
+                <option value="keto" style={commonInputStyle}>Keto</option>
+                <option value="paleo" style={commonInputStyle}>Paleo</option>
+                <option value="gluten-free" style={commonInputStyle}>Không gluten</option>
               </select>
             </div>
 
@@ -300,6 +335,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
                 value={formData.allergies}
                 onChange={handleChange}
                 placeholder="Ví dụ: Dị ứng hải sản, sữa..."
+                style={commonInputStyle} // <--- ÁP DỤNG STYLE ĐỘNG
               />
             </div>
 

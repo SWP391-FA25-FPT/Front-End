@@ -1,3 +1,5 @@
+// src/components/CreateButton/Index.jsx
+
 import React from "react";
 import { Button } from "antd";
 import { Icon } from "@iconify/react";
@@ -26,7 +28,6 @@ const Index = () => {
       <React.Fragment>
         <Button
           type="primary"
-          style={{ backgroundColor: "#FFBA33" }}
           onClick={handleCreate}
         >
           <Icon icon="ic:baseline-plus" width="24" height="24" />
@@ -40,14 +41,13 @@ const Index = () => {
     <React.Fragment>
       <Button
         type="primary"
-        style={{ backgroundColor: "#FFBA33" }} 
-        onClick={() => navigate("/login")} 
+        onClick={() => navigate("/login")}
       >
-        <Icon 
-          icon="mdi:login-variant" 
-          width="20" 
-          height="20" 
-          style={{ marginRight: '4px' }}
+        <Icon
+          icon="mdi:login-variant"
+          width="20"
+          height="20"
+          style={{ marginRight: "4px" }}
         />
         Đăng nhập
       </Button>

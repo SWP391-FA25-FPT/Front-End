@@ -14,10 +14,11 @@ import {
   markAllNotificationsRead,
   markNotificationRead,
 } from "../../apis/notification";
+import { useTheme } from "../../context/ThemeContext.jsx";
+
 
 const AppLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
-  const { Title } = Typography;
   const { user } = useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
@@ -26,6 +27,7 @@ const AppLayout = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [markingAll, setMarkingAll] = useState(false);
+  const {Title} = Typography;
 
   const userId = user?._id;
 
@@ -126,10 +128,13 @@ const AppLayout = ({ children }) => {
       message.error(error.message || "Không thể mở thông báo");
     }
   };
+  const { themeMode } = useTheme();
 
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
+  const toggleCollapsed = () => setCollapsed(!collapsed);
+
+  // Màu nền phân cách (container) và khối nổi (elevated)
+  const containerBg = themeMode === "dark" ? "#2a2a2a" : "#f5f5f5"; // đậm hơn để phân biệt
+  const elevatedBg = themeMode === "dark" ? "#1f1f1f" : "#ffffff";
 
   const componentShadow = {
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
@@ -137,17 +142,16 @@ const AppLayout = ({ children }) => {
 
   return (
     <React.Fragment>
-      {/* Giữ nguyên layout của bạn */}
-      <Layout style={{ minHeight: "100vh", backgroundColor: "#F9FAFB" }}>
+      <Layout style={{ minHeight: "100vh", backgroundColor: containerBg }}>
         <Sider
-          theme="dark"
+          theme={themeMode}
           width={265}
           style={{
             height: "100vh",
             position: "sticky",
             top: 0,
-            backgroundColor: "#ffffffff",
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+            backgroundColor: elevatedBg, // làm Sidebar nổi bật
           }}
           collapsed={collapsed}
           breakpoint="lg"
@@ -156,15 +160,10 @@ const AppLayout = ({ children }) => {
           <SideBar collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
         </Sider>
 
-        <Layout
-          style={{
-            overflowY: "auto",
-            backgroundColor: "#F9FAFB",
-          }}
-        >
+        <Layout style={{ overflowY: "auto", backgroundColor: containerBg }}>
           <Header
             style={{
-              backgroundColor: "white",
+              backgroundColor: elevatedBg,
               margin: "8px",
               borderRadius: "8px",
               ...componentShadow,
@@ -217,9 +216,9 @@ const AppLayout = ({ children }) => {
 
           <Content
             style={{
+              backgroundColor: elevatedBg,
               margin: "8px",
               marginTop: 0,
-              backgroundColor: "white",
               borderRadius: "8px",
               padding: "16px",
               ...componentShadow,
@@ -231,8 +230,8 @@ const AppLayout = ({ children }) => {
           <Footer
             style={{
               textAlign: "start",
-              backgroundColor: "#F9FAFB",
               padding: 0,
+              backgroundColor: elevatedBg,
             }}
           >
             <Foot />

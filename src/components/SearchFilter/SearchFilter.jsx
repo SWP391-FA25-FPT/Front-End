@@ -38,7 +38,7 @@ const SearchFilter = () => {
   return (
     <div className="search-filter-sidebar">
       {/* Tìm kiếm tương tự */}
-      <Card className="filter-card" bordered={false}>
+      <Card className="filter-card custom-panel-elevated" bordered={false}> 
         <Title level={5} className="filter-section-title">
           Tìm kiếm tương tự
         </Title>
@@ -69,7 +69,7 @@ const SearchFilter = () => {
       </Card>
 
       {/* Sàng lọc */}
-      <Card className="filter-card" bordered={false}>
+      <Card className="filter-card custom-panel-elevated" bordered={false}>
         <Title level={5} className="filter-section-title">
           <Icon icon="mdi:filter-outline" width="20" style={{ marginRight: "8px" }} />
           Sàng lọc
@@ -104,10 +104,11 @@ const SearchFilter = () => {
         </Space>
       </Card>
 
-      {/* Bộ lọc Premium */}
-      <Card className="filter-card premium-filter" bordered={false}>
+      {/* Bộ lọc Premium (FIX màu nền vàng CỨNG) */}
+      <Card className="filter-card premium-filter premium-static-box" bordered={false}>
         <Title level={5} className="filter-section-title">
-          <Icon icon="mdi:crown" width="20" style={{ marginRight: "8px", color: "#faad14" }} />
+          {/* FIX: Màu icon trắng cứng */}
+          <Icon icon="mdi:crown" width="20" style={{ marginRight: "8px", color: "white" }} /> 
           Bộ lọc Premium
         </Title>
         
@@ -116,7 +117,8 @@ const SearchFilter = () => {
             <div style={{ flex: 1 }}>
               <Text className="filter-label">Món được Tin Cậy Cao</Text>
               <div>
-                <Text type="secondary" style={{ fontSize: "12px" }}>
+                {/* FIX: Chữ phụ trong hộp vàng nên là màu trắng mờ */}
+                <Text className="premium-text-secondary" style={{ fontSize: "12px" }}>
                   Hiển thị các món có hình trong từng bước
                 </Text>
               </div>
@@ -134,17 +136,17 @@ const SearchFilter = () => {
 
         <div 
           className="premium-notice"
-          style={{
-            marginTop: "16px",
-            padding: "12px",
-            backgroundColor: "#fff7e6",
-            borderRadius: "8px",
-            border: "1px solid #ffd591"
-          }}
         >
-          <div className="d-flex align-items-start gap-2">
-            <Icon icon="mdi:information" width="20" style={{ color: "#faad14", marginTop: "2px" }} />
-            <Text style={{ fontSize: "12px", color: "#ad6800" }}>
+          <div className="d-flex align-items-start gap-2 premium-warning-box">
+            <Icon 
+              icon="mdi:information" 
+              width="20" 
+              // FIX: Màu icon trắng cứng
+              style={{ color: "white", marginTop: "2px" }} 
+            />
+            <Text 
+              style={{ fontSize: "12px", color: "white" }} 
+            >
               Tính năng này yêu cầu tài khoản Premium
             </Text>
           </div>
@@ -155,5 +157,3 @@ const SearchFilter = () => {
 };
 
 export default SearchFilter;
-
-

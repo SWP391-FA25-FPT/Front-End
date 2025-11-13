@@ -1,7 +1,7 @@
 /* Challenge Page Container */
 .challenge-page-container {
   padding: 24px;
-  background-color: #f5f5f5;
+  /* NOTE: ĐÃ XÓA 'background-color: #f5f5f5;' */
   min-height: 100vh;
 }
 
@@ -53,7 +53,7 @@
 .challenge-stats-overview {
   margin-bottom: 24px;
 }
-
+/* NOTE: Antd Card (stat-card) sẽ tự đổi màu, không cần xóa 'background' */
 .challenge-stats-overview .stat-card {
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -91,7 +91,7 @@
 
 /* Filter Bar */
 .challenge-filter-bar {
-  background: white;
+  /* NOTE: ĐÃ XÓA 'background: white;' */
   padding: 20px 24px;
   border-radius: 12px;
   margin-bottom: 32px;
@@ -127,7 +127,7 @@
 .section-title {
   font-size: 24px;
   font-weight: 700;
-  color: #262626;
+  /* NOTE: ĐÃ XÓA 'color: #262626;' */
   margin-bottom: 24px;
 }
 
@@ -203,7 +203,7 @@
 .challenge-title {
   font-size: 18px;
   font-weight: 700;
-  color: #262626;
+  /* NOTE: ĐÃ XÓA 'color: #262626;' */
   margin: 0;
   line-height: 1.4;
   flex: 1;
@@ -314,7 +314,7 @@
 .host-name {
   font-size: 14px;
   font-weight: 600;
-  color: #262626;
+  /* NOTE: ĐÃ XÓA 'color: #262626;' */
 }
 
 /* Responsive */

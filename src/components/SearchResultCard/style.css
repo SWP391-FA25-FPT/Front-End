@@ -9,18 +9,35 @@
 .search-result-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  /* FIX: Thêm viền highlight */
+  border-color: var(--primary-color) !important;
 }
 
 .search-result-card .ant-card-body {
   padding: 16px;
 }
 
-.search-result-card .ant-card-meta-title {
-  margin-bottom: 8px;
+/* FIX MÀU CHỮ: Loại bỏ hardcode màu chữ và buộc kế thừa */
+.search-result-card .ant-card-meta-description {
+  color: inherit !important;
 }
 
-.search-result-card .ant-card-meta-description {
-  color: inherit;
+/* FIX TIÊU ĐỀ: Đảm bảo tiêu đề nhận màu chính và có hiệu ứng */
+/* Sử dụng lại class recipe-title từ component */
+.search-result-card .recipe-title,
+.search-result-card-horizontal .recipe-title {
+    color: var(--color-text-primary) !important;
+    transition: color 0.2s ease, transform 0.2s ease;
+    /* Tăng độ đậm để nổi bật */
+    font-weight: 700 !important;
+}
+
+/* Hiệu ứng Highlight khi hover Card */
+.search-result-card:hover .recipe-title,
+.search-result-card-horizontal:hover .recipe-title {
+    /* Đổi màu chữ sang màu Accent đã định nghĩa trong :root/index.css */
+    color: var(--primary-color) !important; 
+    transform: translateX(4px); 
 }
 
 /* Horizontal Card (List View) */
@@ -29,19 +46,21 @@
   overflow: hidden;
   transition: all 0.3s ease;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f0f0f0;
+  /* FIX: Dùng biến màu nền nổi làm màu viền mặc định */
+  border: 1px solid var(--color-bg-elevated) !important; 
 }
 
 .search-result-card-horizontal:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  border-color: #faad14;
+  /* FIX: Thêm viền highlight */
+  border-color: var(--primary-color) !important; 
 }
 
 .search-result-card-horizontal .ant-card-body {
   padding: 0;
 }
 
-/* Responsive */
+/* Responsive (Giữ nguyên) */
 @media (max-width: 768px) {
   .search-result-card-horizontal .d-flex {
     flex-direction: column;
@@ -52,4 +71,3 @@
     height: 200px;
   }
 }
-

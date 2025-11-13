@@ -6,30 +6,55 @@ import { apiUrls } from "../utils/constants";
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    try {
-      const raw = localStorage.getItem("user");
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
-  });
 
+  const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => getCookie("token") || null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); 
+
 
   useEffect(() => {
-    // small startup delay to simulate async restore (and keep compatibility with components
-    // that check `loading` on mount). In the real app you might verify the token with the API here.
-    setLoading(false);
-  }, []);
+    const bootstrapAsync = async () => {
+      const currentToken = getCookie("token"); 
+      
+      if (!currentToken) {
+        setUser(null);
+        setToken(null);
+        setLoading(false); 
+        return;
+      }
+
+      try {
+
+        const response = await apiHelper.get(apiUrls.getMe);
+        
+        if (response.success && response.data) {
+          setUser(response.data);
+          setToken(currentToken);
+          localStorage.setItem("user", JSON.stringify(response.data));
+        } else {
+
+          throw new Error("Invalid token");
+        }
+      } catch (error) {
+        console.error("Bootstrap error:", error);
+        setToken(null);
+        setUser(null);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        removeCookie("token");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    bootstrapAsync();
+  }, []); 
 
   const login = ({ token: newToken, user: newUser }) => {
     setToken(newToken);
     setUser(newUser);
     if (newToken) {
       localStorage.setItem("token", newToken);
-      // Also set cookie for apiHelper using js-cookie
       setCookie("token", newToken, { path: "/" });
     }
     if (newUser) localStorage.setItem("user", JSON.stringify(newUser));
@@ -40,7 +65,6 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    // Also clear cookie using js-cookie
     removeCookie("token");
   };
 
@@ -66,7 +90,19 @@ export const AuthProvider = ({ children }) => {
   const isAuthenticated = () => Boolean(token);
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, updateUser, refreshUser, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        loading, 
+        login,
+        logout,
+        updateUser,
+        refreshUser,
+        isAuthenticated,
+      }}
+    >
+
       {children}
     </AuthContext.Provider>
   );

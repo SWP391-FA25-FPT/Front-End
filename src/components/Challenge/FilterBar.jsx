@@ -35,6 +35,7 @@ const FilterBar = ({
           <Radio.Group
             value={status}
             onChange={(e) => setStatus(e.target.value)}
+            buttonStyle="solid"
           >
             <Radio.Button value="all">Tất cả</Radio.Button>
             <Radio.Button value="ongoing">Đang diễn ra</Radio.Button>

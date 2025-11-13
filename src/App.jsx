@@ -17,9 +17,11 @@ import ResetPassword from "./pages/ResetPassword";
 import TakeSurvey from "./pages/TakeSurvey";
 import ProfilePage from "./pages/ProfilePage";
 import SupportPage from "./pages/SupportPage"; // Trang support chính
-import Profile from "./pages/Profile";
+import SettingsPage from "./pages/SettingsPage";
+import PinAndRecoveryPage from './pages/PinAndRecoveryPage';
+import ChangePasswordPage from './pages/ChangePasswordPage';
+import Profile from "./pages/Profile"; // Giữ cả ProfilePage và Profile (tùy vào cách dùng)
 
-// Thêm 6 import mới cho 6 trang support
 import GettingStarted from "./pages/support/GettingStarted";
 import NutritionTracking from "./pages/support/NutritionTracking";
 import MealPlanner from "./pages/support/MealPlanner";
@@ -66,23 +68,28 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-
-          {/* --- CÁC ROUTE CÔNG KHAI (Guest có thể xem) --- */}
           <Route path="/" element={<HomePage />} />
           <Route path="/support" element={<SupportPage />} />
 
           {/* NOTE: Thêm 6 route tĩnh mới (BẮT BUỘC PHẢI CÓ) */}
           <Route path="/support/getting-started" element={<GettingStarted />} />
-          <Route path="/support/nutrition-tracking" element={<NutritionTracking />} />
+          <Route
+            path="/support/nutrition-tracking"
+            element={<NutritionTracking />}
+          />
           <Route path="/support/meal-planner" element={<MealPlanner />} />
           <Route path="/support/account-billing" element={<AccountBilling />} />
-          <Route path="/support/challenges-community" element={<ChallengesCommunity />} />
-          <Route path="/support/privacy-security" element={<PrivacySecurity />} />
-
+          <Route
+            path="/support/challenges-community"
+            element={<ChallengesCommunity />}
+          />
+          <Route
+            path="/support/privacy-security"
+            element={<PrivacySecurity />}
+          />
           <Route path="/challenge" element={<Challenge />} />
           <Route path="/challenge/:id" element={<ChallengeDetail />} />
           <Route path="/blog" element={<Blog />} />
@@ -90,7 +97,6 @@ function App() {
           <Route path="/top-meal-plans" element={<TopMealPlans />} />
           <Route path="/search" element={<SearchingPage />} />
           <Route path="/recipe/:id" element={<RecipeDetail />} />
-
           <Route
             path="/survey"
             element={
@@ -99,7 +105,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/user/:userId/edit"
             element={
@@ -128,7 +133,7 @@ function App() {
             path="/admin"
             element={
               <AdminProtectedRoute>
-                <AdminLayout />   
+                <AdminLayout />
               </AdminProtectedRoute>
             }
           >
@@ -264,6 +269,31 @@ function App() {
               </SurveyCheckRoute>
             }
           />
+          <Route
+            path="/settings"
+            element={
+              <SurveyCheckRoute>
+                <SettingsPage />
+              </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/settings/security/pin-recovery"
+            element={
+              <SurveyCheckRoute>
+                <PinAndRecoveryPage />
+              </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/settings/security/change-password"
+            element={
+              <SurveyCheckRoute>
+                <ChangePasswordPage />
+              </SurveyCheckRoute>
+            }
+          />
+
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

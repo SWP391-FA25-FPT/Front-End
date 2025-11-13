@@ -23,7 +23,6 @@ import SearchResultCard from "../components/SearchResultCard/SearchResultCard";
 import { getProfile } from "../apis/user";
 import { useAuth } from "../context/useAuth";
 import guest from "../assets/guest.png";
-
 import "./style/Profile.css";
 
 const Profile = () => {
@@ -165,7 +164,13 @@ const Profile = () => {
       <AppLayout>
         <div
           className="profile-page-container"
-          style={{ textAlign: "center", padding: 100 }}
+          style={{ 
+            textAlign: "center", 
+            padding: 100,
+            // BỔ SUNG: Đảm bảo nền loading đổi màu
+            backgroundColor: 'var(--color-bg-body)',
+            color: 'var(--color-text-primary)',
+          }}
         >
           <Spin size="large" />
         </div>
@@ -191,7 +196,14 @@ const Profile = () => {
 
   return (
     <AppLayout>
-      <div className="profile-page-container">
+      <div 
+        className="profile-page-container"
+        // BỔ SUNG: Áp dụng màu nền/chữ cho container chính của trang Profile
+        style={{ 
+          backgroundColor: 'var(--color-bg-body)',
+          color: 'var(--color-text-primary)',
+        }} 
+      >
         <ProfileHeader
           user={profileData?.user || {}}
           isOwnProfile={isOwnProfile}

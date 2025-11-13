@@ -1,12 +1,14 @@
 /* Progress Tracking Container */
 .progress-tracking-container {
   padding: 24px;
-  background-color: #f5f5f5;
+  background-color: var(--color-bg-container);
   min-height: 100vh;
+  transition: background-color 0.3s ease;
 }
 
 /* Page Header */
 .progress-page-header {
+  /* Giữ gradient cố định */
   background: linear-gradient(135deg, #cb9a09 0%, #eb6e67 100%);
   border-radius: 16px;
   padding: 32px;
@@ -74,61 +76,56 @@
 
 .stat-card .ant-statistic-title {
   font-size: 14px;
-  color: #8c8c8c;
+  color: var(--color-text-secondary);
   margin-bottom: 8px;
 }
 
 .stat-card .ant-statistic-content {
   font-size: 28px;
   font-weight: bold;
+  color: var(--color-text-primary);
 }
 
-/* Weight Chart */
-.weight-chart-card {
+/* Cards: Weight Chart, Daily Progress, Water Intake, Weekly Overview, Goals */
+.weight-chart-card,
+.daily-progress-card,
+.water-intake-card,
+.weekly-overview-card,
+.goals-section-card {
   border-radius: 12px;
   border: none;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   height: 100%;
 }
 
-.weight-chart-card .ant-card-head {
-  border-bottom: 1px solid #f0f0f0;
+.weight-chart-card .ant-card-head,
+.daily-progress-card .ant-card-head,
+.water-intake-card .ant-card-head,
+.weekly-overview-card .ant-card-head,
+.goals-section-card .ant-card-head {
+  border-bottom: 1px solid var(--color-text-secondary);
   padding: 20px 24px;
 }
 
-.weight-chart-card .ant-card-head-title {
+.weight-chart-card .ant-card-head-title,
+.daily-progress-card .ant-card-head-title,
+.water-intake-card .ant-card-head-title,
+.weekly-overview-card .ant-card-head-title,
+.goals-section-card .ant-card-head-title {
   font-size: 18px;
   font-weight: 600;
-  color: #262626;
+  color: var(--color-text-primary);
 }
 
-.weight-chart-card .ant-card-body {
+.weight-chart-card .ant-card-body,
+.daily-progress-card .ant-card-body,
+.water-intake-card .ant-card-body,
+.weekly-overview-card .ant-card-body,
+.goals-section-card .ant-card-body {
   padding: 24px;
 }
 
 /* Daily Progress */
-.daily-progress-card {
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  height: 100%;
-}
-
-.daily-progress-card .ant-card-head {
-  border-bottom: 1px solid #f0f0f0;
-  padding: 20px 24px;
-}
-
-.daily-progress-card .ant-card-head-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #262626;
-}
-
-.daily-progress-card .ant-card-body {
-  padding: 24px;
-}
-
 .progress-item {
   margin-bottom: 8px;
 }
@@ -149,46 +146,24 @@
 .progress-title {
   font-size: 16px;
   font-weight: 600;
-  color: #262626;
+  color: var(--color-text-primary);
 }
 
 .progress-value {
   font-size: 14px;
   font-weight: 500;
-  color: #595959;
+  color: var(--color-text-secondary);
 }
 
 .progress-percent {
   text-align: right;
   font-size: 14px;
   font-weight: 600;
-  color: #262626;
+  color: var(--color-text-primary);
   margin-top: 4px;
 }
 
 /* Water Intake */
-.water-intake-card {
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  height: 100%;
-}
-
-.water-intake-card .ant-card-head {
-  border-bottom: 1px solid #f0f0f0;
-  padding: 20px 24px;
-}
-
-.water-intake-card .ant-card-head-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #262626;
-}
-
-.water-intake-card .ant-card-body {
-  padding: 24px;
-}
-
 .water-progress {
   display: flex;
   align-items: center;
@@ -207,19 +182,19 @@
   position: absolute;
   font-size: 14px;
   font-weight: bold;
-  color: #1890ff;
+  color: var(--color-warning);
 }
 
 .water-info h3 {
   font-size: 24px;
   font-weight: bold;
-  color: #262626;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 .water-info p {
   font-size: 14px;
-  color: #8c8c8c;
+  color: var(--color-text-secondary);
   margin: 4px 0 0 0;
 }
 
@@ -230,7 +205,7 @@
   flex-wrap: wrap;
   gap: 8px;
   padding: 16px;
-  background-color: #fafafa;
+  background-color: var(--color-bg-container);
   border-radius: 12px;
   margin-bottom: 16px;
 }
@@ -262,27 +237,6 @@
 }
 
 /* Weekly Overview */
-.weekly-overview-card {
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-}
-
-.weekly-overview-card .ant-card-head {
-  border-bottom: 1px solid #f0f0f0;
-  padding: 20px 24px;
-}
-
-.weekly-overview-card .ant-card-head-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #262626;
-}
-
-.weekly-overview-card .ant-card-body {
-  padding: 24px;
-}
-
 .weekly-overview-card .ant-picker-calendar {
   border-radius: 8px;
 }
@@ -299,41 +253,22 @@
 }
 
 /* Goals Section */
-.goals-section-card {
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  height: 100%;
-}
-
-.goals-section-card .ant-card-head {
-  border-bottom: 1px solid #f0f0f0;
-  padding: 20px 24px;
-}
-
-.goals-section-card .ant-card-head-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #262626;
-}
-
 .goals-section-card .ant-card-body {
-  padding: 24px;
   max-height: 500px;
   overflow-y: auto;
 }
 
 .goal-item {
   padding: 16px !important;
-  background-color: #fafafa;
+  background-color: var(--color-bg-container);
   border-radius: 12px;
   margin-bottom: 16px !important;
-  border: 1px solid #f0f0f0 !important;
+  border: 1px solid var(--color-text-secondary) !important;
   transition: all 0.3s ease;
 }
 
 .goal-item:hover {
-  background-color: #f5f5f5;
+  background-color: var(--color-bg-elevated);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -353,13 +288,13 @@
 .goal-title-wrapper h4 {
   font-size: 16px;
   font-weight: 600;
-  color: #262626;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 .goal-description {
   font-size: 14px;
-  color: #8c8c8c;
+  color: var(--color-text-secondary);
   margin: 4px 0 0 0;
 }
 
@@ -371,97 +306,77 @@
 }
 
 .goal-stats span:first-child {
-  color: #262626;
+  color: var(--color-text-primary);
   font-weight: 600;
 }
 
 .goal-stats span:last-child {
-  color: #8c8c8c;
+  color: var(--color-text-secondary);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .progress-tracking-container {
-    padding: 16px;
-  }
-
-  .progress-page-header {
-    padding: 24px 20px;
-  }
-
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .header-title {
-    font-size: 24px;
-  }
-
-  .header-subtitle {
-    font-size: 14px;
-  }
-
-  .stat-card .ant-statistic-content {
-    font-size: 24px;
-  }
-
-  .water-progress {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .water-glasses {
-    gap: 12px;
-  }
-
-  .goals-section-card .ant-card-body {
-    max-height: none;
-  }
-}
-
-@media (max-width: 576px) {
-  .progress-page-header {
-    padding: 20px 16px;
-  }
-
-  .header-title {
-    font-size: 20px;
-  }
-
-  .stat-icon {
-    width: 48px;
-    height: 48px;
-  }
-
-  .stat-card .ant-statistic-content {
-    font-size: 20px;
-  }
-
-  .progress-title {
-    font-size: 14px;
-  }
-
-  .water-info h3 {
-    font-size: 20px;
-  }
-}
-
-/* Custom scrollbar for goals section */
+/* Scrollbar */
 .goals-section-card .ant-card-body::-webkit-scrollbar {
   width: 6px;
 }
 
 .goals-section-card .ant-card-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--color-bg-container);
   border-radius: 10px;
 }
 
 .goals-section-card .ant-card-body::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(--color-warning);
   border-radius: 10px;
 }
 
 .goals-section-card .ant-card-body::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #d97706;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+  .progress-tracking-container {
+    background-color: var(--color-bg-body) !important;
+    color: var(--color-text-primary);
+  }
+
+  /* Cards & Elevated elements */
+  .stat-card,
+  .weight-chart-card,
+  .daily-progress-card,
+  .water-intake-card,
+  .weekly-overview-card,
+  .goals-section-card {
+    background-color: var(--color-bg-elevated);
+    box-shadow: 0 2px 12px var(--color-shadow);
+  }
+
+  .stat-card .ant-statistic-title,
+  .progress-value,
+  .goal-description,
+  .goal-stats span:last-child {
+    color: var(--color-text-secondary);
+  }
+
+  .stat-card .ant-statistic-content,
+  .progress-title,
+  .progress-percent,
+  .goal-title-wrapper h4,
+  .goal-stats span:first-child,
+  .water-info h3 {
+    color: var(--color-text-primary);
+  }
+
+  .goal-item {
+    background-color: var(--color-bg-container);
+    border: 1px solid var(--color-text-secondary) !important;
+  }
+
+  .goal-item:hover {
+    background-color: var(--color-bg-elevated);
+  }
+
+  .water-glasses {
+    background-color: var(--color-bg-container);
+  }
 }

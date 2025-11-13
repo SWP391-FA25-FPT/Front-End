@@ -3,6 +3,7 @@ import { Row, Col, Card, Input, Button, Typography, Avatar, Space, Tag, message,
 import { Container } from "react-bootstrap";
 import { SendOutlined, RobotOutlined, UserOutlined, CameraOutlined, FileTextOutlined, HeartOutlined, HistoryOutlined, PlusOutlined } from "@ant-design/icons";
 import Layout from "../components/layout/SettingLayout";
+import { useTheme } from "../context/ThemeContext"; // <--- BỔ SUNG: Import useTheme
 import { sendMessageToAI, getConversations, getConversationHistory } from "../services/geminiAI";
 import "../pages/style/AIConsultation.css";
 
@@ -10,6 +11,7 @@ const { Title, Text, Paragraph } = Typography;
 const { TextArea } = Input;
 
 export default function AIConsultation() {
+  const { themeMode } = useTheme(); // <--- BỔ SUNG: Lấy themeMode
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -336,11 +338,13 @@ export default function AIConsultation() {
                       <List.Item
                         style={{
                           cursor: 'pointer',
-                          backgroundColor: conv.conversationId === conversationId ? '#e6f7ff' : 'transparent',
+                          // SỬA LỖI: Dùng biến theme cho nền khi active/hover
+                          backgroundColor: conv.conversationId === conversationId ? 'var(--color-primary-faded)' : 'transparent',
                           padding: '8px 12px',
                           borderRadius: '4px',
                           marginBottom: '4px'
                         }}
+                        className={conv.conversationId !== conversationId ? "conversation-item" : ""} // Thêm class cho hover
                         onClick={() => handleSelectConversation(conv.conversationId)}
                       >
                         <List.Item.Meta
