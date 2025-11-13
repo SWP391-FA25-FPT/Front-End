@@ -1,6 +1,7 @@
 /**
  * Convert nutrition data from backend format to frontend format
- * Backend format: { ENERC_KCAL, PROCNT, FAT, CHOCDF, FIBTG, SUGAR }
+ * Supports both Edamam format: { ENERC_KCAL, PROCNT, FAT, CHOCDF, FIBTG, SUGAR }
+ * and frontend format: { calories, protein, carbs, fat, fiber, sugar }
  * Frontend format: { calories, protein, carbs, fat, fiber, sugar }
  */
 export function convertNutritionFormat(backendNutrition) {
@@ -8,6 +9,24 @@ export function convertNutritionFormat(backendNutrition) {
     return null;
   }
 
+  // Check if already in frontend format
+  if (backendNutrition.calories !== undefined || backendNutrition.protein !== undefined) {
+    // Already in frontend format, return as is (but ensure all fields exist)
+    const converted = {
+      calories: Math.round(backendNutrition.calories || 0),
+      protein: Math.round((backendNutrition.protein || 0) * 10) / 10,
+      carbs: Math.round((backendNutrition.carbs || 0) * 10) / 10,
+      fat: Math.round((backendNutrition.fat || 0) * 10) / 10,
+      fiber: Math.round((backendNutrition.fiber || 0) * 10) / 10,
+      sugar: Math.round((backendNutrition.sugar || 0) * 10) / 10,
+    };
+
+    // Return null if all values are 0
+    const hasAnyValue = Object.values(converted).some(val => val > 0);
+    return hasAnyValue ? converted : null;
+  }
+
+  // Convert from Edamam format
   const converted = {
     calories: Math.round(backendNutrition.ENERC_KCAL || 0),
     protein: Math.round((backendNutrition.PROCNT || 0) * 10) / 10, // Round to 1 decimal
