@@ -49,6 +49,17 @@ const apiHelper = {
       return formatErrorResponse(error);
     }
   },
+  putFormData: async (url, formData, config = {}) => {
+    try {
+      const response = await api.put(url, formData, {
+        ...config,
+        headers: { "Content-Type": "multipart/form-data", ...config.headers },
+      });
+      return response.data;
+    } catch (error) {
+      return formatErrorResponse(error);
+    }
+  },
   postFormData: async (url, formData, config = {}) => {
     try {
       const response = await api.post(url, formData, {

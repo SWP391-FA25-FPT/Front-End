@@ -16,16 +16,19 @@ const Index = () => {
     navigate('/');
   };
 
+  const profilePath = user?._id ? `/user/${user._id}` : "/";
+  const profileEditPath = user?._id ? `/user/${user._id}/edit` : "/";
+
   const items = [
     {
       key: "1",
       label: "Hồ sơ",
-      onClick: () => navigate('/profile'),
+      onClick: () => navigate(profilePath),
     },
     {
       key: "2",
       label: "Cài đặt",
-      onClick: () => navigate('/profile'),
+      onClick: () => navigate(profileEditPath),
     },
     {
       key: "3",

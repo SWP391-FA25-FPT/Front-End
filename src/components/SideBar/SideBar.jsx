@@ -12,6 +12,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate(); // NOTE: Thêm hook
+  const profilePath = user?._id ? `/user/${user._id}` : "/";
 
   // Hàm này giữ nguyên, dùng để xác định mục nào đang active
   const getSelectedKey = () => {
@@ -35,7 +36,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     if (path === "/challenge" || path.startsWith("/challenge/")) return "3";
     if (path === "/blog" || path.startsWith("/blog/")) return "4";
 
-    if (path === "/profile") return "6";
+    if (path.startsWith("/user/")) return "6";
     if (path === "/support") return "7";
     // ✅ ADD THIS (phần admin sidebar)
 if (path.startsWith("/admin")) {
@@ -121,7 +122,14 @@ if (path.startsWith("/admin")) {
     {
       key: "6",
       icon: <Icon icon="ic:outline-settings" width="24" height="24" />,
-      label: <a href="/profile">Hồ Sơ Cá Nhân</a>,
+      label: (
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(profilePath)}
+        >
+          Hồ Sơ Cá Nhân
+        </span>
+      ),
     },
     {
       key: "7",

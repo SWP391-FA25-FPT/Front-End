@@ -101,7 +101,7 @@ function App() {
           />
 
           <Route
-            path="/profile"
+            path="/user/:userId/edit"
             element={
               <SurveyCheckRoute>
                 <ProfilePage />
@@ -109,7 +109,7 @@ function App() {
             }
           />
           <Route
-            path="/user"
+            path="/user/:userId"
             element={
               <SurveyCheckRoute>
                 <Profile />

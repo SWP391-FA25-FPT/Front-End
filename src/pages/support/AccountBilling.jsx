@@ -57,7 +57,7 @@ const AccountBilling = () => {
               <Panel header="Cập nhật Hồ sơ cá nhân (Profile)" key="1">
                 <Paragraph>
                   Hồ sơ cá nhân là nơi lưu trữ các thông tin cơ bản và mục tiêu của bạn.
-                  Bạn có thể truy cập trang <Text code>/profile</Text> (hoặc <Text code>Thiết Lập</Text>) để:
+                  Bạn có thể truy cập trang <Text code>/user/:id/edit</Text> (hoặc <Text code>Thiết Lập</Text>) để:
                 </Paragraph>
                 <ul className="ps-4">
                   <li>Thay đổi Ảnh đại diện (Avatar).</li>
@@ -72,7 +72,7 @@ const AccountBilling = () => {
                   Để đảm bảo an toàn cho tài khoản, bạn nên đổi mật khẩu định kỳ.
                 </Paragraph>
                 <ul className="ps-4">
-                  <li><Text strong>Đổi mật khẩu:</Text> Trong trang <Text code>/profile</Text>,
+                  <li><Text strong>Đổi mật khẩu:</Text> Trong trang <Text code>/user/:id/edit</Text>,
                   tìm tab 'Bảo mật' hoặc 'Đổi mật khẩu'. Bạn sẽ cần nhập mật khẩu cũ và mật khẩu mới.</li>
                   <li><Text strong>Quên mật khẩu:</Text> Nếu bạn quên mật khẩu, hãy đăng xuất và
                   sử dụng tính năng 'Quên mật khẩu' (Forgot Password) tại trang Đăng nhập.
