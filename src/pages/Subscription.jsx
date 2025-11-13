@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import AppLayout from "../components/layout/AppLayout";
 import { Typography, Row, Col, Card, Button, Modal, Radio, Tag, Spin, message } from "antd";
+import PayPalScript from "../components/PayPalScript";
+import PayPalButton from "../components/PayPalButton";
+import { capturePayPalOrder } from "../apis/paypal";
 import { Icon } from "@iconify/react";
 import {
   getSubscriptionPlans,
@@ -17,6 +20,7 @@ const { Title, Text, Paragraph } = Typography;
 const Subscription = () => {
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [plans, setPlans] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentSubscription, setCurrentSubscription] = useState(null);
@@ -28,7 +32,71 @@ const Subscription = () => {
 
   useEffect(() => {
     fetchData();
+    handlePayPalReturn();
   }, []);
+
+  const handlePayPalReturn = async () => {
+    const paymentStatus = searchParams.get('payment');
+    const token = searchParams.get('token');
+    
+    if (paymentStatus === 'success' && token) {
+      // Get stored plan details
+      const planType = sessionStorage.getItem('paypalPlanType');
+      const planDuration = sessionStorage.getItem('paypalPlanDuration');
+      const orderId = sessionStorage.getItem('paypalOrderId');
+      const processedKey = `paypal_processed_${orderId}`;
+      
+      // Check if this order was already processed
+      if (sessionStorage.getItem(processedKey)) {
+        // Already processed, just clean up and redirect
+        sessionStorage.removeItem('paypalPlanType');
+        sessionStorage.removeItem('paypalPlanDuration');
+        sessionStorage.removeItem('paypalOrderId');
+        navigate('/subscription', { replace: true });
+        return;
+      }
+      
+      if (planType && planDuration && orderId && user?._id) {
+        try {
+          message.loading({ content: 'Đang xử lý thanh toán...', key: 'paypal-capture' });
+          
+          // Mark as processing to prevent duplicate attempts
+          sessionStorage.setItem(processedKey, 'true');
+          
+          const result = await capturePayPalOrder(orderId, planType, planDuration, user._id);
+          
+          if (result.success) {
+            const msg = result.status === 'ALREADY_PROCESSED' 
+              ? 'Thanh toán đã được xử lý trước đó.'
+              : 'Thanh toán thành công! Tài khoản của bạn đã được nâng cấp.';
+            message.success({ content: msg, key: 'paypal-capture', duration: 3 });
+            // Clear session storage
+            sessionStorage.removeItem('paypalPlanType');
+            sessionStorage.removeItem('paypalPlanDuration');
+            sessionStorage.removeItem('paypalOrderId');
+            // Refresh user and subscription data
+            if (refreshUser) await refreshUser();
+            fetchData();
+            // Clean URL
+            navigate('/subscription', { replace: true });
+          } else {
+            sessionStorage.removeItem(processedKey);
+            message.error({ content: 'Lỗi khi xác nhận thanh toán', key: 'paypal-capture' });
+          }
+        } catch (err) {
+          sessionStorage.removeItem(processedKey);
+          message.error({ content: 'Lỗi khi xử lý thanh toán: ' + err.message, key: 'paypal-capture' });
+        }
+      }
+    } else if (paymentStatus === 'cancel') {
+      message.warning('Bạn đã hủy thanh toán PayPal');
+      // Clear session storage
+      sessionStorage.removeItem('paypalPlanType');
+      sessionStorage.removeItem('paypalPlanDuration');
+      sessionStorage.removeItem('paypalOrderId');
+      navigate('/subscription', { replace: true });
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -48,39 +116,39 @@ const Subscription = () => {
   };
 
   const handleSubscribe = async (planType, duration) => {
-    setSelectedPlan({ planType, duration });
+    if (!plans) {
+      message.warning('Vui lòng đợi dữ liệu gói được tải.');
+      return;
+    }
+    setSelectedPlan({ planType, planDuration: duration });
+    // Debug log for troubleshooting plan selection
+    console.log('handleSubscribe:', { planType, duration, plans });
     setShowPaymentModal(true);
   };
 
   const handleConfirmPayment = async () => {
     if (!selectedPlan) return;
-
     setProcessLoading(true);
-
     // Step 1: Create subscription
     const createResponse = await createSubscription({
       planType: selectedPlan.planType,
       planDuration: selectedPlan.duration,
       paymentMethod,
     });
-
     if (!createResponse.success) {
       message.error(createResponse.error || "Lỗi khi tạo subscription");
       setProcessLoading(false);
       return;
     }
-
-    // Step 2: Confirm payment
+    // Step 2: Confirm payment (for non-PayPal)
     const confirmResponse = await confirmPayment({
       subscriptionId: createResponse.data.subscription._id,
       paymentId: "MOCK_PAYMENT_" + Date.now(),
     });
-
     if (confirmResponse.success) {
       message.success("Thanh toán thành công! Tài khoản của bạn đã được nâng cấp.");
       setShowPaymentModal(false);
       setSelectedPlan(null);
-      // Refresh user data
       if (refreshUser) {
         await refreshUser();
       }
@@ -102,6 +170,12 @@ const Subscription = () => {
     return new Date(date).toLocaleDateString("vi-VN");
   };
 
+  // Helper function to check if a plan is currently active
+  const isCurrentlyActive = (planType, planDuration) => {
+    if (!currentSubscription || currentSubscription.status !== "active") return false;
+    return currentSubscription.planType === planType && currentSubscription.planDuration === planDuration;
+  };
+
   // Define subscription packages
   const subscriptionPackages = [
     {
@@ -118,7 +192,7 @@ const Subscription = () => {
         "Hỗ trợ qua email",
       ],
       disabled: true,
-      isCurrentPlan: !user?.subscription?.status || user?.subscription?.status === "free",
+      isCurrentPlan: !currentSubscription || currentSubscription.status !== "active",
     },
     {
       key: "basic-monthly",
@@ -137,6 +211,7 @@ const Subscription = () => {
       ],
       planType: "basic",
       planDuration: "monthly",
+      isCurrentPlan: isCurrentlyActive("basic", "monthly"),
     },
     {
       key: "premium-monthly",
@@ -158,6 +233,7 @@ const Subscription = () => {
       ],
       planType: "premium",
       planDuration: "monthly",
+      isCurrentPlan: isCurrentlyActive("premium", "monthly"),
     },
   ];
 
@@ -310,7 +386,15 @@ const Subscription = () => {
             <Row gutter={[24, 24]} justify="center">
               {plans.basic?.yearly && (
                 <Col xs={24} sm={24} md={12}>
-                  <Card className="subscription-card" hoverable>
+                  <Card className={`subscription-card ${isCurrentlyActive("basic", "yearly") ? 'current-plan' : ''}`} hoverable={!isCurrentlyActive("basic", "yearly")}>
+                    {isCurrentlyActive("basic", "yearly") && (
+                      <div className="current-badge">
+                        <Tag color="green" style={{ margin: 0, fontWeight: 600 }}>
+                          Gói hiện tại
+                        </Tag>
+                      </div>
+                    )}
+
                     <div className="card-header">
                       <Title level={4} className="plan-title">
                         Cao cấp - Hàng năm
@@ -338,9 +422,10 @@ const Subscription = () => {
                         block
                         className="subscribe-button"
                         onClick={() => handleSubscribe("basic", "yearly")}
+                        disabled={isCurrentlyActive("basic", "yearly")}
                         style={{ height: 48, fontSize: 16, fontWeight: 600 }}
                       >
-                        Đăng ký ngay
+                        {isCurrentlyActive("basic", "yearly") ? "Đang sử dụng" : "Đăng ký ngay"}
                       </Button>
                     </div>
                   </Card>
@@ -349,12 +434,20 @@ const Subscription = () => {
 
               {plans.premium?.yearly && (
                 <Col xs={24} sm={24} md={12}>
-                  <Card className="subscription-card popular-card" hoverable>
-                    <div className="popular-badge">
-                      <Tag color="orange" style={{ margin: 0, fontWeight: 600 }}>
-                        Tiết kiệm nhất
-                      </Tag>
-                    </div>
+                  <Card className={`subscription-card popular-card ${isCurrentlyActive("premium", "yearly") ? 'current-plan' : ''}`} hoverable={!isCurrentlyActive("premium", "yearly")}>
+                    {isCurrentlyActive("premium", "yearly") ? (
+                      <div className="current-badge">
+                        <Tag color="green" style={{ margin: 0, fontWeight: 600 }}>
+                          Gói hiện tại
+                        </Tag>
+                      </div>
+                    ) : (
+                      <div className="popular-badge">
+                        <Tag color="orange" style={{ margin: 0, fontWeight: 600 }}>
+                          Tiết kiệm nhất
+                        </Tag>
+                      </div>
+                    )}
 
                     <div className="card-header">
                       <Title level={4} className="plan-title">
@@ -383,6 +476,7 @@ const Subscription = () => {
                         block
                         className="subscribe-button"
                         onClick={() => handleSubscribe("premium", "yearly")}
+                        disabled={isCurrentlyActive("premium", "yearly")}
                         style={{
                           height: 48,
                           fontSize: 16,
@@ -391,7 +485,7 @@ const Subscription = () => {
                           border: "none",
                         }}
                       >
-                        Đăng ký ngay
+                        {isCurrentlyActive("premium", "yearly") ? "Đang sử dụng" : "Đăng ký ngay"}
                       </Button>
                     </div>
                   </Card>
@@ -421,23 +515,38 @@ const Subscription = () => {
           width={500}
           centered
         >
-          {selectedPlan && plans && (
+          {selectedPlan && plans && (() => { console.log('Modal Render:', { selectedPlan, plans }); return true; })() && (
             <div className="payment-modal-content">
               <Card className="payment-summary-card" style={{ marginBottom: 20 }}>
                 <Title level={5}>Thông tin gói đăng ký</Title>
                 <div className="summary-row">
                   <Text strong>Gói:</Text>
                   <Text>
-                    {selectedPlan.planType === "basic" ? "Cao cấp" : "Chuyên nghiệp"} -{" "}
-                    {selectedPlan.planDuration === "monthly" ? "Hàng tháng" : "Hàng năm"}
+                    {(() => {
+                      const planType = selectedPlan.planType;
+                      const planDuration = selectedPlan.planDuration;
+                      const planObj = plans && plans[planType] && plans[planType][planDuration];
+                      if (planObj && planObj.name) {
+                        return planObj.name;
+                      } else {
+                        return <span style={{color: 'red'}}>Không tìm thấy tên gói</span>;
+                      }
+                    })()}
                   </Text>
                 </div>
                 <div className="summary-row">
                   <Text strong>Số tiền:</Text>
                   <Text style={{ fontSize: 18, color: "#1890ff", fontWeight: 600 }}>
-                    {formatPrice(
-                      plans[selectedPlan.planType]?.[selectedPlan.planDuration]?.price || 0
-                    )}
+                    {(() => {
+                      const planType = selectedPlan.planType;
+                      const planDuration = selectedPlan.planDuration;
+                      const planObj = plans && plans[planType] && plans[planType][planDuration];
+                      if (planObj && typeof planObj.price === 'number') {
+                        return formatPrice(planObj.price);
+                      } else {
+                        return <span style={{color: 'red'}}>Không tìm thấy giá gói này</span>;
+                      }
+                    })()}
                   </Text>
                 </div>
               </Card>
@@ -468,6 +577,39 @@ const Subscription = () => {
                     PayPal
                   </Radio.Button>
                 </Radio.Group>
+                {paymentMethod === "paypal" && (
+                  <>
+                    <PayPalScript />
+                    <div style={{ marginTop: 16 }}>
+                      {(() => {
+                        const planType = selectedPlan.planType;
+                        const planDuration = selectedPlan.planDuration;
+                        const planObj = plans && plans[planType] && plans[planType][planDuration];
+                        const amount = planObj && typeof planObj.price === 'number' ? planObj.price : 0;
+                        if (amount <= 0) {
+                          return (
+                            <Text type="danger">Số tiền thanh toán phải lớn hơn 0 để sử dụng PayPal.</Text>
+                          );
+                        }
+                        return (
+                          <PayPalButton
+                            amount={amount}
+                            planType={planType}
+                            planDuration={planDuration}
+                            onSuccess={async (details) => {
+                              message.success("Đang chuyển đến PayPal...");
+                              setShowPaymentModal(false);
+                              setSelectedPlan(null);
+                            }}
+                            onError={(err) => {
+                              message.error("Lỗi khi tạo đơn PayPal: " + err.message);
+                            }}
+                          />
+                        );
+                      })()}
+                    </div>
+                  </>
+                )}
               </div>
 
               <Card
@@ -504,19 +646,21 @@ const Subscription = () => {
                   </Button>
                 </Col>
                 <Col span={12}>
-                  <Button
-                    type="primary"
-                    size="large"
-                    block
-                    onClick={handleConfirmPayment}
-                    loading={processLoading}
-                    style={{
-                      background: "linear-gradient(135deg, #52c41a 0%, #389e0d 100%)",
-                      border: "none",
-                    }}
-                  >
-                    Xác nhận thanh toán
-                  </Button>
+                  {paymentMethod !== "paypal" && (
+                    <Button
+                      type="primary"
+                      size="large"
+                      block
+                      onClick={handleConfirmPayment}
+                      loading={processLoading}
+                      style={{
+                        background: "linear-gradient(135deg, #52c41a 0%, #389e0d 100%)",
+                        border: "none",
+                      }}
+                    >
+                      Xác nhận thanh toán
+                    </Button>
+                  )}
                 </Col>
               </Row>
             </div>

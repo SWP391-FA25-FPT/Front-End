@@ -338,3 +338,4 @@ const GoalCreateModal = ({ visible, onCancel, onSubmit, loading, currentWeight }
 export default GoalCreateModal;
 
 
+
