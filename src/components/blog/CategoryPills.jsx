@@ -1,6 +1,7 @@
-// src/components/blog/CategoryPills.jsx
+// src/components/blog/CategoryPills.jsx 
+
 import React from "react";
-import { cx } from "./utils";
+import { cx } from "./ui";
 
 export default function CategoryPills({ current, categories, onPick }) {
   return (

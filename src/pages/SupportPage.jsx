@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import Layout from "../components/layout/AppLayout";
+import AppLayout from "../components/layout/AppLayout"; // <--- Đã sửa lỗi: Giả định AppLayout là component layout chính
 import { Container } from "react-bootstrap";
 import SupportCard from "../components/support/SupportCard";
-// import Logo from "../assets/icon.svg"; // Logo không được sử dụng, có thể xóa
+import { useTheme } from "../context/ThemeContext"; // <--- Bổ sung để sử dụng theme
+
 import "./style/SupportPage.css";
 
 export default function SupportPage() {
   const [search, setSearch] = useState("");
+  const { themeMode } = useTheme(); // <--- Bổ sung: Lấy themeMode
 
   // NOTE: Đã SỬA LẠI icon từ Emoji sang tên Iconify
   const items = [
@@ -54,8 +56,15 @@ export default function SupportPage() {
   );
 
   return (
-    <Layout>
-      <Container className="py-4">
+    <AppLayout>
+      <Container 
+        className="py-4"
+        // Bổ sung style để đảm bảo nền container đổi màu
+        style={{ 
+          backgroundColor: 'var(--color-bg-body)',
+          color: 'var(--color-text-primary)'
+        }}
+      >
         <div className="support-page">
           {/* Phần tiêu đề */}
           <section className="support-header">
@@ -69,6 +78,12 @@ export default function SupportPage() {
               type="text"
               placeholder="Tìm kiếm hỗ trợ..."
               onChange={(e) => setSearch(e.target.value)}
+              // Bổ sung style để Input đổi màu nền/chữ
+              style={{ 
+                backgroundColor: 'var(--color-bg-elevated)',
+                color: 'var(--color-text-primary)',
+                border: `1px solid var(--color-primary-faded)`
+              }}
             />
           </div>
 
@@ -91,6 +106,6 @@ export default function SupportPage() {
           </main>
         </div>
       </Container>
-    </Layout>
+    </AppLayout>
   );
 }

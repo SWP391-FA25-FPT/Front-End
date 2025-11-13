@@ -1,4 +1,5 @@
-// src/pages/Blog.jsx
+// src/pages/Blog.jsx (NGUYÊN TRẠNG)
+
 import React, { useEffect, useState } from "react";
 import { Typography } from "antd";
 import { Container } from "react-bootstrap";

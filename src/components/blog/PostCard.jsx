@@ -1,23 +1,30 @@
-// src/components/blog/PostCard.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import { Tag, Eye } from "lucide-react";
 import { Card, CardContent } from "./ui";
 
+/**
+ * Component hiển thị từng bài viết trong Blog
+ * - Card nhận màu nền động từ CSS theme
+ * - Ảnh nằm trong wrapper riêng để kiểm soát kích thước
+ * - Hỗ trợ hiển thị lượt xem, danh mục, ngày đăng
+ */
 export default function PostCard({ post, formatDate }) {
   const postId = post._id || post.id;
-  const postDate = post.createdAt
-    ? formatDate(post.createdAt)
-    : post.publishedAt
-    ? formatDate(post.publishedAt)
-    : post.updatedAt
-    ? formatDate(post.updatedAt)
-    : formatDate(post.date);
+  const postDate =
+    post.createdAt
+      ? formatDate(post.createdAt)
+      : post.publishedAt
+      ? formatDate(post.publishedAt)
+      : post.updatedAt
+      ? formatDate(post.updatedAt)
+      : formatDate(post.date);
 
   return (
     <Card className="blog-post-card">
-      <div className="h-48 overflow-hidden">
-        <Link to={`/blog/${postId}`} className="d-block h-100">
+      {/* Ảnh đại diện bài viết */}
+      <div className="blog-post-image-wrapper">
+        <Link to={`/blog/${postId}`} className="blog-post-image-link">
           <img
             src={post.imageUrl || post.image}
             alt={post.title}
@@ -25,6 +32,8 @@ export default function PostCard({ post, formatDate }) {
           />
         </Link>
       </div>
+
+      {/* Nội dung thẻ bài viết */}
       <CardContent className="blog-post-content">
         <div className="blog-post-meta">
           <span className="blog-post-category">
@@ -33,6 +42,7 @@ export default function PostCard({ post, formatDate }) {
           </span>
           <span>•</span>
           <span>{postDate}</span>
+
           {post.views !== undefined && (
             <>
               <span>•</span>
@@ -43,9 +53,11 @@ export default function PostCard({ post, formatDate }) {
             </>
           )}
         </div>
+
         <h3 className="blog-post-title">
           <Link to={`/blog/${postId}`}>{post.title}</Link>
         </h3>
+
         <p className="blog-post-excerpt">{post.excerpt}</p>
       </CardContent>
     </Card>

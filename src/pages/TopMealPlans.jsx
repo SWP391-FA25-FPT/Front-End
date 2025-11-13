@@ -6,6 +6,7 @@ import FilterBar from "../components/TopMeals/FilterBar";
 import MealPlanListCard from "../components/TopMeals/MealPlanListCard";
 import SidebarStats from "../components/TopMeals/SidebarStats";
 import RankingTable from "../components/TopMeals/RankingTable";
+import { useTheme } from "../context/ThemeContext"; // BỔ SUNG: Import useTheme
 import topMealPlansData from "../data/topMealPlans.json";
 import "./style/TopMealPlans.css";
 
@@ -15,6 +16,7 @@ const TopMealPlans = () => {
   const [sortBy, setSortBy] = useState("views");
   const [currentPage, setCurrentPage] = useState(1);
   const mealsPerPage = 8;
+  const { themeMode } = useTheme(); // BỔ SUNG: Lấy themeMode
 
   // Filter and sort meal plans
   const filteredAndSortedMealPlans = useMemo(() => {
@@ -78,7 +80,14 @@ const TopMealPlans = () => {
 
   return (
     <SettingLayout>
-      <div className="top-meal-plans-container">
+      <div
+        className="top-meal-plans-container"
+        // BỔ SUNG: Áp dụng màu nền body và màu chữ
+        style={{
+          backgroundColor: themeMode === "dark" ? "var(--color-bg-body)" : undefined,
+          color: "var(--color-text-primary)",
+        }}
+      >
         <PageHeader />
 
         <FilterBar
@@ -121,7 +130,7 @@ const TopMealPlans = () => {
               ) : (
                 <Empty
                   description="Không tìm thấy thực đơn nào"
-                  style={{ marginTop: "48px" }}
+                  style={{ marginTop: 48 }}
                 />
               )}
             </div>

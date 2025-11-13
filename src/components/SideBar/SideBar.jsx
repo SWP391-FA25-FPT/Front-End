@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Logo from "../Logo/Logo";
 import { Container } from "react-bootstrap";
-// NOTE: Vẫn import ConfigProvider, nhưng chỉ dùng cho nút Premium
 import { Button, ConfigProvider, Menu } from "antd";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/useAuth";
@@ -226,7 +225,11 @@ const Index = ({ collapsed, toggleCollapsed }) => {
   }
 
   baseItems.forEach((item) => {
-    if (item.label && typeof item.label === "object" && item.label.type === "a") {
+    if (
+      item.label &&
+      typeof item.label === "object" &&
+      item.label.type === "a"
+    ) {
       const href = item.label.props.href;
       item.label = item.label.props.children;
       if (!item.onClick) {
@@ -295,18 +298,23 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     }
 
     return (
-      <div className="premium-cta-expanded">
+      <div className="premium-cta-expanded premium-sidebar-box">
+        {/* DÒNG NÀY LÀ DIV GỐC, KHÔNG ĐƯỢC XÓA */}
         <div className="premium-cta-dots"></div>
         <div className="premium-cta-icon-wrapper">
           <Icon icon="mdi:crown" width="24" height="24" />
         </div>
+
         <h5 className="fw-bold mb-1 mt-2">Nâng cấp tài khoản</h5>
-        <p className="mb-3 px-1">Để nhận tính năng Premium</p>
+        <p className="mb-3 px-1 premium-text-secondary">
+          Để nhận tính năng Premium
+        </p>
+
         <ConfigProvider
           theme={{
             token: {
-              colorPrimary: "#FFFFFF",
-              colorText: "#D97706",
+              colorPrimary: "var(--color-bg-elevated)",
+              colorText: "var(--color-warning)",
             },
           }}
         >
@@ -326,7 +334,6 @@ const Index = ({ collapsed, toggleCollapsed }) => {
 
   return (
     <React.Fragment>
-      {/* NOTE: ĐÃ XÓA ConfigProvider bọc ngoài */}
       <Container
         className={
           "d-flex flex-column align-items-center gap-4 p-2 sidebar-scroll-container"
@@ -341,11 +348,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
               className="position-absolute end-0"
               size="small"
             >
-              <Icon
-                icon="mingcute:arrows-left-line"
-                width="24"
-                height="24"
-              />
+              <Icon icon="mingcute:arrows-left-line" width="24" height="24" />
             </Button>
           )}
         </div>
@@ -356,11 +359,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
             className="mb-1"
             size="small"
           >
-            <Icon
-              icon="mingcute:arrows-right-line"
-              width="24"
-              height="24"
-            />
+            <Icon icon="mingcute:arrows-right-line" width="24" height="24" />
           </Button>
         )}
         <Menu

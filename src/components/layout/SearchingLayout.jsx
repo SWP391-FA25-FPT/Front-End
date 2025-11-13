@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Layout } from "antd";
+// NOTE: 1. Import hook useTheme
+import { useTheme } from "../../context/ThemeContext.jsx";
 import SideBar from "../SideBar/SideBar";
 import Head from "./Header";
 import Foot from "./Footer";
@@ -8,36 +10,52 @@ import SearchBar from "../SearchBar/SearchBar";
 const SearchingLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
   const [collapsed, setCollapsed] = useState(false);
+  // NOTE: 2. Lấy themeMode để áp dụng cho Sider
+  const { themeMode } = useTheme(); 
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
 
+  // Shadow dùng cho Header và Content
+  const componentShadow = {
+    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+  };
+
   return (
     <React.Fragment>
-      <Layout style={{ backgroundColor: "#f8f6f2", padding: "5px" }}>
+      {/* FIX LAYOUT: BỎ style hardcode, dùng AntD Layout mặc định */}
+      <Layout style={{ minHeight: "100vh" }}>
         <Sider
-          theme="light"
+          // FIX THEME: Đảm bảo Sider dùng themeMode
+          theme={themeMode} 
           width={265}
           style={{
-            minHeight: "calc(100vh - 10px)",
-            borderRadius: "8px",
-            overflow: "hidden",
+            height: "100vh", 
+            position: "sticky",
+            top: 0,
+            overflow: "auto",
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
           }}
           collapsed={collapsed}
           onCollapse={setCollapsed}
+          breakpoint="lg"
         >
           <SideBar collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
         </Sider>
+
         <Layout
-          style={{ borderRadius: "8px", overflow: "hidden", marginLeft: "5px" }}
+          style={{ 
+            overflowY: "auto",
+          }}
         >
           <Header
             style={{ 
-              backgroundColor: "white",
+              // FIX: Dùng margin/borderRadius/shadow như Header của AppLayout
+              margin: "8px", 
               borderRadius: "8px",
-              margin: "0 8px 0 8px",
-              padding: "0 24px"
+              ...componentShadow, 
+              zIndex: 10, 
             }}
             className="d-flex justify-content-between align-items-center"
           >
@@ -48,14 +66,22 @@ const SearchingLayout = ({ children }) => {
           </Header>
           <Content
             style={{
+              // FIX: Dùng margin/borderRadius/shadow như Content của AppLayout
               margin: "8px",
-              backgroundColor: "white",
+              marginTop: 0,
               borderRadius: "8px",
+              padding: "16px",
+              ...componentShadow, 
             }}
           >
             {children}
           </Content>
-          <Footer style={{ textAlign: "start" }}>
+          <Footer 
+            style={{ 
+              textAlign: "start",
+              padding: 0, 
+            }}
+          >
             <Foot />
           </Footer>
         </Layout>
@@ -65,4 +91,3 @@ const SearchingLayout = ({ children }) => {
 };
 
 export default SearchingLayout;
-

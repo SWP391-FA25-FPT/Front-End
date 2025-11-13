@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Modal,
-  Form,
-  Input,
-  DatePicker,
-  Button,
-  message,
-} from "antd";
+import { Row, Col, Modal, Form, Input, DatePicker, Button, message } from "antd";
 import SettingLayout from "../components/layout/SettingLayout";
 import PageHeader from "../components/Progress/PageHeader";
 import StatsOverview from "../components/Progress/StatsOverview";
@@ -17,7 +8,7 @@ import DailyProgress from "../components/Progress/DailyProgress";
 import WaterIntake from "../components/Progress/WaterIntake";
 import WeeklyOverview from "../components/Progress/WeeklyOverview";
 import GoalsSection from "../components/Progress/GoalsSection";
-import progressData from "../data/progressData.json";
+import progressData from "../data/progressData.json"; // Giữ nguyên import cũ
 import "./style/ProgressTracking.css";
 
 const ProgressTracking = () => {
@@ -25,7 +16,7 @@ const ProgressTracking = () => {
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const [form] = Form.useForm();
 
-  // Load data from JSON file
+  // Load data từ JSON file (giữ nguyên logic)
   const [stats, setStats] = useState(progressData.stats);
   const [weightData, setWeightData] = useState(progressData.weightData);
   const [dailyData, setDailyData] = useState(progressData.dailyData);
@@ -52,13 +43,8 @@ const ProgressTracking = () => {
     }
   };
 
-  const handleAddRecord = () => {
-    setAddRecordModalVisible(true);
-  };
-
-  const handleViewHistory = () => {
-    setHistoryModalVisible(true);
-  };
+  const handleAddRecord = () => setAddRecordModalVisible(true);
+  const handleViewHistory = () => setHistoryModalVisible(true);
 
   const handleAddRecordSubmit = (values) => {
     console.log("New record:", values);
@@ -77,7 +63,7 @@ const ProgressTracking = () => {
 
         <StatsOverview stats={stats} />
 
-        <Row gutter={[24, 24]} style={{ marginTop: "24px" }}>
+        <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
           <Col xs={24} lg={16}>
             <WeightChart weightData={weightData} />
           </Col>
@@ -90,7 +76,7 @@ const ProgressTracking = () => {
           </Col>
         </Row>
 
-        <Row gutter={[24, 24]} style={{ marginTop: "24px" }}>
+        <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
           <Col xs={24} lg={12}>
             <DailyProgress dailyData={dailyData} />
           </Col>
@@ -99,7 +85,7 @@ const ProgressTracking = () => {
           </Col>
         </Row>
 
-        <Row gutter={[24, 24]} style={{ marginTop: "24px" }}>
+        <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
           <Col xs={24}>
             <WeeklyOverview weeklyData={weeklyData} />
           </Col>
@@ -121,7 +107,7 @@ const ProgressTracking = () => {
           form={form}
           layout="vertical"
           onFinish={handleAddRecordSubmit}
-          style={{ marginTop: "20px" }}
+          style={{ marginTop: 20 }}
         >
           <Form.Item
             label="Ngày"
@@ -147,17 +133,8 @@ const ProgressTracking = () => {
             <Input.TextArea rows={4} placeholder="Ghi chú..." />
           </Form.Item>
 
-          <Form.Item style={{ marginBottom: 0, marginTop: "24px" }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              block
-              size="large"
-              style={{
-                background: "linear-gradient(135deg, #F8B602 0%, #e19a28 100%)",
-                border: "none",
-              }}
-            >
+          <Form.Item style={{ marginBottom: 0, marginTop: 24 }}>
+            <Button type="primary" htmlType="submit" block size="large" style={{ border: "none" }}>
               Thêm bản ghi
             </Button>
           </Form.Item>
@@ -172,7 +149,7 @@ const ProgressTracking = () => {
         footer={null}
         width={800}
       >
-        <div style={{ padding: "20px" }}>
+        <div style={{ padding: 20 }}>
           <p>Danh sách lịch sử theo dõi sẽ được hiển thị ở đây...</p>
         </div>
       </Modal>

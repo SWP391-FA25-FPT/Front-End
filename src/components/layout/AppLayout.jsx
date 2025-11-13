@@ -1,5 +1,3 @@
-// src/components/layout/AppLayout.jsx
-
 import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
@@ -8,7 +6,6 @@ import {
   Badge,
   Button,
   Dropdown,
-  List,
   Avatar,
   Space,
 } from "antd";
@@ -18,7 +15,6 @@ import Head from "./Header";
 import Foot from "./Footer";
 import { Icon } from "@iconify/react";
 import SearchBar from "../SearchBar/SearchBar";
-// NOTE: 1. Import hook useTheme
 import { useTheme } from "../../context/ThemeContext.jsx";
 
 const { Title, Text, Link: AntLink } = Typography;
@@ -54,18 +50,21 @@ const AppLayout = ({ children }) => {
   const { Header, Footer, Sider, Content } = Layout;
   const { user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
-  // NOTE: 2. Lấy themeMode
   const { themeMode } = useTheme();
 
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
+  const toggleCollapsed = () => setCollapsed(!collapsed);
+
+  // Màu nền phân cách (container) và khối nổi (elevated)
+  const containerBg = themeMode === "dark" ? "#2a2a2a" : "#f5f5f5"; // đậm hơn để phân biệt
+  const elevatedBg = themeMode === "dark" ? "#1f1f1f" : "#ffffff";
 
   const componentShadow = {
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+    boxShadow:
+      themeMode === "dark"
+        ? "0 2px 5px rgba(0,0,0,0.4)"
+        : "0 1px 3px rgba(0,0,0,0.05)",
   };
 
-  // NOTE: Sửa Dropdown (theo antd v5+)
   const notificationItems = [
     {
       key: "header",
@@ -111,17 +110,16 @@ const AppLayout = ({ children }) => {
 
   return (
     <React.Fragment>
-      {/* NOTE: 3. ĐÃ XÓA backgroundColor */}
-      <Layout style={{ minHeight: "100vh" }}>
+      <Layout style={{ minHeight: "100vh", backgroundColor: containerBg }}>
         <Sider
-          // NOTE: 3. Sửa 'theme="dark"' thành 'theme={themeMode}'
           theme={themeMode}
           width={265}
           style={{
             height: "100vh",
             position: "sticky",
             top: 0,
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+            backgroundColor: elevatedBg, // làm Sidebar nổi bật
           }}
           collapsed={collapsed}
           breakpoint="lg"
@@ -130,14 +128,10 @@ const AppLayout = ({ children }) => {
           <SideBar collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
         </Sider>
 
-        <Layout
-          style={{
-            overflowY: "auto",
-          }}
-        >
+        <Layout style={{ overflowY: "auto", backgroundColor: containerBg }}>
           <Header
             style={{
-              // NOTE: 3. ĐÃ XÓA backgroundColor
+              backgroundColor: elevatedBg,
               margin: "8px",
               borderRadius: "8px",
               ...componentShadow,
@@ -163,12 +157,9 @@ const AppLayout = ({ children }) => {
                 menu={{ items: notificationItems }}
                 trigger={["click"]}
                 placement="bottomRight"
-                styles={{
-                  menu: {
-                    width: 360,
-                    ...componentShadow,
-                  },
-                }}
+                dropdownRender={(menu) => (
+                  <div style={{ width: 360, ...componentShadow }}>{menu}</div>
+                )}
               >
                 <Badge count={5} size="small">
                   <Button
@@ -184,9 +175,9 @@ const AppLayout = ({ children }) => {
 
           <Content
             style={{
+              backgroundColor: elevatedBg,
               margin: "8px",
               marginTop: 0,
-              // NOTE: 3. ĐÃ XÓA backgroundColor
               borderRadius: "8px",
               padding: "16px",
               ...componentShadow,
@@ -199,7 +190,7 @@ const AppLayout = ({ children }) => {
             style={{
               textAlign: "start",
               padding: 0,
-              // NOTE: 3. ĐÃ XÓA backgroundColor
+              backgroundColor: elevatedBg,
             }}
           >
             <Foot />

@@ -1,16 +1,16 @@
 import React from "react";
 import { Flex } from "antd";
 import Logo from "../../assets/icon.svg";
-// NOTE: 1. Import "bộ não" useTheme
 import { useTheme } from "../../context/ThemeContext.jsx";
 
-const Index = ({ collapsed }) => {
-  // NOTE: 2. Lấy themeMode (light hoặc dark)
+const LogoIndex = ({ collapsed }) => { 
   const { themeMode } = useTheme();
 
-  // NOTE: 3. Quyết định màu chữ
-  // Nếu là Tối -> chữ Trắng, nếu là Sáng -> chữ Đen
-  const logoTextColor = themeMode === "dark" ? "#FFFFFF" : "#111827";
+  // FIX: Sử dụng biến CSS để đồng bộ màu chữ chính xác với theme.
+  const logoColorStyle = { 
+      color: 'var(--color-text-primary)', 
+      whiteSpace: "nowrap" 
+   };
 
   return (
     <React.Fragment>
@@ -24,7 +24,7 @@ const Index = ({ collapsed }) => {
         {!collapsed && (
           <p
             className="fs-1 fw-bold m-0"
-            style={{ color: logoTextColor, whiteSpace: "nowrap" }}
+            style={logoColorStyle}
           >
             M&M
           </p>
@@ -34,4 +34,4 @@ const Index = ({ collapsed }) => {
   );
 };
 
-export default Index;
+export default LogoIndex;

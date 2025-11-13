@@ -22,7 +22,8 @@
   margin-bottom: 16px;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f0f0f0;
+  /* FIX: Dùng biến màu nền nổi làm viền mặc định */
+  border: 1px solid var(--color-bg-elevated) !important; 
 }
 
 .filter-card .ant-card-body {
@@ -33,13 +34,15 @@
   margin-bottom: 12px !important;
   display: flex;
   align-items: center;
-  color: #262626;
+  /* FIX MÀU CHỮ: Bỏ hardcode và buộc kế thừa */
+  color: inherit !important; 
 }
 
 .filter-label {
   font-size: 13px;
   font-weight: 500;
-  color: #595959;
+  /* FIX MÀU CHỮ: Bỏ hardcode và buộc kế thừa */
+  color: inherit !important; 
 }
 
 .filter-input {
@@ -55,9 +58,11 @@
   box-shadow: 0 2px 8px rgba(250, 173, 20, 0.3);
 }
 
+/* FIX: Premium Filter đã được thay bằng premium-static-box/premium-sidebar-box trong JSX */
+/* Nên các style dưới đây sẽ không còn cần thiết nếu bạn đã dùng class mới trong JSX */
 .premium-filter {
-  background: linear-gradient(135deg, #fffbf0 0%, #ffffff 100%);
-  border: 1px solid #ffd591;
+  /* XÓA: BỎ style nền hardcode cũ */
+  border: 0;
 }
 
 .premium-notice {
@@ -73,7 +78,7 @@
   }
 }
 
-/* Responsive */
+/* Responsive (Giữ nguyên) */
 @media (max-width: 991px) {
   .search-filter-sidebar {
     position: relative;
@@ -96,4 +101,3 @@
     font-size: 14px !important;
   }
 }
-

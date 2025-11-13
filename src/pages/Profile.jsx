@@ -7,7 +7,7 @@ import ProfileTabs from "../components/User/ProfileTabs";
 import RecipeCard from "../components/User/RecipeCard";
 
 import { getProfile } from "../apis/user"; // API helper
-
+import { useTheme } from "../context/ThemeContext";
 import "./style/Profile.css";
 
 const Profile = () => {
@@ -15,6 +15,7 @@ const Profile = () => {
   const [search, setSearch] = useState("");
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { themeMode } = useTheme();
 
   // 1️⃣ Fetch profile từ backend khi mount
   useEffect(() => {
@@ -58,7 +59,13 @@ const Profile = () => {
       <AppLayout>
         <div
           className="profile-page-container"
-          style={{ textAlign: "center", padding: 100 }}
+          style={{ 
+            textAlign: "center", 
+            padding: 100,
+            // BỔ SUNG: Đảm bảo nền loading đổi màu
+            backgroundColor: 'var(--color-bg-body)',
+            color: 'var(--color-text-primary)',
+          }}
         >
           <Spin size="large" />
         </div>
@@ -68,7 +75,14 @@ const Profile = () => {
 
   return (
     <AppLayout>
-      <div className="profile-page-container">
+      <div 
+        className="profile-page-container"
+        // BỔ SUNG: Áp dụng màu nền/chữ cho container chính của trang Profile
+        style={{ 
+          backgroundColor: 'var(--color-bg-body)',
+          color: 'var(--color-text-primary)',
+        }} 
+      >
         {/* ProfileHeader luôn nhận user (fallback {}) */}
         <ProfileHeader user={profileData?.user || {}} />
 

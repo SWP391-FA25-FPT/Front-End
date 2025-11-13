@@ -18,6 +18,8 @@ import TakeSurvey from "./pages/TakeSurvey";
 import ProfilePage from "./pages/ProfilePage";
 import SupportPage from "./pages/SupportPage"; // Trang support chính
 import SettingsPage from "./pages/SettingsPage";
+import PinAndRecoveryPage from './pages/PinAndRecoveryPage';
+import ChangePasswordPage from './pages/ChangePasswordPage';
 
 import GettingStarted from "./pages/support/GettingStarted";
 import NutritionTracking from "./pages/support/NutritionTracking";
@@ -239,6 +241,22 @@ function App() {
             element={
               <SurveyCheckRoute>
                 <SettingsPage />
+              </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/settings/security/pin-recovery"
+            element={
+              <SurveyCheckRoute>
+                <PinAndRecoveryPage />
+              </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/settings/security/change-password"
+            element={
+              <SurveyCheckRoute>
+                <ChangePasswordPage />
               </SurveyCheckRoute>
             }
           />

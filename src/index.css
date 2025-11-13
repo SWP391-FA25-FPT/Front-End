@@ -4,24 +4,24 @@
 /* --- 1. FIX LỖI NỀN TỔNG THỂ (GLOBAL BODY STYLES) --- */
 
 /* Đảm bảo chiều cao và reset margin/padding */
-html, 
-body, 
+html,
+body,
 #root {
     height: 100%;
     margin: 0;
     padding: 0;
     /* Áp dụng font family lên html */
     font-family: "Raleway", sans-serif;
-    transition: background-color 0.3s ease; 
+    transition: background-color 0.3s ease;
 }
 
 body {
-    /* FIX CẦN THIẾT: Áp dụng biến màu nền body bằng !important để chống xung đột */
-    background-color: var(--color-bg-body, #f0f2f5) !important; 
-    
+    /* FIX: Màu nền Body Light Mode là #f7f9fc (xám nhạt dịu mắt) */
+    background-color: var(--color-bg-body, #f7f9fc) !important;
+   
     /* Áp dụng màu chữ chính cho toàn bộ body */
     color: var(--color-text-primary, #1f1f1f);
-    
+   
     transition: background-color 0.3s ease;
 }
 
@@ -50,7 +50,8 @@ a {
 }
 
 .gradient-text {
-  background: linear-gradient(to right, #f97316, #ea580c);
+  /* SỬA ĐỔI: Dùng biến color-primary cho gradient text (đảm bảo đổi màu accent) */
+  background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
