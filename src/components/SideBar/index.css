@@ -60,6 +60,47 @@
    margin-right: 5px;
 }
 
+/* Sub-menu item icons */
+.ant-menu-submenu .ant-menu-item-icon,
+.ant-menu-submenu-inline .ant-menu-item .ant-menu-item-icon,
+.ant-menu-submenu .ant-menu-item .ant-menu-item-icon {
+   display: inline-flex !important;
+   align-items: center;
+   justify-content: center;
+   margin-right: 8px;
+   width: 20px !important;
+   height: 20px !important;
+   flex-shrink: 0;
+}
+
+.ant-menu-submenu .ant-menu-item,
+.ant-menu-submenu-inline .ant-menu-item {
+   display: flex !important;
+   align-items: center;
+}
+
+/* Ensure iconify icons in submenu items are visible */
+.ant-menu-submenu .ant-menu-item label span svg,
+.ant-menu-submenu-inline .ant-menu-item label span svg,
+.ant-menu-submenu .ant-menu-item label span span svg,
+.admin-submenu-item svg {
+   display: inline-block !important;
+   width: 20px !important;
+   height: 20px !important;
+   flex-shrink: 0;
+   visibility: visible !important;
+   opacity: 1 !important;
+}
+
+/* Ensure the flex container in label works */
+.ant-menu-submenu .ant-menu-item label span,
+.ant-menu-submenu-inline .ant-menu-item label span,
+.admin-submenu-item {
+   display: flex !important;
+   align-items: center !important;
+   gap: 8px !important;
+}
+
 /* Menu text wrapping for expanded sidebar */
 .ant-menu-inline:not(.ant-menu-inline-collapsed) .ant-menu-item {
    white-space: normal;
