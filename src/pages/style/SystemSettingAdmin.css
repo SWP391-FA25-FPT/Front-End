@@ -48,14 +48,15 @@
 }
 .settings-sidebar li:hover {
   background: #f3f4f6;
-  color: #6366f1;
+  color: #F5C542;
 }
 .settings-sidebar li.active {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #F5C542, #e2b63b);
   color: white;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 4px 12px rgba(245, 197, 66, 0.28);
 }
+
 
 /* =============================
   FORM CONTENT
@@ -169,11 +170,21 @@
   padding-top: 24px;
 }
 .settings-footer .ant-btn-primary {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.28);
+  background: linear-gradient(135deg, #F5C542, #e2b63b) !important;
+  box-shadow: 0 4px 12px rgba(245, 197, 66, 0.35);
   font-size: 16px;
   border-radius: 10px;
   padding: 10px 36px;
+  color: white !important;
+}
+.settings-footer .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #e2b63b, #d4a832) !important;
+  box-shadow: 0 6px 16px rgba(245, 197, 66, 0.45);
+}
+
+.settings-footer .ant-btn-primary:active {
+  background: linear-gradient(135deg, #d4a832, #c89a2c) !important;
+  box-shadow: 0 3px 10px rgba(245, 197, 66, 0.3);
 }
 
 /* Fade animation */

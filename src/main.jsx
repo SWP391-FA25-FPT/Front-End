@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>

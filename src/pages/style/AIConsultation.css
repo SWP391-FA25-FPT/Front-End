@@ -536,3 +536,7 @@
     background: var(--color-bg-elevated);
   }
 }
+.tips-card .ant-card-head {
+  background: #F5A623 !important; 
+  color: white !important;
+}
