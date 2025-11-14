@@ -12,6 +12,7 @@ import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
 
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
+import AdminLogin from "./pages/AdminLogin";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import TakeSurvey from "./pages/TakeSurvey";
@@ -54,7 +55,8 @@ import NotificationPage from "./pages/NotificationPage";
 import PaymentModule from "./components/admin/PaymentModule";
 import FeedbackModule from "./components/admin/FeedbackModule";
 import ReportModule from "./components/admin/ReportModule";
-import ContentModerationModule from "./components/admin/ContentModerationModule";
+import RecipeModerationModule from "./components/admin/RecipeModerationModule";
+import BlogModerationModule from "./components/admin/BlogModerationModule";
 import UserManagementModule from "./components/admin/UserManagementModule";
 //import AIControlModule from "./components/admin/AIControlModule";
 import StatisticsModule from "./components/admin/StatisticsModule";
@@ -69,6 +71,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/" element={<HomePage />} />
@@ -139,7 +142,9 @@ function App() {
           >
             <Route index element={<DashboardModule />} />
             <Route path="dashboard" element={<DashboardModule />} />
-            <Route path="content-moderation" element={<ContentModerationModule />} />
+            <Route path="content-moderation" element={<RecipeModerationModule />} />
+            <Route path="content-moderation/recipes" element={<RecipeModerationModule />} />
+            <Route path="content-moderation/blogs" element={<BlogModerationModule />} />
             <Route path="payment" element={<PaymentModule />} />
             <Route path="statistics" element={<StatisticsModule />} />
             <Route path="report" element={<ReportModule />} />
