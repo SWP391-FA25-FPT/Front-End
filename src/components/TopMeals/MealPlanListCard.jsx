@@ -22,6 +22,25 @@ const MealPlanListCard = ({ mealPlan, rank }) => {
 
   const badge = getRankBadge(rank);
 
+  // Format date safely
+  const formatDate = (date) => {
+    if (!date) return "";
+    if (typeof date === "string") return date;
+    if (date.$date) {
+      return new Date(date.$date).toLocaleDateString("vi-VN");
+    }
+    if (date instanceof Date) {
+      return date.toLocaleDateString("vi-VN");
+    }
+    return String(date);
+  };
+
+  // Safe number formatting
+  const safeNumber = (value, defaultValue = 0) => {
+    if (value === null || value === undefined) return defaultValue;
+    return Number(value) || defaultValue;
+  };
+
   return (
     <Card className="meal-plan-list-card" hoverable>
       <div className="list-card-content">
@@ -79,7 +98,7 @@ const MealPlanListCard = ({ mealPlan, rank }) => {
                       icon="mdi:eye"
                       style={{ fontSize: "18px", color: "#1890ff" }}
                     />
-                    <span>{mealPlan.views.toLocaleString()}</span>
+                    <span>{safeNumber(mealPlan.views).toLocaleString()}</span>
                   </div>
                 </Tooltip>
                 <Tooltip title="Lượt thích">
@@ -88,7 +107,7 @@ const MealPlanListCard = ({ mealPlan, rank }) => {
                       icon="mdi:heart"
                       style={{ fontSize: "18px", color: "#ff4d4f" }}
                     />
-                    <span>{mealPlan.likes.toLocaleString()}</span>
+                    <span>{safeNumber(mealPlan.likes).toLocaleString()}</span>
                   </div>
                 </Tooltip>
                 <Tooltip title="Đánh giá">
@@ -97,59 +116,77 @@ const MealPlanListCard = ({ mealPlan, rank }) => {
                       icon="mdi:star"
                       style={{ fontSize: "18px", color: "#faad14" }}
                     />
-                    <span>{mealPlan.rating.toFixed(1)}</span>
+                    <span>{safeNumber(mealPlan.rating).toFixed(1)}</span>
                   </div>
                 </Tooltip>
               </Space>
             </div>
 
-            <div className="list-card-nutrition-section">
-              <div className="list-nutrition-item">
-                <Icon
-                  icon="mdi:fire"
-                  style={{ fontSize: "16px", color: "#ff7a45" }}
-                />
-                <span>{mealPlan.nutrition.calories} kcal</span>
+            {mealPlan.nutrition && (
+              <div className="list-card-nutrition-section">
+                {mealPlan.nutrition.calories && (
+                  <div className="list-nutrition-item">
+                    <Icon
+                      icon="mdi:fire"
+                      style={{ fontSize: "16px", color: "#ff7a45" }}
+                    />
+                    <span>{safeNumber(mealPlan.nutrition.calories)} kcal</span>
+                  </div>
+                )}
+                {mealPlan.nutrition.protein && (
+                  <div className="list-nutrition-item">
+                    <Icon
+                      icon="mdi:food-drumstick"
+                      style={{ fontSize: "16px", color: "#eb2f96" }}
+                    />
+                    <span>
+                      {safeNumber(mealPlan.nutrition.protein)}g protein
+                    </span>
+                  </div>
+                )}
+                {mealPlan.nutrition.carbs && (
+                  <div className="list-nutrition-item">
+                    <Icon
+                      icon="mdi:bread-slice"
+                      style={{ fontSize: "16px", color: "#faad14" }}
+                    />
+                    <span>{safeNumber(mealPlan.nutrition.carbs)}g carbs</span>
+                  </div>
+                )}
+                {mealPlan.nutrition.fat && (
+                  <div className="list-nutrition-item">
+                    <Icon
+                      icon="mdi:butter"
+                      style={{ fontSize: "16px", color: "#fadb14" }}
+                    />
+                    <span>{safeNumber(mealPlan.nutrition.fat)}g fat</span>
+                  </div>
+                )}
               </div>
-              <div className="list-nutrition-item">
-                <Icon
-                  icon="mdi:food-drumstick"
-                  style={{ fontSize: "16px", color: "#eb2f96" }}
-                />
-                <span>{mealPlan.nutrition.protein}g protein</span>
-              </div>
-              <div className="list-nutrition-item">
-                <Icon
-                  icon="mdi:bread-slice"
-                  style={{ fontSize: "16px", color: "#faad14" }}
-                />
-                <span>{mealPlan.nutrition.carbs}g carbs</span>
-              </div>
-              <div className="list-nutrition-item">
-                <Icon
-                  icon="mdi:butter"
-                  style={{ fontSize: "16px", color: "#fadb14" }}
-                />
-                <span>{mealPlan.nutrition.fat}g fat</span>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Tags and Author */}
           <div className="list-card-footer">
-            <div className="list-card-tags">
-              {mealPlan.tags.map((tag, index) => (
-                <Tag key={index} color="blue">
-                  {tag}
-                </Tag>
-              ))}
-            </div>
+            {mealPlan.tags && mealPlan.tags.length > 0 && (
+              <div className="list-card-tags">
+                {mealPlan.tags.map((tag, index) => (
+                  <Tag key={index} color="blue">
+                    {tag}
+                  </Tag>
+                ))}
+              </div>
+            )}
 
             <div className="list-card-author">
               <Avatar src={mealPlan.author?.avatar || guest} size={28} />
               <div className="list-author-info">
-                <span className="list-author-name">{mealPlan.author.name}</span>
-                <span className="list-author-date">{mealPlan.createdAt}</span>
+                <span className="list-author-name">
+                  {mealPlan.author?.name || "Unknown"}
+                </span>
+                <span className="list-author-date">
+                  {formatDate(mealPlan.createdAt)}
+                </span>
               </div>
             </div>
           </div>

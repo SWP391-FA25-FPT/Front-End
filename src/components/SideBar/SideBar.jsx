@@ -125,7 +125,7 @@ if (path.startsWith("/admin")) {
         {
           key: "2-5",
           icon: <Icon icon="mdi:crown-outline" width="24" height="24" />,
-          label: <a href="/top-meal-plans"> Top Thực Đơn Xem Nhiều Nhất</a>,
+          label: <a href="/recipes/top"> Top Thực Đơn Xem Nhiều Nhất</a>,
         },
       ],
     },

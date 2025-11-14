@@ -534,3 +534,50 @@ export const checkRecipeSaved = async (recipeId) => {
   }
 };
 
+// Get top recipes with filters
+export const getTopRecipes = async (params = {}) => {
+  try {
+    const queryParams = new URLSearchParams();
+    
+    if (params.category) queryParams.append('category', params.category);
+    if (params.timeRange) queryParams.append('timeRange', params.timeRange);
+    if (params.sortBy) queryParams.append('sortBy', params.sortBy);
+    if (params.includeIngredients) {
+      const ingredients = Array.isArray(params.includeIngredients)
+        ? params.includeIngredients.join(',')
+        : params.includeIngredients;
+      queryParams.append('includeIngredients', ingredients);
+    }
+    if (params.excludeIngredients) {
+      const ingredients = Array.isArray(params.excludeIngredients)
+        ? params.excludeIngredients.join(',')
+        : params.excludeIngredients;
+      queryParams.append('excludeIngredients', ingredients);
+    }
+    if (params.minTrustScore) queryParams.append('minTrustScore', params.minTrustScore);
+    if (params.hasStepImages) queryParams.append('hasStepImages', params.hasStepImages);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+
+    const url = `${baseUrl}/api/recipes/top${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi lấy top recipes");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Get top recipes error:", error);
+    throw error;
+  }
+};
+

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import { Tabs, Spin, Empty, Typography, message, ConfigProvider } from "antd";
@@ -32,6 +32,12 @@ const SearchingPage = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("newest");
   const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState({
+    includeIngredients: [],
+    excludeIngredients: [],
+    minTrustScore: null,
+    hasStepImages: false
+  });
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 20,
@@ -44,14 +50,33 @@ const SearchingPage = () => {
   const hoverColor = getCSSVariable('--primary-hover-color') || '#000';
   const activeColor = getCSSVariable('--primary-hover-color') || '#000';
 
-  const performSearch = useCallback(async (keyword) => {
+  // Perform search function
+  const performSearch = async (keyword, currentFilters, currentTab) => {
+    if (!keyword) return;
+    
     try {
       setLoading(true);
-      const response = await searchRecipes(keyword, {
+      const searchParams = {
         page: 1,
         limit: 20,
-        sortBy: activeTab === "popular" ? "views" : "createdAt"
-      });
+        sortBy: currentTab === "popular" ? "views" : "createdAt"
+      };
+
+      // Add filter params
+      if (currentFilters.includeIngredients && currentFilters.includeIngredients.length > 0) {
+        searchParams.includeIngredients = currentFilters.includeIngredients;
+      }
+      if (currentFilters.excludeIngredients && currentFilters.excludeIngredients.length > 0) {
+        searchParams.excludeIngredients = currentFilters.excludeIngredients;
+      }
+      if (currentFilters.minTrustScore) {
+        searchParams.minTrustScore = currentFilters.minTrustScore;
+      }
+      if (currentFilters.hasStepImages) {
+        searchParams.hasStepImages = currentFilters.hasStepImages;
+      }
+
+      const response = await searchRecipes(keyword, searchParams);
 
       if (response.success) {
         setRecipes(response.data || []);
@@ -66,26 +91,30 @@ const SearchingPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [activeTab]);
+  };
 
   // Get keyword from URL params
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const keyword = params.get("q");
     setSearchQuery(keyword || "");
-    
-    if (keyword) {
-      performSearch(keyword);
+  }, [location.search]);
+
+  // Perform search when searchQuery, filters, or activeTab change
+  useEffect(() => {
+    if (searchQuery) {
+      performSearch(searchQuery, filters, activeTab);
     }
-  }, [location.search, performSearch]);
+  }, [searchQuery, filters, activeTab]);
 
   // Handle tab change (Mới nhất / Phổ biến)
   const handleTabChange = (key) => {
     setActiveTab(key);
-    // Re-fetch with new sort order
-    if (searchQuery) {
-      performSearch(searchQuery);
-    }
+  };
+
+  // Handle filter change from SearchFilter
+  const handleFilterChange = (newFilters) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
   };
 
   // Sort recipes based on active tab (frontend sorting)
@@ -250,7 +279,13 @@ const SearchingPage = () => {
 
               {/* Filter Sidebar - Right Side */}
               <div className="search-filter-wrapper">
-                <SearchFilter />
+                <SearchFilter 
+                  onFilterChange={handleFilterChange}
+                  includeIngredients={filters.includeIngredients}
+                  excludeIngredients={filters.excludeIngredients}
+                  minTrustScore={filters.minTrustScore}
+                  hasStepImages={filters.hasStepImages}
+                />
               </div>
             </div>
           </>
