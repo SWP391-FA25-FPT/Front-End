@@ -41,12 +41,13 @@ const DetailHeader = ({ participants, dishes, timeLeft, duration, status }) => {
       icon: "mdi:account-group",
       color: "#1890ff",
     },
-    {
+    // Only show "Món đã đăng" if dishes is provided (admin only)
+    ...(dishes !== undefined ? [{
       title: "Món đã đăng",
       value: dishes,
       icon: "mdi:food",
       color: "#52c41a",
-    },
+    }] : []),
     {
       title: "Thời gian còn lại",
       value: timeLeft,

@@ -35,6 +35,7 @@ import ChallengeDetail from "./pages/ChallengeDetail";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import BlogCreate from "./pages/BlogCreate";
+import MyBlogs from "./pages/MyBlogs";
 import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
@@ -52,6 +53,7 @@ import PublishedRecipes from "./pages/PublishedRecipes";
 import SavedRecipes from "./pages/SavedRecipes";
 import Subscription from "./pages/Subscription";
 import NotificationPage from "./pages/NotificationPage";
+import FeedbackPage from "./pages/FeedbackPage";
 import PaymentModule from "./components/admin/PaymentModule";
 import FeedbackModule from "./components/admin/FeedbackModule";
 import ReportModule from "./components/admin/ReportModule";
@@ -62,6 +64,8 @@ import UserManagementModule from "./components/admin/UserManagementModule";
 import StatisticsModule from "./components/admin/StatisticsModule";
 import DashboardModule from "./components/admin/DashboardModule";
 import SystemSettingsModule from "./components/admin/SystemSettingsModule";
+import ChallengeManagementModule from "./components/admin/ChallengeManagementModule";
+import AdminChallengeDetail from "./components/admin/AdminChallengeDetail";
 import AdminLayout from "./components/admin/AdminLayout";
 
 
@@ -133,6 +137,14 @@ function App() {
             }
           />
           <Route
+            path="/my-blogs"
+            element={
+              <ProtectedRoute>
+                <MyBlogs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin"
             element={
               <AdminProtectedRoute>
@@ -150,6 +162,8 @@ function App() {
             <Route path="report" element={<ReportModule />} />
             <Route path="feedback" element={<FeedbackModule />} />
             <Route path="users" element={<UserManagementModule />} />
+            <Route path="challenges" element={<ChallengeManagementModule />} />
+            <Route path="challenges/:id" element={<AdminChallengeDetail />} />
             <Route path="system-settings" element={<SystemSettingsModule />} />
           </Route>
 
@@ -272,6 +286,14 @@ function App() {
               <SurveyCheckRoute>
                 <NotificationPage />
               </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/feedback"
+            element={
+              <ProtectedRoute>
+                <FeedbackPage />
+              </ProtectedRoute>
             }
           />
           <Route

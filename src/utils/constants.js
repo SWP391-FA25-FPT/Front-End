@@ -1,5 +1,5 @@
-// export const baseUrl = "http://localhost:7860";
-export const baseUrl = "https://toan215-Meta-Meal.hf.space";
+export const baseUrl = "http://localhost:7860";
+// export const baseUrl = "https://toan215-Meta-Meal.hf.space";
 
 export const apiUrls = {
   // Auth endpoints
@@ -80,4 +80,15 @@ export const apiUrls = {
   notifications: "/api/notifications",
   notificationsMarkAll: "/api/notifications/read-all",
   notificationsAdmin: "/api/notifications/admin",
+
+  // Challenge endpoints
+  getAllChallenges: "/api/challenges",
+  getChallengeById: "/api/challenges",
+  createChallenge: "/api/challenges",
+  updateChallenge: "/api/challenges",
+  deleteChallenge: "/api/challenges",
+  joinChallenge: "/api/challenges",
+  submitEntry: "/api/challenges",
+  getChallengeStats: "/api/challenges/stats",
+  likeEntry: "/api/challenges",
 };
