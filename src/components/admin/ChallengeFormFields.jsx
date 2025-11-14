@@ -155,10 +155,18 @@ export default function ChallengeFormFields({
             </label>
             <input
               type="date"
-              className={`form-control ${errors.startDate ? "is-invalid" : ""}`}
+              className={`form-control mb-2 ${errors.startDate ? "is-invalid" : ""}`}
               value={formData.startDate}
               onChange={(e) =>
                 setFormData({ ...formData, startDate: e.target.value })
+              }
+            />
+            <input
+              type="time"
+              className={`form-control ${errors.startDate ? "is-invalid" : ""}`}
+              value={formData.startTime}
+              onChange={(e) =>
+                setFormData({ ...formData, startTime: e.target.value })
               }
             />
             {errors.startDate && (
@@ -171,10 +179,18 @@ export default function ChallengeFormFields({
             </label>
             <input
               type="date"
-              className={`form-control ${errors.endDate ? "is-invalid" : ""}`}
+              className={`form-control mb-2 ${errors.endDate ? "is-invalid" : ""}`}
               value={formData.endDate}
               onChange={(e) =>
                 setFormData({ ...formData, endDate: e.target.value })
+              }
+            />
+            <input
+              type="time"
+              className={`form-control ${errors.endDate ? "is-invalid" : ""}`}
+              value={formData.endTime}
+              onChange={(e) =>
+                setFormData({ ...formData, endTime: e.target.value })
               }
             />
             {errors.endDate && (

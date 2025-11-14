@@ -10,7 +10,9 @@ export default function ChallengeFormModal({ challenge, onClose, onSuccess }) {
     description: "",
     category: "",
     startDate: "",
+    startTime: "",
     endDate: "",
+    endTime: "",
     hostName: "",
     hostAvatar: "",
     prizes: [],
@@ -34,12 +36,23 @@ export default function ChallengeFormModal({ challenge, onClose, onSuccess }) {
         return `${year}-${month}-${day}`;
       };
 
+      // Format time for input
+      const formatTimeForInput = (dateString) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        return `${hours}:${minutes}`;
+      };
+
       setFormData({
         title: challenge.title || "",
         description: challenge.description || "",
         category: challenge.category || "",
         startDate: formatDateForInput(challenge.startDate),
+        startTime: formatTimeForInput(challenge.startDate),
         endDate: formatDateForInput(challenge.endDate),
+        endTime: formatTimeForInput(challenge.endDate),
         hostName: challenge.host?.name || "",
         hostAvatar: challenge.host?.avatar || "",
         prizes: challenge.prizes || [],
@@ -75,10 +88,18 @@ export default function ChallengeFormModal({ challenge, onClose, onSuccess }) {
     }
 
     if (formData.startDate && formData.endDate) {
-      const start = new Date(formData.startDate);
-      const end = new Date(formData.endDate);
+      // Combine date and time for comparison
+      const startDateTime = formData.startTime 
+        ? `${formData.startDate}T${formData.startTime}:00`
+        : `${formData.startDate}T00:00:00`;
+      const endDateTime = formData.endTime 
+        ? `${formData.endDate}T${formData.endTime}:00`
+        : `${formData.endDate}T23:59:59`;
+      
+      const start = new Date(startDateTime);
+      const end = new Date(endDateTime);
       if (start >= end) {
-        newErrors.endDate = "Ngày kết thúc phải sau ngày bắt đầu";
+        newErrors.endDate = "Thời gian kết thúc phải sau thời gian bắt đầu";
       }
     }
 
@@ -101,8 +122,18 @@ export default function ChallengeFormModal({ challenge, onClose, onSuccess }) {
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
       formDataToSend.append("category", formData.category);
-      formDataToSend.append("startDate", formData.startDate);
-      formDataToSend.append("endDate", formData.endDate);
+      
+      // Combine date and time for startDate
+      const startDateTime = formData.startTime 
+        ? `${formData.startDate}T${formData.startTime}:00`
+        : `${formData.startDate}T00:00:00`;
+      formDataToSend.append("startDate", startDateTime);
+      
+      // Combine date and time for endDate
+      const endDateTime = formData.endTime 
+        ? `${formData.endDate}T${formData.endTime}:00`
+        : `${formData.endDate}T23:59:59`;
+      formDataToSend.append("endDate", endDateTime);
       formDataToSend.append("hostName", formData.hostName);
       formDataToSend.append("hostAvatar", formData.hostAvatar);
       formDataToSend.append("prizes", JSON.stringify(formData.prizes));

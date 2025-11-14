@@ -9,6 +9,8 @@ import DetailInfo from "../components/Challenge/DetailInfo";
 import DetailPrizes from "../components/Challenge/DetailPrizes";
 import DetailActions from "../components/Challenge/DetailActions";
 import DetailEntries from "../components/Challenge/DetailEntries";
+import SubmitEntryModal from "../components/Challenge/SubmitEntryModal";
+import WinnerPrize from "../components/Challenge/WinnerPrize";
 import { getChallengeById, joinChallenge } from "../apis/challenge";
 import { useAuth } from "../context/useAuth";
 import "./style/ChallengeDetail.css";
@@ -23,6 +25,7 @@ const ChallengeDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isJoining, setIsJoining] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   // Fetch challenge data
   useEffect(() => {
@@ -84,11 +87,44 @@ const ChallengeDetail = () => {
   const handleSubmit = () => {
     if (!challenge) return;
     
-    // Check if user has joined
-    // TODO: Check if user is in participants list
-    // For now, navigate to recipe selection or submission page
-    message.info("Chức năng nộp bài đang được phát triển");
-    // navigate(`/challenge/${id}/submit`);
+    // Check if user is logged in
+    if (!isLoggedIn) {
+      message.warning("Vui lòng đăng nhập để nộp bài");
+      navigate("/login", { state: { from: `/challenge/${id}` } });
+      return;
+    }
+
+    // Check if user has joined the challenge
+    const userId = user?._id?.toString();
+    const isParticipant = challenge.participants?.some(
+      (p) => (typeof p === 'object' ? p._id?.toString() : p.toString()) === userId
+    );
+
+    if (!isParticipant) {
+      message.warning("Bạn cần tham gia thử thách trước khi nộp bài");
+      return;
+    }
+
+    // Check if challenge is ongoing
+    if (challenge.status !== "ongoing") {
+      message.warning("Chỉ có thể nộp bài khi thử thách đang diễn ra");
+      return;
+    }
+
+    // Open submit modal
+    setShowSubmitModal(true);
+  };
+
+  const handleSubmitSuccess = async () => {
+    // Refresh challenge data
+    try {
+      const response = await getChallengeById(id);
+      if (response.success) {
+        setChallenge(response.data);
+      }
+    } catch (err) {
+      console.error("Error refreshing challenge:", err);
+    }
   };
 
   const handleShare = () => {
@@ -198,6 +234,9 @@ const ChallengeDetail = () => {
           {/* Main Content */}
           <div className="challenge-detail-content">
             <div className="challenge-detail-main">
+              {/* Winner Prize Section - Show if user won */}
+              {!isAdmin && <WinnerPrize challenge={challenge} user={user} />}
+
               {/* Info Section */}
               <DetailInfo
                 description={challenge.description}
@@ -226,6 +265,14 @@ const ChallengeDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Submit Entry Modal */}
+      <SubmitEntryModal
+        challengeId={id}
+        visible={showSubmitModal}
+        onClose={() => setShowSubmitModal(false)}
+        onSuccess={handleSubmitSuccess}
+      />
     </AppLayout>
   );
 };

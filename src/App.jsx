@@ -53,6 +53,7 @@ import PublishedRecipes from "./pages/PublishedRecipes";
 import SavedRecipes from "./pages/SavedRecipes";
 import Subscription from "./pages/Subscription";
 import NotificationPage from "./pages/NotificationPage";
+import FeedbackPage from "./pages/FeedbackPage";
 import PaymentModule from "./components/admin/PaymentModule";
 import FeedbackModule from "./components/admin/FeedbackModule";
 import ReportModule from "./components/admin/ReportModule";
@@ -285,6 +286,14 @@ function App() {
               <SurveyCheckRoute>
                 <NotificationPage />
               </SurveyCheckRoute>
+            }
+          />
+          <Route
+            path="/feedback"
+            element={
+              <ProtectedRoute>
+                <FeedbackPage />
+              </ProtectedRoute>
             }
           />
           <Route

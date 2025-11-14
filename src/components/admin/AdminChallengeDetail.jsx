@@ -3,10 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button, Spin, message, Card, Row, Col, Space, Popconfirm } from "antd";
 import { 
   getChallengeById, 
-  deleteChallenge
+  deleteChallenge,
+  awardPrize
 } from "../../apis/challenge";
-import { Edit, Trash2, ArrowLeft, Users, FileText, Calendar, Award } from "lucide-react";
+import { Edit, Trash2, ArrowLeft, Users, FileText, Calendar, Award, Eye, ExternalLink } from "lucide-react";
 import ChallengeFormModal from "./ChallengeFormModal";
+import EntryDetailModal from "./EntryDetailModal";
 import "../../pages/style/AdminChallengeDetail.css";
 
 const AdminChallengeDetail = () => {
@@ -18,6 +20,9 @@ const AdminChallengeDetail = () => {
   const [showFormModal, setShowFormModal] = useState(false);
   const [editingChallenge, setEditingChallenge] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [awarding, setAwarding] = useState(false);
+  const [showEntryDetail, setShowEntryDetail] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState(null);
 
   useEffect(() => {
     const fetchChallenge = async () => {
@@ -80,6 +85,43 @@ const AdminChallengeDetail = () => {
       }
     };
     fetchChallenge();
+  };
+
+  const handleAwardPrize = async (entryId) => {
+    try {
+      setAwarding(true);
+      const response = await awardPrize(id, entryId);
+      if (response.success) {
+        message.success("Trao giải thành công!");
+        // Refresh challenge data
+        const updatedResponse = await getChallengeById(id);
+        if (updatedResponse.success) {
+          setChallenge(updatedResponse.data);
+        }
+      }
+    } catch (err) {
+      console.error("Error awarding prize:", err);
+      message.error(err.message || "Lỗi khi trao giải");
+    } finally {
+      setAwarding(false);
+    }
+  };
+
+  // Calculate interaction score: (views + rating) / 2
+  const calculateInteractionScore = (entry) => {
+    const views = entry.views || 0;
+    const rating = entry.rating || 0;
+    return (views + rating) / 2;
+  };
+
+  // Sort entries by interaction score (highest first)
+  const sortedEntries = challenge && challenge.entries
+    ? [...challenge.entries].sort((a, b) => calculateInteractionScore(b) - calculateInteractionScore(a))
+    : [];
+
+  const handleViewEntryDetail = (entry) => {
+    setSelectedEntry(entry);
+    setShowEntryDetail(true);
   };
 
   const formatDate = (dateString) => {
@@ -329,38 +371,206 @@ const AdminChallengeDetail = () => {
         )}
 
         {/* Entries */}
-        {challenge.entries && challenge.entries.length > 0 && (
-          <Card title={`Bài nộp (${challenge.entries.length})`} className="mb-4">
+        <Card 
+          title={`Bài nộp (${challenge.entries?.length || 0})`}
+          className="mb-4"
+        >
+          {challenge.entries && challenge.entries.length > 0 ? (
             <div className="table-responsive">
-              <table className="table table-striped">
-                <thead>
+              <table className="table table-striped table-hover align-middle">
+                <thead className="table-light">
                   <tr>
-                    <th>STT</th>
+                    <th style={{ width: "50px" }}>STT</th>
+                    <th style={{ width: "100px" }}>Hình ảnh</th>
+                    <th>Món ăn</th>
+                    <th>Cách nấu/Status</th>
                     <th>Người nộp</th>
-                    <th>Tiêu đề</th>
-                    <th>Likes</th>
+                    <th style={{ width: "80px" }}>Rating</th>
+                    <th style={{ width: "80px" }}>Views</th>
+                    <th style={{ width: "100px" }}>Điểm tương tác</th>
                     <th>Ngày nộp</th>
+                    <th style={{ width: "150px" }} className="text-end">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {challenge.entries.map((entry, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>
-                        {typeof entry.userId === 'object' 
-                          ? entry.userId?.name || entry.author 
-                          : entry.author}
-                      </td>
-                      <td>{entry.title || "N/A"}</td>
-                      <td>{entry.likes?.length || 0}</td>
-                      <td>{formatDate(entry.submittedAt)}</td>
-                    </tr>
-                  ))}
+                  {sortedEntries.map((entry, index) => {
+                    const authorName = typeof entry.userId === 'object' 
+                      ? entry.userId?.name || entry.author 
+                      : entry.author;
+                    const authorEmail = typeof entry.userId === 'object' 
+                      ? entry.userId?.email 
+                      : null;
+                    const authorAvatar = typeof entry.userId === 'object' 
+                      ? entry.userId?.avatar || entry.authorAvatar 
+                      : entry.authorAvatar;
+                    const recipeId = entry.recipeId?._id || entry.recipeId;
+                    
+                    return (
+                      <tr key={entry._id || index}>
+                        <td className="text-center">{index + 1}</td>
+                        <td>
+                          {entry.image ? (
+                            <img
+                              src={entry.image}
+                              alt={entry.title}
+                              className="rounded"
+                              style={{
+                                width: "60px",
+                                height: "60px",
+                                objectFit: "cover",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              className="rounded d-flex align-items-center justify-content-center bg-light"
+                              style={{
+                                width: "60px",
+                                height: "60px",
+                              }}
+                            >
+                              <FileText size={24} className="text-muted" />
+                            </div>
+                          )}
+                        </td>
+                        <td>
+                          <div>
+                            <strong>{entry.title || "N/A"}</strong>
+                            {entry.isPremium && (
+                              <span className="badge bg-warning ms-2">Premium</span>
+                            )}
+                            {challenge.winnerEntryId?.toString() === entry._id?.toString() && (
+                              <span className="badge bg-success ms-2">
+                                🏆 Đã thắng giải
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td>
+                          <div style={{ maxWidth: "200px" }}>
+                            {entry.content ? (
+                              <div 
+                                style={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  display: "-webkit-box",
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: "vertical",
+                                }}
+                                title={entry.content}
+                              >
+                                {entry.content}
+                              </div>
+                            ) : (
+                              <span className="text-muted">-</span>
+                            )}
+                          </div>
+                        </td>
+                        <td>
+                          <div className="d-flex align-items-center">
+                            {authorAvatar && (
+                              <img
+                                src={authorAvatar}
+                                alt={authorName}
+                                className="rounded-circle me-2"
+                                style={{
+                                  width: "32px",
+                                  height: "32px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            )}
+                            <div>
+                              <div className="fw-medium">{authorName}</div>
+                              {authorEmail && (
+                                <small className="text-muted d-block">{authorEmail}</small>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-center">
+                          <span className="badge bg-warning">
+                            {entry.rating || 0}
+                          </span>
+                        </td>
+                        <td className="text-center">
+                          <span className="badge bg-info">
+                            {entry.views || 0}
+                          </span>
+                        </td>
+                        <td className="text-center">
+                          <span className="badge bg-primary" style={{ fontSize: "0.9rem" }}>
+                            {calculateInteractionScore(entry).toFixed(2)}
+                          </span>
+                        </td>
+                        <td>{formatDate(entry.submittedAt)}</td>
+                        <td className="text-end">
+                          <Space>
+                            <Button
+                              type="default"
+                              size="small"
+                              icon={<Eye size={14} />}
+                              onClick={() => handleViewEntryDetail(entry)}
+                              title="Xem chi tiết"
+                            >
+                              Chi tiết
+                            </Button>
+                            {challenge.status === "ended" && (
+                              challenge.winnerEntryId?.toString() === entry._id?.toString() ? (
+                                <Button
+                                  type="primary"
+                                  size="small"
+                                  icon={<Award size={14} />}
+                                  disabled
+                                  style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
+                                >
+                                  🏆 Winner
+                                </Button>
+                              ) : (
+                                <Popconfirm
+                                  title="Xác nhận trao giải"
+                                  description={`Trao giải cho bài nộp này?`}
+                                  onConfirm={() => handleAwardPrize(entry._id)}
+                                  okText="Xác nhận"
+                                  cancelText="Hủy"
+                                >
+                                  <Button
+                                    type="primary"
+                                    size="small"
+                                    icon={<Award size={14} />}
+                                    loading={awarding}
+                                    disabled={awarding || !!challenge.winnerEntryId}
+                                  >
+                                    Winner
+                                  </Button>
+                                </Popconfirm>
+                              )
+                            )}
+                            {recipeId && (
+                              <Button
+                                type="link"
+                                size="small"
+                                icon={<ExternalLink size={14} />}
+                                onClick={() => window.open(`/recipe/${recipeId}`, '_blank')}
+                                title="Xem công thức"
+                              >
+                                Recipe
+                              </Button>
+                            )}
+                          </Space>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
-          </Card>
-        )}
+          ) : (
+            <div className="text-center py-4 text-muted">
+              <FileText size={48} className="mb-3 opacity-50" />
+              <p>Chưa có bài nộp nào</p>
+            </div>
+          )}
+        </Card>
       </div>
 
       {/* Edit Modal */}
@@ -374,6 +584,16 @@ const AdminChallengeDetail = () => {
           onSuccess={handleFormSuccess}
         />
       )}
+
+      {/* Entry Detail Modal */}
+      <EntryDetailModal
+        entry={selectedEntry}
+        visible={showEntryDetail}
+        onClose={() => {
+          setShowEntryDetail(false);
+          setSelectedEntry(null);
+        }}
+      />
     </>
   );
 };

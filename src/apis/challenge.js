@@ -216,7 +216,7 @@ export const joinChallenge = async (challengeId) => {
 };
 
 // Submit entry to challenge
-export const submitEntry = async (challengeId, entryData) => {
+export const submitEntry = async (challengeId, formData) => {
   try {
     const token = getCookie("token");
 
@@ -229,10 +229,10 @@ export const submitEntry = async (challengeId, entryData) => {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          // Don't set Content-Type, let browser set it with boundary for FormData
         },
-        body: JSON.stringify(entryData),
+        body: formData, // FormData for file upload
       }
     );
 
@@ -245,6 +245,40 @@ export const submitEntry = async (challengeId, entryData) => {
     return data;
   } catch (error) {
     console.error("Submit entry error:", error);
+    throw error;
+  }
+};
+
+// Award prize to entry (Admin only)
+export const awardPrize = async (challengeId, entryId) => {
+  try {
+    const token = getCookie("token");
+
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập");
+    }
+
+    const response = await fetch(
+      `${baseUrl}${apiUrls.submitEntry}/${challengeId}/award`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ entryId }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi trao giải");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Award prize error:", error);
     throw error;
   }
 };
