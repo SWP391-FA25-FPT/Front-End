@@ -2,6 +2,10 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/layout/SettingLayout";
 import { useTheme } from "../context/ThemeContext"; // BỔ SUNG: Import useTheme
+import { useAuth } from "../context/useAuth";
+import { isPremium } from "../utils/premium";
+import PremiumNotice from "../components/PremiumNotice";
+import { Button } from "antd";
 import "./style/MealPlan.css";
 import {
   getMealPlans,
@@ -19,6 +23,8 @@ const customConfirm = (message) => {
 };
 
 export default function MealPlan() {
+  const { user } = useAuth();
+  const [premiumNoticeVisible, setPremiumNoticeVisible] = useState(false);
   const [mealPlanData, setMealPlanData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -27,6 +33,13 @@ export default function MealPlan() {
   const navigate = useNavigate();
   const { themeMode } = useTheme(); // BỔ SUNG: Lấy themeMode
   const shoppingListRef = useRef(null); // Ref for shopping list section
+
+  // Auto-show premium notice on mount if not premium
+  useEffect(() => {
+    if (user && !isPremium(user)) {
+      setPremiumNoticeVisible(true);
+    }
+  }, [user]);
 
   // Helper function to normalize date to YYYY-MM-DD string
   const normalizeDate = (date) => {
@@ -470,6 +483,30 @@ export default function MealPlan() {
     );
   };
 
+  // Block access if not premium - show empty page with modal
+  if (user && !isPremium(user)) {
+    return (
+      <Layout>
+        <div style={{ textAlign: 'center', padding: '60px 20px', minHeight: '60vh' }}>
+          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <h2 style={{ color: '#ffc107', marginBottom: '20px' }}>Tính Năng Premium</h2>
+            <p style={{ fontSize: '16px', color: '#666', marginBottom: '30px' }}>
+              Tính năng "Tạo Thực Đơn Premium" yêu cầu tài khoản Premium. Vui lòng nâng cấp để sử dụng.
+            </p>
+          </div>
+        </div>
+        <PremiumNotice
+          visible={premiumNoticeVisible}
+          onCancel={() => {
+            setPremiumNoticeVisible(false);
+            window.location.href = '/';
+          }}
+          featureName="Tạo Thực Đơn Premium"
+        />
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div
@@ -765,6 +802,11 @@ export default function MealPlan() {
           </div>
         )}
       </div>
+      <PremiumNotice
+        visible={premiumNoticeVisible}
+        onCancel={() => setPremiumNoticeVisible(false)}
+        featureName="Tạo Thực Đơn Premium"
+      />
     </Layout>
   );
 }

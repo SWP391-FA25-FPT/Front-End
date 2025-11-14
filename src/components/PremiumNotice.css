@@ -1,0 +1,77 @@
+.premium-notice-modal .ant-modal-content {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.premium-notice-content {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.premium-notice-icon {
+  margin-bottom: 20px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.premium-notice-title {
+  color: #ffc107;
+  margin-bottom: 16px !important;
+}
+
+.premium-notice-description {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.premium-features-list {
+  text-align: left;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.premium-features-list ul {
+  margin: 12px 0 0 0;
+  padding-left: 20px;
+}
+
+.premium-features-list li {
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.premium-notice-actions {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.premium-upgrade-button {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  border: none;
+  height: 40px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+}
+
+.premium-upgrade-button:hover {
+  background: linear-gradient(135deg, #ffb300 0%, #f57c00 100%);
+  box-shadow: 0 6px 16px rgba(255, 193, 7, 0.5);
+  transform: translateY(-2px);
+}
+
+.premium-upgrade-button:active {
+  transform: translateY(0);
+}
+

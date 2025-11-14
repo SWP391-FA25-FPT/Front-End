@@ -40,6 +40,8 @@ import {
   generatePersonalizedQuickActions,
   extractStructuredData,
 } from "../utils/aiHelpers";
+import { isPremium } from "../utils/premium";
+import PremiumNotice from "../components/PremiumNotice";
 import "../pages/style/AIConsultation.css";
 
 const { Title, Text } = Typography;
@@ -47,6 +49,7 @@ const { TextArea } = Input;
 
 export default function AIConsultation() {
   const { user } = useAuth();
+  const [premiumNoticeVisible, setPremiumNoticeVisible] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -332,6 +335,37 @@ Hãy đưa ra lời khuyên cá nhân hóa dựa trên thông tin này.`;
     };
     return iconMap[iconString] || <FileTextOutlined />;
   };
+
+  // Auto-show premium notice on mount if not premium
+  useEffect(() => {
+    if (user && !isPremium(user)) {
+      setPremiumNoticeVisible(true);
+    }
+  }, [user]);
+
+  // Block access if not premium - show empty page with modal
+  if (user && !isPremium(user)) {
+    return (
+      <Layout>
+        <div style={{ textAlign: 'center', padding: '60px 20px', minHeight: '60vh' }}>
+          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <h2 style={{ color: '#ffc107', marginBottom: '20px' }}>Tính Năng Premium</h2>
+            <p style={{ fontSize: '16px', color: '#666', marginBottom: '30px' }}>
+              Tính năng "AI Tư Vấn M&M" yêu cầu tài khoản Premium. Vui lòng nâng cấp để sử dụng.
+            </p>
+          </div>
+        </div>
+        <PremiumNotice
+          visible={premiumNoticeVisible}
+          onCancel={() => {
+            setPremiumNoticeVisible(false);
+            window.location.href = '/';
+          }}
+          featureName="AI Tư Vấn M&M"
+        />
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -660,6 +694,11 @@ Hãy đưa ra lời khuyên cá nhân hóa dựa trên thông tin này.`;
           </Col>
         </Row>
       </Container>
+      <PremiumNotice
+        visible={premiumNoticeVisible}
+        onCancel={() => setPremiumNoticeVisible(false)}
+        featureName="AI Tư Vấn M&M"
+      />
     </Layout>
   );
 }
