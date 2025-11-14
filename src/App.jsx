@@ -72,11 +72,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-<<<<<<< Updated upstream
           <Route path="/admin/login" element={<AdminLogin />} />
-=======
           <Route path="/verify-otp" element={<OTPVerification />} />
->>>>>>> Stashed changes
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route 

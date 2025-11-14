@@ -136,11 +136,6 @@ function Login() {
         setSuccess('Đăng nhập thành công!');
         console.log('User:', response.data.user);
 
-<<<<<<< Updated upstream
-        // Redirect to home page (admin should use /admin/login)
-        setTimeout(() => {
-          window.location.href = "/";
-=======
         // Redirect based on user status
         setTimeout(() => {
           if (response.data.user.role === "admin") {
@@ -151,7 +146,6 @@ function Login() {
           } else {
             window.location.href = "/";
           }
->>>>>>> Stashed changes
         }, 800);
       } else {
         setError(response.error || 'Đăng nhập thất bại!');

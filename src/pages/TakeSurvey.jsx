@@ -25,13 +25,9 @@ function TakeSurvey({ onComplete }) {
       eatingHabits: '',
       diet: '',
       allergies: [],
-<<<<<<< Updated upstream
-      meals: [],
-      knowledgeSource: '',
-=======
       meals: ['breakfast', 'lunch', 'dinner'], // Always include 3 main meals
+      knowledgeSource: '',
       profileImageUrl: '',
->>>>>>> Stashed changes
     },
   });
 
@@ -149,19 +145,12 @@ function TakeSurvey({ onComplete }) {
         }
         break;
       case 4:
-<<<<<<< Updated upstream
-        if (profileData.profile.meals.length === 0) {
-          setError('Vui lòng chọn ít nhất một bữa ăn!');
-          return false;
-        }
+        // Meals will always have at least breakfast, lunch, dinner
+        // No validation needed as these are always included
         if (!profileData.profile.knowledgeSource) {
           setError('Vui lòng chọn nguồn biết đến hệ thống!');
           return false;
         }
-=======
-        // Meals will always have at least breakfast, lunch, dinner
-        // No validation needed as these are always included
->>>>>>> Stashed changes
         break;
       default:
         break;
@@ -207,12 +196,8 @@ function TakeSurvey({ onComplete }) {
         },
       };
 
-<<<<<<< Updated upstream
-      const updateResponse = await updateProfile(null, processedData);
-=======
       // updateProfile now requires userId as first parameter (or undefined for current user)
       const updateResponse = await updateProfile(undefined, processedData);
->>>>>>> Stashed changes
       const completeResponse = await completeOnboarding();
 
       // Update user data in context
@@ -418,21 +403,6 @@ function TakeSurvey({ onComplete }) {
               </div>
             </div>
             <div className="form-group">
-<<<<<<< Updated upstream
-              <label>Bạn biết đến hệ thống qua đâu? <span className="required">*</span></label>
-              <select
-                value={profileData.profile.knowledgeSource}
-                onChange={(e) => handleInputChange('profile.knowledgeSource', e.target.value)}
-                required
-              >
-                <option value="">Chọn nguồn</option>
-                <option value="social-media">Mạng xã hội (TikTok, Facebook, Instagram...)</option>
-                <option value="google-search">Tìm kiếm Google</option>
-                <option value="referral">Link chia sẻ / Giới thiệu từ người khác</option>
-                <option value="advertisement">Quảng cáo</option>
-                <option value="other">Khác</option>
-              </select>
-=======
               <label>Bạn có hay ăn bữa phụ không?</label>
               <div className="checkbox-group">
                 <label className="checkbox-label">
@@ -458,6 +428,21 @@ function TakeSurvey({ onComplete }) {
               </div>
             </div>
             <div className="form-group">
+              <label>Bạn biết đến hệ thống qua đâu? <span className="required">*</span></label>
+              <select
+                value={profileData.profile.knowledgeSource}
+                onChange={(e) => handleInputChange('profile.knowledgeSource', e.target.value)}
+                required
+              >
+                <option value="">Chọn nguồn</option>
+                <option value="social-media">Mạng xã hội (TikTok, Facebook, Instagram...)</option>
+                <option value="google-search">Tìm kiếm Google</option>
+                <option value="referral">Link chia sẻ / Giới thiệu từ người khác</option>
+                <option value="advertisement">Quảng cáo</option>
+                <option value="other">Khác</option>
+              </select>
+            </div>
+            <div className="form-group">
               <label>URL ảnh đại diện (tùy chọn)</label>
               <input
                 type="url"
@@ -465,7 +450,6 @@ function TakeSurvey({ onComplete }) {
                 onChange={(e) => handleInputChange('profile.profileImageUrl', e.target.value)}
                 placeholder="https://example.com/your-image.jpg"
               />
->>>>>>> Stashed changes
             </div>
           </div>
         );
