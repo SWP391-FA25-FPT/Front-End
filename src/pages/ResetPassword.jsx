@@ -1,25 +1,27 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import apiHelper from '../utils/apiHelper';
+import { apiUrls } from '../utils/constants';
 import Logo from '../components/Logo/Logo';
 import './style/ResetPassword.css';
 
 function ResetPassword() {
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const token = searchParams.get('token');
+    
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [token, setToken] = useState('');
 
+    // Redirect if no token
     useEffect(() => {
-        const tokenFromUrl = searchParams.get('token');
-        if (tokenFromUrl) {
-            setToken(tokenFromUrl);
-        } else {
-            setError('Invalid reset link');
+        if (!token) {
+            navigate('/forgot-password');
         }
-    }, [searchParams]);
+    }, [token, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,33 +35,38 @@ function ResetPassword() {
             return;
         }
 
-        if (password.length < 6) {
-            setError('Mật khẩu phải có ít nhất 6 ký tự!');
+        if (password.length < 8) {
+            setError('Mật khẩu phải có ít nhất 8 ký tự!');
+            setLoading(false);
+            return;
+        }
+
+        // Check password strength
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+        if (!hasUpperCase || !hasNumber || !hasSpecialChar) {
+            setError('Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ số và 1 ký tự đặc biệt!');
             setLoading(false);
             return;
         }
 
         try {
-            // Check if token matches (simple demo version)
-            const storedToken = localStorage.getItem('resetToken');
-            const storedEmail = localStorage.getItem('resetEmail');
-            
-            if (token !== storedToken) {
-                setError('Token không hợp lệ hoặc đã hết hạn!');
-                setLoading(false);
-                return;
-            }
+            // Call backend API to reset password with token
+            const response = await apiHelper.post(apiUrls.resetPassword, {
+                token,
+                newPassword: password
+            });
 
-            // Simulate API call (in real app, call backend API)
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-            
-            // Clear stored data
-            localStorage.removeItem('resetToken');
-            localStorage.removeItem('resetEmail');
-            
-            setSuccess(true);
+            if (response.success) {
+                setSuccess(true);
+            } else {
+                setError(response.error || 'Không thể đặt lại mật khẩu!');
+            }
         } catch (err) {
-            setError('Có lỗi xảy ra khi đặt lại mật khẩu!');
+            console.error('Reset password error:', err);
+            setError(err.response?.data?.error || 'Có lỗi xảy ra khi đặt lại mật khẩu!');
         } finally {
             setLoading(false);
         }
@@ -80,7 +87,7 @@ function ResetPassword() {
                             Mật khẩu của bạn đã được cập nhật thành công. 
                             Bây giờ bạn có thể đăng nhập với mật khẩu mới.
                         </p>
-                        <a href="/" className="btn-primary">
+                        <a href="/login" className="btn-primary">
                             Đăng nhập ngay
                         </a>
                     </div>
@@ -101,36 +108,41 @@ function ResetPassword() {
 
                 {/* Title */}
                 <div className="page-title">
-                    <h1>Thay đổi mật khẩu</h1>
+                    <h1>Đặt lại mật khẩu</h1>
+                    <p className="subtitle">
+                        Nhập mật khẩu mới của bạn
+                    </p>
                 </div>
 
-                {/* Form Container with dotted border */}
+                {/* Form Container */}
                 <div className="form-container">
                     {error && <div className="alert alert-error">{error}</div>}
 
                     <form onSubmit={handleSubmit} className="reset-password-form">
+                        {/* Password Fields */}
                         <div className="form-group">
-                            <label htmlFor="password">New Password</label>
+                            <label htmlFor="password">Mật khẩu mới</label>
                             <input
                                 id="password"
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Password"
+                                placeholder="Nhập mật khẩu mới"
                                 required
                                 disabled={loading}
                                 minLength={8}
+                                autoFocus
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="confirmPassword">Repeat Password</label>
+                            <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
                             <input
                                 id="confirmPassword"
                                 type="password"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                placeholder="Password"
+                                placeholder="Nhập lại mật khẩu"
                                 required
                                 disabled={loading}
                                 minLength={8}
@@ -139,19 +151,19 @@ function ResetPassword() {
 
                         {/* Password Requirements */}
                         <div className="password-requirements">
-                            <div className="requirement-item">
+                            <div className={`requirement-item ${password.length >= 8 ? 'valid' : ''}`}>
                                 <span className="requirement-circle"></span>
                                 <span>Tối thiểu phải 8 kí tự</span>
                             </div>
-                            <div className="requirement-item">
+                            <div className={`requirement-item ${/[A-Z]/.test(password) ? 'valid' : ''}`}>
                                 <span className="requirement-circle"></span>
                                 <span>Bao gồm 1 kí tự in hoa</span>
                             </div>
-                            <div className="requirement-item">
+                            <div className={`requirement-item ${/[0-9]/.test(password) ? 'valid' : ''}`}>
                                 <span className="requirement-circle"></span>
                                 <span>Bao gồm 1 chữ số</span>
                             </div>
-                            <div className="requirement-item">
+                            <div className={`requirement-item ${/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) ? 'valid' : ''}`}>
                                 <span className="requirement-circle"></span>
                                 <span>Bao gồm 1 kí tự đặc biệt</span>
                             </div>
@@ -160,10 +172,14 @@ function ResetPassword() {
                         <button 
                             type="submit" 
                             className="btn-change-password"
-                            disabled={loading || !token}
+                            disabled={loading || !password || !confirmPassword}
                         >
-                            {loading ? 'Đang cập nhật...' : 'Đăng Nhập'}
+                            {loading ? 'Đang cập nhật...' : 'Đặt lại mật khẩu'}
                         </button>
+
+                        <a href="/login" className="back-link">
+                            ← Quay lại đăng nhập
+                        </a>
                     </form>
                 </div>
             </div>

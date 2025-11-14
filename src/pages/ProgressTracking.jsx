@@ -29,8 +29,13 @@ import { getProgressHistory, addProgressRecord, updateProgressRecord, getProgres
 import { getMealPlans, generateMealPlan, regenerateMealPlan, deleteAllUserMealPlans } from "../apis/mealplan";
 import { getProfile } from "../apis/user";
 import "./style/ProgressTracking.css";
+import { useAuth } from "../context/useAuth";
+import { isPremium } from "../utils/premium";
+import PremiumNotice from "../components/PremiumNotice";
 
 const ProgressTracking = () => {
+  const { user } = useAuth();
+  const [premiumNoticeVisible, setPremiumNoticeVisible] = useState(false);
   const [addRecordModalVisible, setAddRecordModalVisible] = useState(false);
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const [goalModalVisible, setGoalModalVisible] = useState(false);
@@ -73,10 +78,20 @@ const ProgressTracking = () => {
   });
   const [weeklyData, setWeeklyData] = useState([]);
 
-  // Load data on mount
+  // Check premium status on mount and auto-show notice
   useEffect(() => {
-    loadAllData();
-  }, []);
+    if (user && !isPremium(user)) {
+      // Auto-show premium notice modal
+      setPremiumNoticeVisible(true);
+    }
+  }, [user]);
+
+  // Load data on mount (only if premium)
+  useEffect(() => {
+    if (user && isPremium(user)) {
+      loadAllData();
+    }
+  }, [user]);
 
   // Auto-show daily check-in modal
   useEffect(() => {
@@ -109,8 +124,12 @@ const ProgressTracking = () => {
       // Load user profile
       const profileRes = await getProfile();
       if (profileRes) {
-        // getProfile returns the full user object with nested profile
-        setUserProfile(profileRes);
+        // getProfile returns { user: { profile: {...} }, stats: {...}, ... }
+        // So we need to extract the user object
+        const userData = profileRes.user || profileRes;
+        console.log('Profile data loaded:', userData);
+        console.log('User weight:', userData?.profile?.weight);
+        setUserProfile(userData);
       }
 
       // Load active goal
@@ -390,18 +409,67 @@ const ProgressTracking = () => {
         mealPlanId: mealPlan?._id
       };
 
+      let response;
       // Check if record exists for today
       if (todayProgress) {
         // Update existing record
-        const response = await updateProgressRecord(todayProgress._id, recordData);
+        response = await updateProgressRecord(todayProgress._id, recordData);
         if (response.success) {
           message.success("Đã cập nhật thông tin hôm nay!");
         }
       } else {
         // Create new record
-        const response = await addProgressRecord(recordData);
+        response = await addProgressRecord(recordData);
         if (response.success) {
           message.success("Cảm ơn bạn đã chia sẻ! Tiếp tục phát huy nhé! 💪");
+        }
+      }
+
+      // Update local state immediately for instant UI feedback
+      if (response.success) {
+        const updatedProgress = {
+          ...todayProgress,
+          ...recordData,
+          actualWeight: values.weight,
+          actualCalories: values.calories || 0,
+          waterIntake: values.waterIntake || 0,
+          exercised: values.exercised || false,
+          date: today.toISOString()
+        };
+        
+        setTodayProgress(updatedProgress);
+        
+        // Update water data immediately
+        setWaterData({
+          current: values.waterIntake || 0,
+          target: 8
+        });
+
+        // Update daily data immediately
+        updateDailyDataFromProgress(updatedProgress);
+
+        // Update current weight in stats if changed
+        if (values.weight && activeGoal) {
+          setStats(prev => ({
+            ...prev,
+            currentWeight: values.weight,
+            weightChange: values.weight - activeGoal.startWeight
+          }));
+        }
+
+        // Update weight chart immediately with today's weight
+        if (values.weight) {
+          // Update progress history to include today's data
+          const updatedHistory = [updatedProgress, ...progressHistory.filter(h => 
+            new Date(h.date).toDateString() !== today.toDateString()
+          )];
+          setProgressHistory(updatedHistory);
+          
+          // Update weight chart with new data
+          updateWeightChartFromHistory(updatedHistory);
+          
+          // Update weekly data with new record
+          updateWeeklyDataFromHistory(updatedHistory);
         }
       }
 
@@ -410,7 +478,9 @@ const ProgressTracking = () => {
       localStorage.setItem('lastDailyCheckIn', today_str);
 
       setDailyCheckInVisible(false);
-      loadAllData(); // Reload all data
+      
+      // Reload all data in background to ensure consistency
+      loadAllData();
     } catch (error) {
       console.error('Error submitting daily check-in:', error);
       message.error(error.message || 'Không thể lưu thông tin');
@@ -685,6 +755,31 @@ const ProgressTracking = () => {
     });
   };
 
+  // Block access if not premium - show empty page with modal
+  if (user && !isPremium(user)) {
+    return (
+      <SettingLayout>
+        <div className="progress-tracking-container" style={{ textAlign: 'center', padding: '60px 20px', minHeight: '60vh' }}>
+          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <h2 style={{ color: '#ffc107', marginBottom: '20px' }}>Tính Năng Premium</h2>
+            <p style={{ fontSize: '16px', color: '#666', marginBottom: '30px' }}>
+              Tính năng "Theo Dõi Tiến Độ" yêu cầu tài khoản Premium. Vui lòng nâng cấp để sử dụng.
+            </p>
+          </div>
+        </div>
+        <PremiumNotice
+          visible={premiumNoticeVisible}
+          onCancel={() => {
+            setPremiumNoticeVisible(false);
+            // Redirect to home if user closes modal
+            window.location.href = '/';
+          }}
+          featureName="Theo Dõi Tiến Độ"
+        />
+      </SettingLayout>
+    );
+  }
+
   return (
     <SettingLayout>
       <div className="progress-tracking-container">
@@ -759,7 +854,7 @@ const ProgressTracking = () => {
         onCancel={() => setGoalModalVisible(false)}
         onSubmit={handleGoalSubmit}
         loading={loading}
-        currentWeight={userProfile?.profile?.weight}
+        currentWeight={userProfile?.profile?.weight || user?.profile?.weight || null}
       />
 
       {/* Add Record Modal */}
@@ -843,6 +938,13 @@ const ProgressTracking = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      {/* Premium Notice Modal */}
+      <PremiumNotice
+        visible={premiumNoticeVisible}
+        onCancel={() => setPremiumNoticeVisible(false)}
+        featureName="Theo Dõi Tiến Độ"
+      />
 
       {/* History Modal */}
       <Modal

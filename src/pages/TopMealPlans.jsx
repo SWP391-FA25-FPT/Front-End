@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { Row, Col, Empty, Pagination } from "antd";
+import React, { useState, useMemo, useEffect } from "react";
+import { Row, Col, Empty, Pagination, Button } from "antd";
 import SettingLayout from "../components/layout/SettingLayout";
 import PageHeader from "../components/TopMeals/PageHeader";
 import FilterBar from "../components/TopMeals/FilterBar";
@@ -7,10 +7,22 @@ import MealPlanListCard from "../components/TopMeals/MealPlanListCard";
 import SidebarStats from "../components/TopMeals/SidebarStats";
 import RankingTable from "../components/TopMeals/RankingTable";
 import { useTheme } from "../context/ThemeContext"; // BỔ SUNG: Import useTheme
+import { useAuth } from "../context/useAuth";
+import { isPremium } from "../utils/premium";
+import PremiumNotice from "../components/PremiumNotice";
 import topMealPlansData from "../data/topMealPlans.json";
 import "./style/TopMealPlans.css";
 
 const TopMealPlans = () => {
+  const { user } = useAuth();
+  const [premiumNoticeVisible, setPremiumNoticeVisible] = useState(false);
+
+  // Auto-show premium notice on mount if not premium
+  useEffect(() => {
+    if (user && !isPremium(user)) {
+      setPremiumNoticeVisible(true);
+    }
+  }, [user]);
   const [timeRange, setTimeRange] = useState("all");
   const [category, setCategory] = useState("all");
   const [sortBy, setSortBy] = useState("views");
@@ -77,6 +89,30 @@ const TopMealPlans = () => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  // Block access if not premium - show empty page with modal
+  if (user && !isPremium(user)) {
+    return (
+      <SettingLayout>
+        <div style={{ textAlign: 'center', padding: '60px 20px', minHeight: '60vh' }}>
+          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <h2 style={{ color: '#ffc107', marginBottom: '20px' }}>Tính Năng Premium</h2>
+            <p style={{ fontSize: '16px', color: '#666', marginBottom: '30px' }}>
+              Tính năng "Top Thực Đơn Xem Nhiều Nhất" yêu cầu tài khoản Premium. Vui lòng nâng cấp để sử dụng.
+            </p>
+          </div>
+        </div>
+        <PremiumNotice
+          visible={premiumNoticeVisible}
+          onCancel={() => {
+            setPremiumNoticeVisible(false);
+            window.location.href = '/';
+          }}
+          featureName="Top Thực Đơn Xem Nhiều Nhất"
+        />
+      </SettingLayout>
+    );
+  }
 
   return (
     <SettingLayout>
@@ -145,6 +181,11 @@ const TopMealPlans = () => {
           </Col>
         </Row>
       </div>
+      <PremiumNotice
+        visible={premiumNoticeVisible}
+        onCancel={() => setPremiumNoticeVisible(false)}
+        featureName="Top Thực Đơn Xem Nhiều Nhất"
+      />
     </SettingLayout>
   );
 };

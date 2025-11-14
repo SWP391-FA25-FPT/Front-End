@@ -29,20 +29,12 @@ export async function registerApi({ username, email, password, onFail, onSuccess
   // Handle response
   if (response.success) {
     console.log(response.message);
-    if (response?.data?.token) {
-      // Set cookies
-      setCookie("token", response.data.token);
-      // Set token to apiHelper
-      apiHelper.addToken(response.data.token);
-      // Call onSuccess callback
-      onSuccess();
-    } else {
-      // Call onFail callback
-      onFail("No token received");
-    }
+    if (onSuccess) onSuccess();
+    return response; // Return response for new OTP flow
   } else {
     // Call onFail callback
-    onFail(response.error);
+    if (onFail) onFail(response.error);
+    return response;
   }
 }
 
@@ -82,4 +74,38 @@ export async function logoutApi({ onFail, onSuccess }) {
   } else {
     onFail(response.error);
   }
+}
+
+export async function verifyOTPApi(data) {
+  // Send verify OTP request
+  const response = await apiHelper.post(apiUrls.verifyOTP, data);
+  // Handle response
+  if (response.success && response?.data?.token) {
+    // Set cookies
+    setCookie("token", response.data.token);
+    // Set token to apiHelper
+    apiHelper.addToken(response.data.token);
+  }
+  return response;
+}
+
+export async function resendOTPApi(data) {
+  // Send resend OTP request
+  const response = await apiHelper.post(apiUrls.resendOTP, data);
+  return response;
+}
+
+export async function googleLoginApi(token) {
+  // Remove current token
+  removeCookie("token");
+  // Send Google login request
+  const response = await apiHelper.post(apiUrls.googleLogin, { token });
+  // Handle response
+  if (response.success && response?.data?.token) {
+    // Set cookies
+    setCookie("token", response.data.token);
+    // Set token to apiHelper
+    apiHelper.addToken(response.data.token);
+  }
+  return response;
 }
