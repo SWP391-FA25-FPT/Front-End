@@ -63,6 +63,8 @@ import UserManagementModule from "./components/admin/UserManagementModule";
 import StatisticsModule from "./components/admin/StatisticsModule";
 import DashboardModule from "./components/admin/DashboardModule";
 import SystemSettingsModule from "./components/admin/SystemSettingsModule";
+import ChallengeManagementModule from "./components/admin/ChallengeManagementModule";
+import AdminChallengeDetail from "./components/admin/AdminChallengeDetail";
 import AdminLayout from "./components/admin/AdminLayout";
 
 
@@ -159,6 +161,8 @@ function App() {
             <Route path="report" element={<ReportModule />} />
             <Route path="feedback" element={<FeedbackModule />} />
             <Route path="users" element={<UserManagementModule />} />
+            <Route path="challenges" element={<ChallengeManagementModule />} />
+            <Route path="challenges/:id" element={<AdminChallengeDetail />} />
             <Route path="system-settings" element={<SystemSettingsModule />} />
           </Route>
 

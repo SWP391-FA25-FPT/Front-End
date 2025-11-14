@@ -111,7 +111,8 @@ export default function DashboardModule() {
   if (loading) {
     return (
       <div className="text-center py-5">
-        <Spin size="large" tip="Đang tải dữ liệu..." />
+        <Spin size="large" />
+        <div className="mt-3">Đang tải dữ liệu...</div>
       </div>
     );
   }
