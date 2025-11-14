@@ -25,8 +25,13 @@ function TakeSurvey({ onComplete }) {
       eatingHabits: '',
       diet: '',
       allergies: [],
+<<<<<<< Updated upstream
       meals: [],
       knowledgeSource: '',
+=======
+      meals: ['breakfast', 'lunch', 'dinner'], // Always include 3 main meals
+      profileImageUrl: '',
+>>>>>>> Stashed changes
     },
   });
 
@@ -144,6 +149,7 @@ function TakeSurvey({ onComplete }) {
         }
         break;
       case 4:
+<<<<<<< Updated upstream
         if (profileData.profile.meals.length === 0) {
           setError('Vui lòng chọn ít nhất một bữa ăn!');
           return false;
@@ -152,6 +158,10 @@ function TakeSurvey({ onComplete }) {
           setError('Vui lòng chọn nguồn biết đến hệ thống!');
           return false;
         }
+=======
+        // Meals will always have at least breakfast, lunch, dinner
+        // No validation needed as these are always included
+>>>>>>> Stashed changes
         break;
       default:
         break;
@@ -178,6 +188,12 @@ function TakeSurvey({ onComplete }) {
         processedAllergies.push(customAllergy.trim());
       }
 
+      // Ensure meals always include breakfast, lunch, dinner
+      const baseMeals = ['breakfast', 'lunch', 'dinner'];
+      const finalMeals = profileData.profile.meals.includes('snack')
+        ? [...baseMeals, 'snack']
+        : baseMeals;
+
       // Convert string numbers to actual numbers
       const processedData = {
         name: profileData.name, // Gửi tên từ user data
@@ -187,10 +203,16 @@ function TakeSurvey({ onComplete }) {
           height: profileData.profile.height ? Number(profileData.profile.height) : undefined,
           age: profileData.profile.age ? Number(profileData.profile.age) : undefined,
           allergies: processedAllergies,
+          meals: finalMeals, // Ensure meals always have the 3 main meals
         },
       };
 
+<<<<<<< Updated upstream
       const updateResponse = await updateProfile(null, processedData);
+=======
+      // updateProfile now requires userId as first parameter (or undefined for current user)
+      const updateResponse = await updateProfile(undefined, processedData);
+>>>>>>> Stashed changes
       const completeResponse = await completeOnboarding();
 
       // Update user data in context
@@ -377,19 +399,18 @@ function TakeSurvey({ onComplete }) {
           <div className="step-content">
             <h2>Bữa ăn yêu thích</h2>
             <div className="form-group">
-              <label>Bạn thường ăn những bữa nào? <span className="required">*</span> (chọn ít nhất một bữa)</label>
-              <div className="checkbox-group">
+              <label>Bạn sẽ có 3 bữa chính mỗi ngày:</label>
+              <div className="checkbox-group" style={{ opacity: 0.6, pointerEvents: 'none' }}>
                 {[
                   { value: 'breakfast', label: 'Bữa sáng' },
                   { value: 'lunch', label: 'Bữa trưa' },
                   { value: 'dinner', label: 'Bữa tối' },
-                  { value: 'snack', label: 'Bữa phụ' },
                 ].map(meal => (
                   <label key={meal.value} className="checkbox-label">
                     <input
                       type="checkbox"
-                      checked={profileData.profile.meals.includes(meal.value)}
-                      onChange={(e) => handleArrayChange('meals', meal.value, e.target.checked)}
+                      checked={true}
+                      disabled
                     />
                     <span>{meal.label}</span>
                   </label>
@@ -397,6 +418,7 @@ function TakeSurvey({ onComplete }) {
               </div>
             </div>
             <div className="form-group">
+<<<<<<< Updated upstream
               <label>Bạn biết đến hệ thống qua đâu? <span className="required">*</span></label>
               <select
                 value={profileData.profile.knowledgeSource}
@@ -410,6 +432,40 @@ function TakeSurvey({ onComplete }) {
                 <option value="advertisement">Quảng cáo</option>
                 <option value="other">Khác</option>
               </select>
+=======
+              <label>Bạn có hay ăn bữa phụ không?</label>
+              <div className="checkbox-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={profileData.profile.meals.includes('snack')}
+                    onChange={(e) => {
+                      const hasSnack = e.target.checked;
+                      setProfileData(prev => {
+                        const baseMeals = ['breakfast', 'lunch', 'dinner'];
+                        return {
+                          ...prev,
+                          profile: {
+                            ...prev.profile,
+                            meals: hasSnack ? [...baseMeals, 'snack'] : baseMeals
+                          }
+                        };
+                      });
+                    }}
+                  />
+                  <span>Có, tôi thường ăn bữa phụ (ở giữa bữa trưa và bữa tối)</span>
+                </label>
+              </div>
+            </div>
+            <div className="form-group">
+              <label>URL ảnh đại diện (tùy chọn)</label>
+              <input
+                type="url"
+                value={profileData.profile.profileImageUrl}
+                onChange={(e) => handleInputChange('profile.profileImageUrl', e.target.value)}
+                placeholder="https://example.com/your-image.jpg"
+              />
+>>>>>>> Stashed changes
             </div>
           </div>
         );

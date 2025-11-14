@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { loginApi, registerApi } from '../apis/auth';
+import { useNavigate } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
+import { loginApi, registerApi, googleLoginApi } from '../apis/auth';
 import { useAuth } from '../context/useAuth';
 import Logo from '../components/Logo/Logo';
 import './style/Login.css';
 
 function Login() {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -133,9 +136,22 @@ function Login() {
         setSuccess('Đăng nhập thành công!');
         console.log('User:', response.data.user);
 
+<<<<<<< Updated upstream
         // Redirect to home page (admin should use /admin/login)
         setTimeout(() => {
           window.location.href = "/";
+=======
+        // Redirect based on user status
+        setTimeout(() => {
+          if (response.data.user.role === "admin") {
+            window.location.href = "/admin";
+          } else if (response.data.user.isFirstLogin) {
+            // Redirect to survey for first-time users
+            window.location.href = "/survey";
+          } else {
+            window.location.href = "/";
+          }
+>>>>>>> Stashed changes
         }, 800);
       } else {
         setError(response.error || 'Đăng nhập thất bại!');
@@ -162,46 +178,88 @@ function Login() {
     }
 
     try {
-      await registerApi({
+      const response = await registerApi({
         username: registerData.username,
         email: registerData.email,
         password: registerData.password,
-        onSuccess: async () => {
-          setSuccess('Đăng ký thành công! Đang đăng nhập...');
-
-          try {
-            const loginRes = await loginApi({
-              username: registerData.email,
-              password: registerData.password
-            });
-
-            if (loginRes.success) {
-              login({
-                token: loginRes.data.token,
-                user: loginRes.data.user
-              });
-
-              setTimeout(() => {
-                window.location.href = "/";
-              }, 800);
-            } else {
-              setError("Tự động đăng nhập thất bại, vui lòng đăng nhập lại!");
-            }
-          } catch {
-            setError("Có lỗi khi đăng nhập tự động!");
-          }
-        },
-
+        onSuccess: () => {},
         onFail: (error) => {
           setError(error || 'Đăng ký thất bại!');
         }
       });
-    } catch {
-      setError('Đăng ký thất bại!');
+
+      // New flow: Register doesn't auto-login, redirect to OTP verification
+      if (response && response.success) {
+        setSuccess('Đăng ký thành công! Đang chuyển đến trang xác thực...');
+        
+        setTimeout(() => {
+          // Redirect to OTP verification page with state
+          navigate('/verify-otp', {
+            state: {
+              email: registerData.email,
+              username: registerData.username,
+              otp: response.data.otp
+            }
+          });
+        }, 1000);
+      }
+    } catch (error) {
+      setError(error?.response?.data?.error || 'Đăng ký thất bại!');
     } finally {
       setLoading(false);
     }
   };
+  // ----------------- GOOGLE LOGIN -----------------
+  const handleGoogleLogin = useGoogleLogin({
+    // Use implicit flow (popup) - no redirect URI needed
+    flow: 'implicit',
+    onSuccess: async (tokenResponse) => {
+      setLoading(true);
+      setError('');
+      setSuccess('');
+
+      try {
+        // Send access_token to backend
+        // Backend will verify with Google and get user info
+        const response = await googleLoginApi(tokenResponse.access_token);
+        
+        if (response.success) {
+          // Update AuthContext
+          login({
+            token: response.data.token,
+            user: response.data.user
+          });
+
+          setSuccess('Đăng nhập với Google thành công!');
+          
+          // Redirect based on user status
+          setTimeout(() => {
+            if (response.data.user.role === "admin") {
+              window.location.href = "/admin";
+            } else if (response.data.user.isFirstLogin) {
+              // Redirect to survey for first-time users
+              window.location.href = "/survey";
+            } else {
+              window.location.href = "/";
+            }
+          }, 800);
+        } else {
+          setError(response.error || 'Đăng nhập với Google thất bại!');
+        }
+      } catch (err) {
+        console.error('Google login error:', err);
+        setError(err.response?.data?.error || 'Có lỗi xảy ra khi đăng nhập với Google!');
+      } finally {
+        setLoading(false);
+      }
+    },
+    onError: (error) => {
+      console.error('Google OAuth error:', error);
+      setError('Không thể đăng nhập với Google. Vui lòng thử lại.');
+      setLoading(false);
+    },
+  });
+
   // ----------------- TOGGLE SLIDE -----------------
   const handleToggle = () => {
     setSlideDirection(isLogin ? 'slide-left' : 'slide-right');
@@ -400,9 +458,13 @@ function Login() {
                 </button>
               </form>
             )}
-            {/* MOVE GOOGLE BUTTON HERE */}
             <div className="external-login">
-              <button className="btn-google" type="button">
+              <button 
+                className="btn-google" 
+                type="button"
+                onClick={handleGoogleLogin}
+                disabled={loading}
+              >
                 <div className="google-icon">
                   <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -411,7 +473,7 @@ function Login() {
                     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                   </svg>
                 </div>
-                Tiếp tục với Google
+                {loading ? 'Đang xử lý...' : 'Tiếp tục với Google'}
               </button>
             </div>
           </div>

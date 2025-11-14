@@ -1,10 +1,18 @@
-// export const baseUrl = "http://localhost:7860";
-export const baseUrl = "https://toan215-Meta-Meal.hf.space";
+// Development
+export const baseUrl = "http://localhost:7860";
+
+// Production
+// export const baseUrl = "https://toan215-meta-meal.hf.space";
 
 export const apiUrls = {
   // Auth endpoints
   login: "/api/auth/login",
   register: "/api/auth/register",
+  verifyOTP: "/api/auth/verify-otp",
+  resendOTP: "/api/auth/resend-otp",
+  googleLogin: "/api/auth/google",
+  forgotPassword: "/api/auth/forgot-password",
+  resetPassword: "/api/auth/reset-password",
   getMe: "/api/auth/me",
 
   // User endpoints

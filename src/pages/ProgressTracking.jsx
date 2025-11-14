@@ -29,8 +29,10 @@ import { getProgressHistory, addProgressRecord, updateProgressRecord, getProgres
 import { getMealPlans, generateMealPlan, regenerateMealPlan, deleteAllUserMealPlans } from "../apis/mealplan";
 import { getProfile } from "../apis/user";
 import "./style/ProgressTracking.css";
+import { useAuth } from "../context/useAuth";
 
 const ProgressTracking = () => {
+  const { user } = useAuth();
   const [addRecordModalVisible, setAddRecordModalVisible] = useState(false);
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const [goalModalVisible, setGoalModalVisible] = useState(false);
@@ -390,18 +392,67 @@ const ProgressTracking = () => {
         mealPlanId: mealPlan?._id
       };
 
+      let response;
       // Check if record exists for today
       if (todayProgress) {
         // Update existing record
-        const response = await updateProgressRecord(todayProgress._id, recordData);
+        response = await updateProgressRecord(todayProgress._id, recordData);
         if (response.success) {
           message.success("Đã cập nhật thông tin hôm nay!");
         }
       } else {
         // Create new record
-        const response = await addProgressRecord(recordData);
+        response = await addProgressRecord(recordData);
         if (response.success) {
           message.success("Cảm ơn bạn đã chia sẻ! Tiếp tục phát huy nhé! 💪");
+        }
+      }
+
+      // Update local state immediately for instant UI feedback
+      if (response.success) {
+        const updatedProgress = {
+          ...todayProgress,
+          ...recordData,
+          actualWeight: values.weight,
+          actualCalories: values.calories || 0,
+          waterIntake: values.waterIntake || 0,
+          exercised: values.exercised || false,
+          date: today.toISOString()
+        };
+        
+        setTodayProgress(updatedProgress);
+        
+        // Update water data immediately
+        setWaterData({
+          current: values.waterIntake || 0,
+          target: 8
+        });
+
+        // Update daily data immediately
+        updateDailyDataFromProgress(updatedProgress);
+
+        // Update current weight in stats if changed
+        if (values.weight && activeGoal) {
+          setStats(prev => ({
+            ...prev,
+            currentWeight: values.weight,
+            weightChange: values.weight - activeGoal.startWeight
+          }));
+        }
+
+        // Update weight chart immediately with today's weight
+        if (values.weight) {
+          // Update progress history to include today's data
+          const updatedHistory = [updatedProgress, ...progressHistory.filter(h => 
+            new Date(h.date).toDateString() !== today.toDateString()
+          )];
+          setProgressHistory(updatedHistory);
+          
+          // Update weight chart with new data
+          updateWeightChartFromHistory(updatedHistory);
+          
+          // Update weekly data with new record
+          updateWeeklyDataFromHistory(updatedHistory);
         }
       }
 
@@ -410,7 +461,9 @@ const ProgressTracking = () => {
       localStorage.setItem('lastDailyCheckIn', today_str);
 
       setDailyCheckInVisible(false);
-      loadAllData(); // Reload all data
+      
+      // Reload all data in background to ensure consistency
+      loadAllData();
     } catch (error) {
       console.error('Error submitting daily check-in:', error);
       message.error(error.message || 'Không thể lưu thông tin');
@@ -759,7 +812,7 @@ const ProgressTracking = () => {
         onCancel={() => setGoalModalVisible(false)}
         onSubmit={handleGoalSubmit}
         loading={loading}
-        currentWeight={userProfile?.profile?.weight}
+        currentWeight={userProfile?.profile?.weight || user?.profile?.weight}
       />
 
       {/* Add Record Modal */}

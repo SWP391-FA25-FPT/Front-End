@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/layout/SettingLayout";
 import { useTheme } from "../context/ThemeContext"; // BỔ SUNG: Import useTheme
@@ -23,12 +23,154 @@ export default function MealPlan() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showNutritionModal, setShowNutritionModal] = useState(false);
   const navigate = useNavigate();
   const { themeMode } = useTheme(); // BỔ SUNG: Lấy themeMode
+  const shoppingListRef = useRef(null); // Ref for shopping list section
+
+  // Helper function to normalize date to YYYY-MM-DD string
+  const normalizeDate = (date) => {
+    if (!date) return null;
+    if (typeof date === 'string') {
+      return new Date(date).toISOString().split("T")[0];
+    }
+    if (date instanceof Date) {
+      return date.toISOString().split("T")[0];
+    }
+    return null;
+  };
+
+  // Helper function to get meal plan from localStorage by date
+  const getMealPlanFromStorage = (date) => {
+    const dateStr = date.toISOString().split("T")[0];
+    const storageKey = `mealPlan_${dateStr}`;
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Ensure date is normalized to string format
+        if (parsed && !parsed.date) {
+          parsed.date = dateStr;
+        } else if (parsed && parsed.date) {
+          parsed.date = normalizeDate(parsed.date) || dateStr;
+        }
+        return parsed;
+      } catch (e) {
+        console.error("Error parsing saved meal plan:", e);
+        return null;
+      }
+    }
+    return null;
+  };
+
+  // Helper function to save meal plan to localStorage by date
+  const saveMealPlanToStorage = (date, data) => {
+    const dateStr = date.toISOString().split("T")[0];
+    const storageKey = `mealPlan_${dateStr}`;
+    if (data) {
+      // Normalize date to string format before saving
+      const dataToSave = {
+        ...data,
+        date: normalizeDate(data.date) || dateStr
+      };
+      localStorage.setItem(storageKey, JSON.stringify(dataToSave));
+      console.log('💾 Saved to localStorage:', storageKey);
+    } else {
+      localStorage.removeItem(storageKey);
+      console.log('🗑️ Removed from localStorage:', storageKey);
+    }
+  };
+
+  // Load meal plan from localStorage on mount
+  useEffect(() => {
+    const savedDate = localStorage.getItem('mealPlanSelectedDate');
+    if (savedDate) {
+      const parsedDate = new Date(savedDate);
+      if (!isNaN(parsedDate.getTime())) {
+        setSelectedDate(parsedDate);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Save selected date to localStorage
+  useEffect(() => {
+    localStorage.setItem('mealPlanSelectedDate', selectedDate.toISOString());
+  }, [selectedDate]);
+
+  // Save meal plan to localStorage when it changes (by date)
+  useEffect(() => {
+    if (mealPlanData) {
+      // Ensure meal plan has correct date
+      const mealPlanWithDate = {
+        ...mealPlanData,
+        date: mealPlanData.date || selectedDate.toISOString().split("T")[0]
+      };
+      saveMealPlanToStorage(selectedDate, mealPlanWithDate);
+      console.log('💾 Saved meal plan to localStorage for date:', selectedDate.toISOString().split("T")[0]);
+    }
+  }, [mealPlanData, selectedDate]);
 
   // Check for meal plan on mount and when date changes
   useEffect(() => {
-    checkMealPlanForDate();
+    // Clear meal plan immediately when date changes (to avoid showing wrong day's plan)
+    setMealPlanData(null);
+    setLoading(true);
+    
+    const loadMealPlan = async () => {
+      const selectedDateStr = selectedDate.toISOString().split("T")[0];
+      console.log('📅 Loading meal plan for date:', selectedDateStr);
+      
+      // First, try to load from localStorage for this specific date
+      const savedMealPlan = getMealPlanFromStorage(selectedDate);
+      console.log('💾 Saved meal plan from localStorage:', savedMealPlan ? 'Found' : 'Not found');
+      
+      if (savedMealPlan) {
+        // Check if saved meal plan date matches selected date
+        const savedDateStr = normalizeDate(savedMealPlan.date);
+        
+        console.log('📆 Saved date:', savedDateStr, 'Selected date:', selectedDateStr);
+        
+        if (savedDateStr && savedDateStr === selectedDateStr) {
+          // Set from localStorage first (instant display)
+          console.log('✅ Restoring meal plan from localStorage');
+          setMealPlanData(savedMealPlan);
+          setLoading(false);
+          
+          // Then check server in background to sync (but don't clear if server has no data)
+          try {
+            const response = await getMealPlans({ date: selectedDateStr });
+            if (response.success && response.data && response.data.length > 0) {
+              // Server has data, update with server version
+              const serverMealPlan = response.data[0];
+              const mealPlanWithDate = {
+                ...serverMealPlan,
+                date: serverMealPlan.date || selectedDateStr
+              };
+              saveMealPlanToStorage(selectedDate, mealPlanWithDate);
+              setMealPlanData(mealPlanWithDate);
+              console.log('🔄 Updated with server data');
+            } else {
+              console.log('ℹ️ Server has no data, keeping localStorage version');
+            }
+            // If server has no data, keep the localStorage version
+          } catch (err) {
+            console.error("Error syncing meal plan from server:", err);
+            // Keep localStorage version on error
+          }
+          return;
+        } else {
+          console.log('⚠️ Date mismatch, ignoring saved meal plan');
+        }
+      }
+      
+      // If no saved meal plan for this date, load from server
+      console.log('🌐 Loading from server...');
+      await checkMealPlanForDate();
+    };
+    
+    loadMealPlan();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
 
   // Check if we need to refresh when day changes
@@ -58,19 +200,58 @@ export default function MealPlan() {
 
   const checkMealPlanForDate = async () => {
     try {
-      setLoading(true);
       setError(null);
       const dateStr = selectedDate.toISOString().split("T")[0];
       const response = await getMealPlans({ date: dateStr });
 
       if (response.success && response.data && response.data.length > 0) {
-        setMealPlanData(response.data[0]);
+        const serverMealPlan = response.data[0];
+        // Verify the meal plan is for the correct date
+        const mealPlanDateStr = normalizeDate(serverMealPlan.date);
+        if (mealPlanDateStr === dateStr) {
+          // Update localStorage with server data (in case it's newer)
+          saveMealPlanToStorage(selectedDate, serverMealPlan);
+          setMealPlanData(serverMealPlan);
+          console.log('✅ Loaded meal plan from server for date:', dateStr);
+        } else {
+          // Meal plan date doesn't match, don't use it
+          console.log('⚠️ Server meal plan date mismatch:', mealPlanDateStr, 'vs', dateStr);
+          setMealPlanData(null);
+        }
       } else {
-        setMealPlanData(null);
+        // Server doesn't have data for this date - show empty state
+        // Check localStorage one more time (in case it was saved after initial check)
+        const savedMealPlan = getMealPlanFromStorage(selectedDate);
+        if (savedMealPlan) {
+          const savedDateStr = normalizeDate(savedMealPlan.date);
+          if (savedDateStr === dateStr) {
+            setMealPlanData(savedMealPlan);
+            console.log('✅ Restored meal plan from localStorage for date:', dateStr);
+          } else {
+            console.log('⚠️ LocalStorage meal plan date mismatch:', savedDateStr, 'vs', dateStr);
+            setMealPlanData(null);
+          }
+        } else {
+          console.log('ℹ️ No meal plan found for date:', dateStr);
+          setMealPlanData(null);
+        }
       }
     } catch (err) {
       console.error("Error loading meal plan:", err);
-      setMealPlanData(null);
+      // On error, try to use saved meal plan
+      const savedMealPlan = getMealPlanFromStorage(selectedDate);
+      if (savedMealPlan) {
+        const savedDateStr = normalizeDate(savedMealPlan.date);
+        const selectedDateStr = selectedDate.toISOString().split("T")[0];
+        if (savedDateStr === selectedDateStr) {
+          setMealPlanData(savedMealPlan);
+          console.log('✅ Restored meal plan from localStorage on error');
+        } else {
+          setMealPlanData(null);
+        }
+      } else {
+        setMealPlanData(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -153,7 +334,15 @@ export default function MealPlan() {
         : await generateMealPlan(dateStr);
 
       if (response.success && response.data) {
-        setMealPlanData(response.data);
+        // Ensure the meal plan has the correct date
+        const mealPlanWithDate = {
+          ...response.data,
+          date: response.data.date || dateStr
+        };
+        setMealPlanData(mealPlanWithDate);
+        // Explicitly save to localStorage
+        saveMealPlanToStorage(selectedDate, mealPlanWithDate);
+        console.log('✅ Meal plan saved for date:', dateStr);
       }
     } catch (err) {
       console.error("Error generating meal plan:", err);
@@ -200,6 +389,8 @@ export default function MealPlan() {
       setError(null);
 
       await deleteMealPlanAPI(mealPlanData._id);
+      // Remove from localStorage
+      saveMealPlanToStorage(selectedDate, null);
       setMealPlanData(null);
     } catch (err) {
       console.error("Error deleting meal plan:", err);
@@ -215,6 +406,15 @@ export default function MealPlan() {
         ? recipeId._id || recipeId.toString()
         : recipeId;
     navigate(`/recipe/${id}`);
+  };
+
+  const handleShoppingListClick = () => {
+    if (shoppingListRef.current) {
+      shoppingListRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
   };
 
   const macroData = useMemo(() => {
@@ -291,7 +491,11 @@ export default function MealPlan() {
             </p>
           </div>
           <div className="header-actions">
-            <button className="btn-secondary" disabled={!mealPlanData}>
+            <button 
+              className="btn-secondary" 
+              onClick={handleShoppingListClick}
+              disabled={!mealPlanData}
+            >
               <span className="icon">📝</span> Danh sách mua sắm
             </button>
             <button
@@ -322,13 +526,6 @@ export default function MealPlan() {
           <span className="current-date">{getDayName(selectedDate)}</span>
           <button className="date-nav-btn" onClick={() => changeDate(1)}>
             &gt;
-          </button>
-          <button
-            className="btn-week-plan"
-            onClick={handleGenerateWeeklyPlan}
-            disabled={loading}
-          >
-            <span className="icon">📅</span> Tạo kế hoạch tuần
           </button>
         </div>
 
@@ -467,14 +664,19 @@ export default function MealPlan() {
                 </div>
               </div>
 
-              <button className="btn-details">Detailed Nutrition Information</button>
+              <button 
+                className="btn-details"
+                onClick={() => setShowNutritionModal(true)}
+              >
+                Detailed Nutrition Information
+              </button>
             </div>
           </div>
         )}
 
         {/* Ingredients List */}
         {mealPlanData && getAllIngredients.length > 0 && (
-          <div className="ingredients-section">
+          <div className="ingredients-section" ref={shoppingListRef}>
             <div className="ingredients-header">
               <h2>📋 Danh sách nguyên liệu</h2>
               <p>Nguyên liệu cần chuẩn bị cho cả tuần</p>
@@ -487,6 +689,78 @@ export default function MealPlan() {
                   <span className="ingredient-amount">{ingredient.amount}</span>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Detailed Nutrition Information Modal */}
+        {showNutritionModal && mealPlanData && (
+          <div className="nutrition-modal-overlay" onClick={() => setShowNutritionModal(false)}>
+            <div className="nutrition-modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="nutrition-modal-header">
+                <h2>Thông Tin Dinh Dưỡng Chi Tiết</h2>
+                <button 
+                  className="nutrition-modal-close"
+                  onClick={() => setShowNutritionModal(false)}
+                >
+                  ×
+                </button>
+              </div>
+              <div className="nutrition-modal-body">
+                <div className="nutrition-detail-section">
+                  <h3>Tổng Quan</h3>
+                  <div className="nutrition-detail-grid">
+                    <div className="nutrition-detail-item">
+                      <span className="detail-label">Calories</span>
+                      <span className="detail-value">
+                        {Math.round(mealPlanData.totalCalories || 0)} / {mealPlanData.targetCalories || 0} cal
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="nutrition-detail-section">
+                  <h3>Macronutrients</h3>
+                  <div className="nutrition-detail-grid">
+                    <div className="nutrition-detail-item">
+                      <span className="detail-label">Protein</span>
+                      <span className="detail-value">
+                        {Math.round(mealPlanData.totalMacros?.protein || 0)}g
+                      </span>
+                    </div>
+                    <div className="nutrition-detail-item">
+                      <span className="detail-label">Carbs</span>
+                      <span className="detail-value">
+                        {Math.round(mealPlanData.totalMacros?.carbs || 0)}g
+                      </span>
+                    </div>
+                    <div className="nutrition-detail-item">
+                      <span className="detail-label">Fat</span>
+                      <span className="detail-value">
+                        {Math.round(mealPlanData.totalMacros?.fat || 0)}g
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="nutrition-detail-section">
+                  <h3>Thông Tin Bổ Sung</h3>
+                  <div className="nutrition-detail-grid">
+                    <div className="nutrition-detail-item">
+                      <span className="detail-label">Fiber</span>
+                      <span className="detail-value">
+                        {Math.round(mealPlanData.totalMacros?.fiber || 0)}g
+                      </span>
+                    </div>
+                    <div className="nutrition-detail-item">
+                      <span className="detail-label">Sugar</span>
+                      <span className="detail-value">
+                        {Math.round(mealPlanData.totalMacros?.sugar || 0)}g
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}

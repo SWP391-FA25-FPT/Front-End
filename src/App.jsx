@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import AdminLogin from "./pages/AdminLogin";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import OTPVerification from "./pages/OTPVerification";
 import TakeSurvey from "./pages/TakeSurvey";
 import ProfilePage from "./pages/ProfilePage";
 import SupportPage from "./pages/SupportPage"; // Trang support chính
@@ -71,10 +72,21 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+<<<<<<< Updated upstream
           <Route path="/admin/login" element={<AdminLogin />} />
+=======
+          <Route path="/verify-otp" element={<OTPVerification />} />
+>>>>>>> Stashed changes
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/" element={<HomePage />} />
+          <Route 
+            path="/" 
+            element={
+              <SurveyCheckRoute>
+                <HomePage />
+              </SurveyCheckRoute>
+            } 
+          />
           <Route path="/support" element={<SupportPage />} />
 
           {/* NOTE: Thêm 6 route tĩnh mới (BẮT BUỘC PHẢI CÓ) */}
