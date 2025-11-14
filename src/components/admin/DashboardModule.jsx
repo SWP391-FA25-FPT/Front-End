@@ -113,13 +113,9 @@ export default function DashboardModule() {
   ];
 
   // ===================== BIỂU ĐỒ DONUT =====================
-  // Mock data - cần analytics data từ backend
-  const trafficSource = [
-    { name: "Mạng xã hội (TikTok, Facebook)", value: 63 },
-    { name: "Tìm kiếm Google", value: 22 },
-    { name: "Link chia sẻ / Referral", value: 15 },
-  ];
-  const trafficColors = ["#6366F1", "#22C55E", "#F97316"];
+  // Lấy data từ API
+  const trafficSource = stats?.users?.byKnowledgeSource || [];
+  const trafficColors = ["#6366F1", "#22C55E", "#F97316", "#EAB308", "#EF4444"];
 
   if (loading) {
     return (
@@ -185,22 +181,28 @@ export default function DashboardModule() {
         {/* DONUT CHART */}
         <Col xs={24} md={8}>
           <Card className="chart-container" title="Nguồn người dùng đến nền tảng">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={trafficSource}
-                  dataKey="value"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={3}
-                >
-                  {trafficSource.map((_, index) => (
-                    <Cell key={index} fill={trafficColors[index]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            {trafficSource.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={trafficSource}
+                    dataKey="value"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={3}
+                  >
+                    {trafficSource.map((_, index) => (
+                      <Cell key={index} fill={trafficColors[index % trafficColors.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-center py-5 text-muted">
+                Chưa có dữ liệu về nguồn người dùng
+              </div>
+            )}
           </Card>
         </Col>
 

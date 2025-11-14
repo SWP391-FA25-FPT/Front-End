@@ -26,7 +26,7 @@ function TakeSurvey({ onComplete }) {
       diet: '',
       allergies: [],
       meals: [],
-      profileImageUrl: '',
+      knowledgeSource: '',
     },
   });
 
@@ -146,6 +146,10 @@ function TakeSurvey({ onComplete }) {
       case 4:
         if (profileData.profile.meals.length === 0) {
           setError('Vui lòng chọn ít nhất một bữa ăn!');
+          return false;
+        }
+        if (!profileData.profile.knowledgeSource) {
+          setError('Vui lòng chọn nguồn biết đến hệ thống!');
           return false;
         }
         break;
@@ -393,13 +397,19 @@ function TakeSurvey({ onComplete }) {
               </div>
             </div>
             <div className="form-group">
-              <label>URL ảnh đại diện (tùy chọn)</label>
-              <input
-                type="url"
-                value={profileData.profile.profileImageUrl}
-                onChange={(e) => handleInputChange('profile.profileImageUrl', e.target.value)}
-                placeholder="https://example.com/your-image.jpg"
-              />
+              <label>Bạn biết đến hệ thống qua đâu? <span className="required">*</span></label>
+              <select
+                value={profileData.profile.knowledgeSource}
+                onChange={(e) => handleInputChange('profile.knowledgeSource', e.target.value)}
+                required
+              >
+                <option value="">Chọn nguồn</option>
+                <option value="social-media">Mạng xã hội (TikTok, Facebook, Instagram...)</option>
+                <option value="google-search">Tìm kiếm Google</option>
+                <option value="referral">Link chia sẻ / Giới thiệu từ người khác</option>
+                <option value="advertisement">Quảng cáo</option>
+                <option value="other">Khác</option>
+              </select>
             </div>
           </div>
         );
