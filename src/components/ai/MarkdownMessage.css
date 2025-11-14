@@ -1,0 +1,202 @@
+.markdown-message {
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-message .markdown-paragraph {
+  margin: 0 0 0.75rem 0;
+  line-height: 1.6;
+}
+
+.markdown-message .markdown-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+/* Headings */
+.markdown-message .markdown-h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1rem 0 0.75rem 0;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.markdown-message .markdown-h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0.875rem 0 0.5rem 0;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.markdown-message .markdown-h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0.75rem 0 0.5rem 0;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+/* Lists */
+.markdown-message .markdown-list {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.markdown-message .markdown-ul {
+  list-style-type: disc;
+}
+
+.markdown-message .markdown-ol {
+  list-style-type: decimal;
+}
+
+.markdown-message .markdown-li {
+  margin: 0.25rem 0;
+  line-height: 1.6;
+}
+
+.markdown-message .markdown-li::marker {
+  color: var(--color-primary);
+}
+
+/* Code */
+.markdown-message .markdown-code-block {
+  background: var(--color-bg-container);
+  border: 1px solid var(--color-primary-faded);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.markdown-message .markdown-code-block code {
+  background: transparent;
+  padding: 0;
+  border: none;
+  color: var(--color-text-primary);
+  font-family: inherit;
+}
+
+.markdown-message .markdown-inline-code {
+  background: var(--color-primary-faded);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9em;
+  color: var(--color-primary-dark);
+  border: 1px solid var(--color-primary);
+}
+
+/* Links */
+.markdown-message .markdown-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.markdown-message .markdown-link:hover {
+  color: var(--color-primary-dark);
+  border-bottom-color: var(--color-primary);
+}
+
+/* Blockquotes */
+.markdown-message .markdown-blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: 1rem;
+  margin: 0.75rem 0;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  background: var(--color-primary-faded);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+}
+
+/* Tables */
+.markdown-message .markdown-table-wrapper {
+  overflow-x: auto;
+  margin: 0.75rem 0;
+}
+
+.markdown-message .markdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--color-primary-faded);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.markdown-message .markdown-th {
+  background: var(--color-primary-faded);
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.markdown-message .markdown-td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-primary-faded);
+  color: var(--color-text-primary);
+}
+
+.markdown-message .markdown-tr:last-child .markdown-td {
+  border-bottom: none;
+}
+
+.markdown-message .markdown-tr:hover {
+  background: var(--color-primary-faded);
+}
+
+/* Horizontal rule */
+.markdown-message .markdown-hr {
+  border: none;
+  border-top: 2px solid var(--color-primary-faded);
+  margin: 1rem 0;
+}
+
+/* Strong and emphasis */
+.markdown-message .markdown-strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.markdown-message .markdown-em {
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+/* Dark theme adjustments */
+.markdown-message.dark .markdown-code-block {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: var(--color-primary);
+}
+
+.markdown-message.dark .markdown-inline-code {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: var(--color-primary);
+}
+
+.markdown-message.dark .markdown-blockquote {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.markdown-message.dark .markdown-table {
+  border-color: var(--color-primary);
+}
+
+.markdown-message.dark .markdown-th {
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom-color: var(--color-primary);
+}
+
+.markdown-message.dark .markdown-tr:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
