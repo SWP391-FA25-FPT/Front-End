@@ -19,13 +19,17 @@ export default function DashboardModule() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(2025); // Default to 2025
+
+  // Generate years from 2025 to 2029
+  const availableYears = [2025, 2026, 2027, 2028, 2029];
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await getSystemStats();
+        const response = await getSystemStats(selectedYear);
         if (response.success) {
           setStats(response.data);
         } else {
@@ -40,7 +44,7 @@ export default function DashboardModule() {
     };
 
     fetchStats();
-  }, []);
+  }, [selectedYear]);
 
   // Format số với dấu phẩy
   const formatNumber = (num) => {
@@ -54,11 +58,11 @@ export default function DashboardModule() {
     return `${amount.toLocaleString("vi-VN")}đ`;
   };
 
-  // Tính % thay đổi (mock - cần dữ liệu thực từ backend)
-  const calculateChange = (current, previous) => {
-    if (!previous || previous === 0) return "+0%";
-    const change = ((current - previous) / previous) * 100;
-    return change >= 0 ? `+${change.toFixed(0)}%` : `${change.toFixed(0)}%`;
+  // Format % thay đổi từ API
+  const formatChange = (change) => {
+    if (change === undefined || change === null) return "+0%";
+    const changeValue = parseFloat(change);
+    return changeValue >= 0 ? `+${changeValue.toFixed(0)}%` : `${changeValue.toFixed(0)}%`;
   };
 
   // ===================== KPI THỐNG KÊ =====================
@@ -67,28 +71,28 @@ export default function DashboardModule() {
         {
           title: "Người dùng Premium đang hoạt động",
           value: formatNumber(stats.subscriptions?.active || 0),
-          change: "+12%", // Mock - cần tính từ dữ liệu thực
+          change: formatChange(stats.subscriptions?.activeChange),
           icon: "mdi:diamond-stone",
           color: "#EAB308",
         },
         {
           title: "Người dùng mới (tháng này)",
           value: formatNumber(stats.users?.new || 0),
-          change: "-8%", // Mock - cần tính từ dữ liệu thực
+          change: formatChange(stats.users?.newChange),
           icon: "mdi:account-plus-outline",
           color: "#22C55E",
         },
         {
           title: "Tổng lượt tìm kiếm",
           value: formatNumber(stats.analytics?.totalSearches || 0),
-          change: "+22%", // Mock
+          change: formatChange(stats.analytics?.searchesChange),
           icon: "mdi:robot-outline",
           color: "#F97316",
         },
         {
           title: "Tổng doanh thu",
           value: formatCurrency(stats.subscriptions?.revenue || 0),
-          change: "+14%", // Mock
+          change: formatChange(stats.subscriptions?.revenueChange),
           icon: "mdi:credit-card-outline",
           color: "#6366F1",
         },
@@ -96,21 +100,8 @@ export default function DashboardModule() {
     : [];
 
   // ===================== BIỂU ĐỒ BAR =====================
-  // Mock data - cần API để lấy dữ liệu theo tháng
-  const subscriptionData = [
-    { month: "Th01", value: 120 },
-    { month: "Th02", value: 160 },
-    { month: "Th03", value: 200 },
-    { month: "Th04", value: 180 },
-    { month: "Th05", value: 240 },
-    { month: "Th06", value: 260 },
-    { month: "Th07", value: 310 },
-    { month: "Th08", value: 380 },
-    { month: "Th09", value: 420 },
-    { month: "Th10", value: 460 },
-    { month: "Th11", value: 510 },
-    { month: "Th12", value: 580 },
-  ];
+  // Lấy data từ API
+  const subscriptionData = stats?.subscriptions?.monthlyGrowth || [];
 
   // ===================== BIỂU ĐỒ DONUT =====================
   // Lấy data từ API
@@ -166,15 +157,38 @@ export default function DashboardModule() {
 
         {/* BAR CHART */}
         <Col xs={24} md={16}>
-          <Card className="chart-container" title="Tăng trưởng người dùng Premium">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={subscriptionData}>
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" fill="#6366F1" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <Card 
+            className="chart-container" 
+            title="Tăng trưởng người dùng Premium"
+            extra={
+              <select
+                className="form-select form-select-sm"
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                style={{ width: "120px" }}
+              >
+                {availableYears.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            }
+          >
+            {subscriptionData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={subscriptionData}>
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#6366F1" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-center py-5 text-muted">
+                Chưa có dữ liệu về tăng trưởng người dùng Premium
+              </div>
+            )}
           </Card>
         </Col>
 

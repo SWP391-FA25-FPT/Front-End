@@ -35,6 +35,7 @@ import ChallengeDetail from "./pages/ChallengeDetail";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import BlogCreate from "./pages/BlogCreate";
+import MyBlogs from "./pages/MyBlogs";
 import MealPlan from "./pages/MealPlan";
 import AIConsultation from "./pages/AIConsultation";
 import NutritionalAnalysis from "./pages/NutritionalAnalysis";
@@ -129,6 +130,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <BlogCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-blogs"
+            element={
+              <ProtectedRoute>
+                <MyBlogs />
               </ProtectedRoute>
             }
           />

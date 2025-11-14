@@ -2,7 +2,7 @@ import { baseUrl } from "../utils/constants";
 import { getCookie } from "../utils/cookie";
 
 // Get system statistics (Admin only)
-export const getSystemStats = async () => {
+export const getSystemStats = async (year = null) => {
   try {
     const token = getCookie("token");
 
@@ -10,7 +10,11 @@ export const getSystemStats = async () => {
       throw new Error("Vui lòng đăng nhập");
     }
 
-    const response = await fetch(`${baseUrl}/api/admin/stats`, {
+    const url = year 
+      ? `${baseUrl}/api/admin/stats?year=${year}`
+      : `${baseUrl}/api/admin/stats`;
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
