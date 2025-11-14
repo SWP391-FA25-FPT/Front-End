@@ -1,4 +1,4 @@
-import { baseUrl, apiUrls } from "../utils/constants";
+import { baseUrl } from "../utils/constants";
 import { getCookie } from "../utils/cookie";
 
 // Get ratings by recipe ID
