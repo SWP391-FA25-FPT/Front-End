@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Container } from "react-bootstrap";
 import { Button, ConfigProvider, Menu } from "antd";
 import { Icon } from "@iconify/react";
@@ -10,8 +10,10 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
     const location = useLocation();
 
     // ✅ xác định mục đang active
-    const getSelectedKey = () => {
+    const selectedKey = useMemo(() => {
         const path = location.pathname;
+        // Check exact paths first
+        if (path === "/admin" || path === "/admin/") return "admin-dashboard";
         if (path === "/admin/dashboard") return "admin-dashboard";
         if (path === "/admin/content-moderation") return "admin-content";
         if (path === "/admin/payment") return "admin-payment";
@@ -19,9 +21,11 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
         if (path === "/admin/report") return "admin-report";
         if (path === "/admin/feedback") return "admin-feedback";
         if (path === "/admin/users") return "admin-users";
+        if (path === "/admin/system-settings") return "admin-system-setting";
+        // Legacy path support
         if (path === "/admin/setting") return "admin-system-setting";
         return "";
-    };
+    }, [location.pathname]);
 
     // ✅ danh sách menu admin
     const adminItems = [
@@ -124,7 +128,7 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
 
                 {/* Menu Admin */}
                 <Menu
-                    selectedKeys={[getSelectedKey()]}
+                    selectedKeys={selectedKey ? [selectedKey] : []}
                     mode="inline"
                     items={adminItems}
                     inlineCollapsed={collapsed}

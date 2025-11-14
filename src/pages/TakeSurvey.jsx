@@ -186,7 +186,7 @@ function TakeSurvey({ onComplete }) {
         },
       };
 
-      const updateResponse = await updateProfile(processedData);
+      const updateResponse = await updateProfile(null, processedData);
       const completeResponse = await completeOnboarding();
 
       // Update user data in context

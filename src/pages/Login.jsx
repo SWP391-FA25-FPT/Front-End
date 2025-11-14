@@ -133,13 +133,9 @@ function Login() {
         setSuccess('Đăng nhập thành công!');
         console.log('User:', response.data.user);
 
-        // Redirect to home page
+        // Redirect to home page (admin should use /admin/login)
         setTimeout(() => {
-          if (response.data.user.role === "admin") {
-            window.location.href = "/admin"; // hoặc /admin/dashboard
-          } else {
-            window.location.href = "/";
-          }
+          window.location.href = "/";
         }, 800);
       } else {
         setError(response.error || 'Đăng nhập thất bại!');
