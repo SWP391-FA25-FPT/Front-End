@@ -381,6 +381,132 @@ export const toggleSaveRecipe = async (recipeId) => {
 };
 
 // Check if recipe is saved by user
+// ==================== ADMIN FUNCTIONS ====================
+
+// Get pending recipes for moderation (Admin only)
+export const getPendingRecipesAdmin = async (params = {}) => {
+  try {
+    const token = getCookie("token");
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập");
+    }
+
+    const queryParams = new URLSearchParams();
+    if (params.page) queryParams.append("page", params.page);
+    if (params.limit) queryParams.append("limit", params.limit);
+    if (params.status) queryParams.append("status", params.status);
+    if (params.search) queryParams.append("search", params.search);
+    if (params.category) queryParams.append("category", params.category);
+
+    const url = `${baseUrl}/api/recipes/admin/pending${
+      queryParams.toString() ? "?" + queryParams.toString() : ""
+    }`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi lấy danh sách recipes chờ duyệt");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Get pending recipes admin error:", error);
+    throw error;
+  }
+};
+
+// Approve recipe (Admin only)
+export const approveRecipeAdmin = async (recipeId) => {
+  try {
+    const token = getCookie("token");
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập");
+    }
+
+    const response = await fetch(`${baseUrl}/api/recipes/admin/${recipeId}/approve`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi duyệt recipe");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Approve recipe admin error:", error);
+    throw error;
+  }
+};
+
+// Reject recipe (Admin only)
+export const rejectRecipeAdmin = async (recipeId, reason = "") => {
+  try {
+    const token = getCookie("token");
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập");
+    }
+
+    const response = await fetch(`${baseUrl}/api/recipes/admin/${recipeId}/reject`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ reason }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi từ chối recipe");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Reject recipe admin error:", error);
+    throw error;
+  }
+};
+
+// Get moderation statistics (Admin only)
+export const getModerationStatsAdmin = async () => {
+  try {
+    const token = getCookie("token");
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập");
+    }
+
+    const response = await fetch(`${baseUrl}/api/recipes/admin/moderation/stats`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || "Lỗi khi lấy thống kê moderation");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Get moderation stats admin error:", error);
+    throw error;
+  }
+};
+
 export const checkRecipeSaved = async (recipeId) => {
   try {
     const token = getCookie("token") || localStorage.getItem("token");

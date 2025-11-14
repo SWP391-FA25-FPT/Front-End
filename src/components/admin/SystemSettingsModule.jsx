@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { Switch, Select, Slider, Input, Button, Upload, message } from "antd";
+import React, { useState, useEffect } from "react";
+import { Switch, Select, Slider, Input, Button, Upload, message, Spin, Alert } from "antd";
 import { UploadOutlined, SaveOutlined } from "@ant-design/icons";
 import "../../pages/style/SystemSettingAdmin.css";
+import { getSystemSettings, updateSystemSettings } from "../../apis/admin";
 
 export default function SystemSettingsModule() {
   const [settings, setSettings] = useState({
     systemName: "Meta Meal",
+    logoUrl: "",
     timezone: "UTC+7",
     language: "vi",
     twoFactorAuth: false,
@@ -19,15 +21,67 @@ export default function SystemSettingsModule() {
     notifyPremium: true,
   });
 
-  const [activeTab, setActiveTab] = useState("general"); 
+  const [activeTab, setActiveTab] = useState("general");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Fetch settings on mount
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await getSystemSettings();
+        if (response.success && response.data) {
+          setSettings(response.data);
+        }
+      } catch (err) {
+        console.error("Error fetching settings:", err);
+        setError(err.message || "Lỗi khi tải cài đặt");
+        message.error("Không thể tải cài đặt hệ thống");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, []);
 
   const updateSetting = (key, value) => {
     setSettings({ ...settings, [key]: value });
   };
 
-  const saveSettings = () => {
-    message.success("Đã lưu cài đặt thành công!");
+  const saveSettings = async () => {
+    try {
+      setSaving(true);
+      setError(null);
+      const response = await updateSystemSettings(settings);
+      if (response.success) {
+        message.success("Đã lưu cài đặt thành công!");
+      } else {
+        throw new Error(response.error || "Lỗi khi lưu cài đặt");
+      }
+    } catch (err) {
+      console.error("Error saving settings:", err);
+      setError(err.message || "Lỗi khi lưu cài đặt");
+      message.error(err.message || "Lỗi khi lưu cài đặt");
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <Spin size="large" tip="Đang tải cài đặt..." />
+      </div>
+    );
+  }
+
+  if (error && !settings.systemName) {
+    return <Alert message="Lỗi" description={error} type="error" showIcon />;
+  }
 
   return (
     <div className="system-settings-wrapper">
@@ -171,8 +225,26 @@ export default function SystemSettingsModule() {
         )}
 
         <div className="settings-footer">
-          <Button type="primary" icon={<SaveOutlined />} size="large" onClick={saveSettings}>
-            Lưu cài đặt
+          {error && (
+            <Alert
+              message="Lỗi"
+              description={error}
+              type="error"
+              showIcon
+              style={{ marginBottom: 16 }}
+              closable
+              onClose={() => setError(null)}
+            />
+          )}
+          <Button
+            type="primary"
+            icon={<SaveOutlined />}
+            size="large"
+            onClick={saveSettings}
+            loading={saving}
+            disabled={saving}
+          >
+            {saving ? "Đang lưu..." : "Lưu cài đặt"}
           </Button>
         </div>
       </div>

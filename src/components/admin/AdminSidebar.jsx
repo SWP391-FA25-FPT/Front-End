@@ -5,6 +5,8 @@ import { Icon } from "@iconify/react";
 import Logo from "../Logo/Logo";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../SideBar/index.css";
+
+const { SubMenu } = Menu;
 export default function AdminSidebar({ collapsed, toggleCollapsed }) {
     const navigate = useNavigate();
     const location = useLocation();
@@ -15,7 +17,8 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
         // Check exact paths first
         if (path === "/admin" || path === "/admin/") return "admin-dashboard";
         if (path === "/admin/dashboard") return "admin-dashboard";
-        if (path === "/admin/content-moderation") return "admin-content";
+        if (path === "/admin/content-moderation/recipes" || path === "/admin/content-moderation") return "admin-content-recipes";
+        if (path === "/admin/content-moderation/blogs") return "admin-content-blogs";
         if (path === "/admin/payment") return "admin-payment";
         if (path === "/admin/statistics") return "admin-statistics";
         if (path === "/admin/report") return "admin-report";
@@ -39,7 +42,20 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
             key: "admin-content",
             icon: <Icon icon="mdi:camera-outline" width="24" height="24" />,
             label: "Kiểm Duyệt Nội Dung",
-            onClick: () => navigate("/admin/content-moderation"),
+            children: [
+                {
+                    key: "admin-content-recipes",
+                    icon: <Icon icon="mdi:food-variant-outline" width="20" height="20" />,
+                    label: "Recipes",
+                    onClick: () => navigate("/admin/content-moderation/recipes"),
+                },
+                {
+                    key: "admin-content-blogs",
+                    icon: <Icon icon="mdi:newspaper-variant-outline" width="20" height="20" />,
+                    label: "Blogs",
+                    onClick: () => navigate("/admin/content-moderation/blogs"),
+                },
+            ],
         },
         {
             key: "admin-payment",
@@ -130,10 +146,40 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
                 <Menu
                     selectedKeys={selectedKey ? [selectedKey] : []}
                     mode="inline"
-                    items={adminItems}
                     inlineCollapsed={collapsed}
                     style={{ border: "none" }}
-                />
+                >
+                    {adminItems.map((item) => {
+                        if (item.children) {
+                            return (
+                                <SubMenu
+                                    key={item.key}
+                                    icon={item.icon}
+                                    title={item.label}
+                                >
+                                    {item.children.map((child) => (
+                                        <Menu.Item
+                                            key={child.key}
+                                            icon={child.icon}
+                                            onClick={child.onClick}
+                                        >
+                                            {child.label}
+                                        </Menu.Item>
+                                    ))}
+                                </SubMenu>
+                            );
+                        }
+                        return (
+                            <Menu.Item
+                                key={item.key}
+                                icon={item.icon}
+                                onClick={item.onClick}
+                            >
+                                {item.label}
+                            </Menu.Item>
+                        );
+                    })}
+                </Menu>
             </Container>
         </ConfigProvider>
     );
