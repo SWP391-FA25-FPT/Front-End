@@ -443,7 +443,6 @@
 .btn-add-to-list:hover {
   background: var(--color-primary-dark);
 }
-
 .ingredients-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -451,14 +450,17 @@
 }
 
 .ingredient-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 12px 16px;
-  /* SỬA ĐỔI: Dùng màu Container */
   background: var(--color-bg-container);
   border-radius: 8px;
   transition: all 0.2s ease;
+
+  /* FIX LỖI */
+  min-height: 65px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 
 .ingredient-item:hover {
@@ -466,17 +468,18 @@
   transform: translateY(-2px);
 }
 
-.ingredient-name {
+.ingredient-name,
+.ingredient-amount {
   font-size: 14px;
   font-weight: 500;
   color: var(--color-text-primary);
+
+  /* FIX CHỮ DÀI */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.ingredient-amount {
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  font-weight: 600;
-}
 
 /* Responsive Design */
 @media (max-width: 1024px) {
@@ -608,3 +611,18 @@
     background: var(--color-primary-faded);
   }
 }
+.ingredient-item {
+  min-height: 60px;             
+  display: flex;
+  flex-direction: column;        
+  justify-content: center;       
+  gap: 4px;
+  text-align: center;            
+}
+.ingredient-name,
+.ingredient-amount {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
