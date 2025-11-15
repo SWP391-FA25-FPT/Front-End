@@ -133,18 +133,6 @@ export default function RecipeModerationModule() {
     setIsModalOpen(true);
   };
 
-  const getPriorityColor = (views, saves) => {
-    if (views >= 100 || saves >= 50) return "red";
-    if (views >= 50 || saves >= 25) return "orange";
-    return "green";
-  };
-
-  const getPriorityText = (views, saves) => {
-    if (views >= 100 || saves >= 50) return "Cao";
-    if (views >= 50 || saves >= 25) return "Trung bình";
-    return "Thấp";
-  };
-
   // Extract unique categories from recipes
   const categories = [...new Set(recipes.flatMap(r => r.tags || []))].filter(Boolean);
 
@@ -166,10 +154,7 @@ export default function RecipeModerationModule() {
       {stats && (
         <div className="mb-4 d-flex gap-3 flex-wrap">
           <Tag color="blue">Chờ duyệt: {stats.pending || 0}</Tag>
-          <Tag color="orange">Draft: {stats.draft || 0}</Tag>
-          <Tag color="purple">Private: {stats.private || 0}</Tag>
           <Tag color="green">Đã duyệt: {stats.published || 0}</Tag>
-          <Tag color="red">Ưu tiên cao: {stats.highPriority || 0}</Tag>
         </div>
       )}
 
@@ -209,8 +194,8 @@ export default function RecipeModerationModule() {
           }}
           style={{ minWidth: 150 }}
           options={[
-            { value: "draft", label: "Draft" },
-            { value: "private", label: "Private" },
+            { value: "private", label: "Chờ duyệt" },
+            { value: "published", label: "Đã duyệt" },
           ]}
         />
       </div>
@@ -223,8 +208,6 @@ export default function RecipeModerationModule() {
           </div>
         ) : (
           recipes.map((recipe) => {
-            const priority = getPriorityText(recipe.views || 0, recipe.saves || 0);
-            const priorityColor = getPriorityColor(recipe.views || 0, recipe.saves || 0);
             const mainTag = recipe.tags?.[0] || "Không có";
 
             return (
@@ -232,15 +215,14 @@ export default function RecipeModerationModule() {
                 <div>
                   <div className="admin-card-tags">
                     <Tag color="purple">{mainTag}</Tag>
-                    <Tag color={priorityColor}>{priority}</Tag>
                   </div>
 
                   <h4 className="admin-card-title">{recipe.name || "Không có tên"}</h4>
                   <Tag
-                    color={recipe.status === "published" ? "green" : recipe.status === "private" ? "orange" : "gold"}
+                    color={recipe.status === "published" ? "green" : "orange"}
                     style={{ marginBottom: 8 }}
                   >
-                    {recipe.status === "published" ? "Đã duyệt" : recipe.status === "private" ? "Private" : "Draft"}
+                    {recipe.status === "published" ? "Đã duyệt" : "Chờ duyệt"}
                   </Tag>
                   <p><strong>Người đăng:</strong> {recipe.author || recipe.authorId?.name || "Ẩn danh"}</p>
                   {recipe.views !== undefined && <p><small>Lượt xem: {recipe.views || 0}</small></p>}
