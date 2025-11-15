@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Select, Button, Tag, Modal, Input, message, Spin, Alert, Pagination } from "antd";
+import {
+  Select,
+  Button,
+  Tag,
+  Modal,
+  Input,
+  message,
+  Spin,
+  Alert,
+  Pagination,
+} from "antd";
 import { Icon } from "@iconify/react";
 import "../../pages/style/ContentModeration.css";
 import {
@@ -134,7 +144,9 @@ export default function RecipeModerationModule() {
   };
 
   // Extract unique categories from recipes
-  const categories = [...new Set(recipes.flatMap(r => r.tags || []))].filter(Boolean);
+  const categories = [...new Set(recipes.flatMap((r) => r.tags || []))].filter(
+    Boolean
+  );
 
   if (loading && recipes.length === 0) {
     return (
@@ -181,7 +193,7 @@ export default function RecipeModerationModule() {
             setCurrentPage(1);
           }}
           style={{ minWidth: 150 }}
-          options={categories.map(cat => ({ value: cat, label: cat }))}
+          options={categories.map((cat) => ({ value: cat, label: cat }))}
         />
 
         <Select
@@ -194,8 +206,8 @@ export default function RecipeModerationModule() {
           }}
           style={{ minWidth: 150 }}
           options={[
-            { value: "private", label: "Chờ duyệt" },
-            { value: "published", label: "Đã duyệt" },
+            { value: "published", label: "Chờ duyệt" },
+            { value: "private", label: "Đã duyệt" },
           ]}
         />
       </div>
@@ -217,15 +229,24 @@ export default function RecipeModerationModule() {
                     <Tag color="purple">{mainTag}</Tag>
                   </div>
 
-                  <h4 className="admin-card-title">{recipe.name || "Không có tên"}</h4>
+                  <h4 className="admin-card-title">
+                    {recipe.name || "Không có tên"}
+                  </h4>
                   <Tag
                     color={recipe.status === "published" ? "green" : "orange"}
                     style={{ marginBottom: 8 }}
                   >
                     {recipe.status === "published" ? "Đã duyệt" : "Chờ duyệt"}
                   </Tag>
-                  <p><strong>Người đăng:</strong> {recipe.author || recipe.authorId?.name || "Ẩn danh"}</p>
-                  {recipe.views !== undefined && <p><small>Lượt xem: {recipe.views || 0}</small></p>}
+                  <p>
+                    <strong>Người đăng:</strong>{" "}
+                    {recipe.author || recipe.authorId?.name || "Ẩn danh"}
+                  </p>
+                  {recipe.views !== undefined && (
+                    <p>
+                      <small>Lượt xem: {recipe.views || 0}</small>
+                    </p>
+                  )}
                 </div>
 
                 <div className="admin-card-actions">
@@ -266,7 +287,9 @@ export default function RecipeModerationModule() {
         }}
         footer={null}
         width={650}
-        title={`Xem trước công thức — ${selectedRecipe?.name || "Không có tên"}`}
+        title={`Xem trước công thức — ${
+          selectedRecipe?.name || "Không có tên"
+        }`}
       >
         {selectedRecipe && (
           <>
@@ -274,25 +297,40 @@ export default function RecipeModerationModule() {
               <img
                 src={selectedRecipe.image}
                 alt={selectedRecipe.name}
-                style={{ width: "100%", borderRadius: "12px", marginBottom: "16px" }}
+                style={{
+                  width: "100%",
+                  borderRadius: "12px",
+                  marginBottom: "16px",
+                }}
               />
             )}
 
-            <p><strong>Người đăng:</strong> {selectedRecipe.author || selectedRecipe.authorId?.name || "Ẩn danh"}</p>
-            <p><strong>Mô tả:</strong> {selectedRecipe.description || "Không có mô tả"}</p>
+            <p>
+              <strong>Người đăng:</strong>{" "}
+              {selectedRecipe.author ||
+                selectedRecipe.authorId?.name ||
+                "Ẩn danh"}
+            </p>
+            <p>
+              <strong>Mô tả:</strong>{" "}
+              {selectedRecipe.description || "Không có mô tả"}
+            </p>
 
-            {selectedRecipe.ingredients && selectedRecipe.ingredients.length > 0 && (
-              <>
-                <h4>📌 Nguyên liệu:</h4>
-                <ul>
-                  {selectedRecipe.ingredients.map((ing, index) => (
-                    <li key={index}>
-                      {typeof ing === 'object' ? `${ing.name}: ${ing.amount}` : ing}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
+            {selectedRecipe.ingredients &&
+              selectedRecipe.ingredients.length > 0 && (
+                <>
+                  <h4>📌 Nguyên liệu:</h4>
+                  <ul>
+                    {selectedRecipe.ingredients.map((ing, index) => (
+                      <li key={index}>
+                        {typeof ing === "object"
+                          ? `${ing.name}: ${ing.amount}`
+                          : ing}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
 
             {selectedRecipe.steps && selectedRecipe.steps.length > 0 && (
               <>
@@ -300,7 +338,7 @@ export default function RecipeModerationModule() {
                 <ol>
                   {selectedRecipe.steps.map((step, index) => (
                     <li key={index}>
-                      {typeof step === 'object' ? step.description : step}
+                      {typeof step === "object" ? step.description : step}
                     </li>
                   ))}
                 </ol>
@@ -343,4 +381,3 @@ export default function RecipeModerationModule() {
     </div>
   );
 }
-
