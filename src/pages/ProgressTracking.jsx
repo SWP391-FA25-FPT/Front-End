@@ -10,8 +10,16 @@ import {
   message,
   InputNumber,
   Checkbox,
+  List,
+  Card,
+  Tag,
+  Empty,
+  Typography,
+  Space,
+  Divider,
 } from "antd";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Icon } from "@iconify/react";
 import dayjs from "dayjs";
 import SettingLayout from "../components/layout/SettingLayout";
 import PageHeader from "../components/Progress/PageHeader";
@@ -124,58 +132,93 @@ const ProgressTracking = () => {
       // Load user profile
       const profileRes = await getProfile();
       if (profileRes) {
-        // getProfile returns { user: { profile: {...} }, stats: {...}, ... }
-        // So we need to extract the user object
-        const userData = profileRes.user || profileRes;
-        console.log('Profile data loaded:', userData);
-        console.log('User weight:', userData?.profile?.weight);
-        setUserProfile(userData);
+        // getProfile returns { user: {...}, stats: {...}, ... }
+        // The user object has profile nested inside
+        setUserProfile(profileRes);
       }
 
-      // Load active goal
+      // Load active goal first
+      let currentActiveGoal = null;
       try {
         const goalRes = await getActiveGoal();
         if (goalRes.success) {
-          setActiveGoal(goalRes.data);
-          setGoals([goalRes.data]);
+          currentActiveGoal = goalRes.data;
+          setActiveGoal(currentActiveGoal);
+          setGoals([currentActiveGoal]);
 
           // Update stats from goal
           setStats({
-            currentWeight: goalRes.data.currentWeight,
-            targetWeight: goalRes.data.targetWeight,
-            weightChange: goalRes.data.currentWeight - goalRes.data.startWeight,
+            currentWeight: currentActiveGoal.currentWeight,
+            targetWeight: currentActiveGoal.targetWeight,
+            weightChange: currentActiveGoal.currentWeight - currentActiveGoal.startWeight,
             currentStreak: 0
           });
         }
       } catch (error) {
         // No active goal
         console.log('No active goal');
+        setActiveGoal(null);
+        setGoals([]);
       }
 
-      // Load today's progress
+      // Load today's progress - only if there's an active goal
+      if (currentActiveGoal) {
       try {
         const todayRes = await getTodayProgress();
         if (todayRes.success) {
+            // Only use if it belongs to current goal
+            if (todayRes.data.goalId && todayRes.data.goalId.toString() === currentActiveGoal._id.toString()) {
           setTodayProgress(todayRes.data);
           updateDailyDataFromProgress(todayRes.data);
+            } else {
+              setTodayProgress(null);
+            }
         }
       } catch (error) {
         // No progress for today
         console.log('No progress for today');
+          setTodayProgress(null);
+        }
+      } else {
+        setTodayProgress(null);
       }
 
-      // Load progress history (last 30 days)
-      const historyRes = await getProgressHistory({ limit: 30 });
+      // Load progress history (last 30 days) - only for active goal
+      if (currentActiveGoal) {
+        try {
+          const historyRes = await getProgressHistory({ 
+            goalId: currentActiveGoal._id,
+            limit: 30 
+          });
       if (historyRes.success) {
         setProgressHistory(historyRes.data);
         updateWeightChartFromHistory(historyRes.data);
         updateWeeklyDataFromHistory(historyRes.data);
+          }
+        } catch (error) {
+          console.log('No progress history for current goal');
+          setProgressHistory([]);
+        }
+      } else {
+        // Clear history if no active goal
+        setProgressHistory([]);
+        setWeightData({ labels: [], values: [], target: [] });
+        setWeeklyData([]);
       }
 
-      // Load progress stats
-      const statsRes = await getProgressStats();
+      // Load progress stats - only for active goal
+      if (currentActiveGoal) {
+        try {
+          const statsRes = await getProgressStats({ goalId: currentActiveGoal._id });
       if (statsRes.success) {
         setProgressStats(statsRes.data);
+          }
+        } catch (error) {
+          console.log('No progress stats for current goal');
+          setProgressStats(null);
+        }
+      } else {
+        setProgressStats(null);
       }
 
       // Load today's meal plan (only goal-based meal plans for Tracking Page)
@@ -284,6 +327,10 @@ const ProgressTracking = () => {
   };
 
   const handleAddRecord = () => {
+    if (!activeGoal) {
+      message.warning('Vui lòng tạo mục tiêu trước khi thêm bản ghi!');
+      return;
+    }
     form.setFieldsValue({
       date: dayjs(),
       waterIntake: waterData.current
@@ -292,10 +339,19 @@ const ProgressTracking = () => {
   };
 
   const handleViewHistory = () => {
+    if (!activeGoal) {
+      message.warning('Vui lòng tạo mục tiêu trước khi xem lịch sử!');
+      return;
+    }
     setHistoryModalVisible(true);
   };
 
   const handleAddRecordSubmit = async (values) => {
+    if (!activeGoal) {
+      message.error('Vui lòng tạo mục tiêu trước khi thêm bản ghi!');
+      return;
+    }
+
     try {
       setLoading(true);
       const recordData = {
@@ -305,7 +361,7 @@ const ProgressTracking = () => {
         waterIntake: values.waterIntake || waterData.current,
         exercised: values.exercised || false,
         notes: values.notes || '',
-        goalId: activeGoal?._id,
+        goalId: activeGoal._id, // Always require goalId
         mealPlanId: mealPlan?._id
       };
 
@@ -393,6 +449,12 @@ const ProgressTracking = () => {
   };
 
   const handleDailyCheckInSubmit = async (values) => {
+    if (!activeGoal) {
+      message.warning('Vui lòng tạo mục tiêu trước khi cập nhật thông tin!');
+      setDailyCheckInVisible(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const today = new Date();
@@ -405,7 +467,8 @@ const ProgressTracking = () => {
         waterIntake: values.waterIntake || 0,
         exercised: values.exercised || false,
         notes: values.notes || '',
-        goalId: activeGoal?._id,
+        mood: values.mood || '',
+        goalId: activeGoal._id, // Always require goalId
         mealPlanId: mealPlan?._id
       };
 
@@ -573,16 +636,16 @@ const ProgressTracking = () => {
             </p>
             <div style={{ marginTop: '8px' }}>
               <p style={{ margin: '4px 0', fontSize: '13px' }}>
-                • <strong>Hủy và giữ dữ liệu</strong>: Mục tiêu bị hủy nhưng lịch sử tracking vẫn được lưu
+                • <strong>Hủy mục tiêu</strong>: Xóa mục tiêu và tất cả bản ghi tracking liên quan
               </p>
               <p style={{ margin: '4px 0', fontSize: '13px' }}>
-                • <strong>Hủy và xóa tất cả</strong>: Xóa mục tiêu và TẤT CẢ dữ liệu tracking liên quan
+                • <strong>Hủy và xóa tất cả</strong>: Xóa mục tiêu, TẤT CẢ bản ghi tracking và kế hoạch bữa ăn
               </p>
             </div>
           </div>
         </div>
       ),
-      okText: 'Hủy và giữ dữ liệu',
+      okText: 'Hủy mục tiêu',
       cancelText: 'Không hủy',
       width: 550,
       okButtonProps: {
@@ -608,13 +671,37 @@ const ProgressTracking = () => {
       onOk: async () => {
         try {
           setLoading(true);
+
+          // Import APIs
           const { cancelGoal } = await import("../apis/goal");
+          const { getProgressHistory, deleteProgressRecord } = await import("../apis/progressTracking");
+
+          // Delete all progress records for this goal
+          try {
+            const progressRes = await getProgressHistory({ goalId: activeGoal._id, limit: 1000 });
+            if (progressRes.success && progressRes.data && progressRes.data.length > 0) {
+              const deletePromises = progressRes.data.map(record =>
+                deleteProgressRecord(record._id).catch(err => {
+                  console.error('Error deleting record:', err);
+                  return null;
+                })
+              );
+              await Promise.all(deletePromises);
+            }
+          } catch (error) {
+            console.error('Error deleting progress records:', error);
+            // Continue even if deletion fails
+          }
+
+          // Cancel the goal
           const response = await cancelGoal(activeGoal._id);
 
           if (response.success) {
-            message.success('Đã hủy mục tiêu (dữ liệu tracking được giữ lại)');
+            message.success('Đã hủy mục tiêu và xóa tất cả bản ghi tracking');
             setActiveGoal(null);
             setGoals([]);
+            setTodayProgress(null);
+            setProgressHistory([]);
             loadAllData();
           }
         } catch (error) {
@@ -854,7 +941,14 @@ const ProgressTracking = () => {
         onCancel={() => setGoalModalVisible(false)}
         onSubmit={handleGoalSubmit}
         loading={loading}
-        currentWeight={userProfile?.profile?.weight || user?.profile?.weight || null}
+        currentWeight={
+          userProfile?.user?.profile?.weight || 
+          userProfile?.profile?.weight || 
+          activeGoal?.currentWeight || 
+          (progressHistory && progressHistory.length > 0 
+            ? progressHistory.find(r => r.actualWeight)?.actualWeight 
+            : null)
+        }
       />
 
       {/* Add Record Modal */}
@@ -948,14 +1042,187 @@ const ProgressTracking = () => {
 
       {/* History Modal */}
       <Modal
-        title="Lịch sử theo dõi"
+        title={
+          <Space>
+            <Icon icon="mdi:history" style={{ fontSize: "24px", color: "#F8B602" }} />
+            <span>Lịch sử theo dõi</span>
+          </Space>
+        }
         open={historyModalVisible}
         onCancel={() => setHistoryModalVisible(false)}
         footer={null}
-        width={800}
+        width={900}
+        style={{ top: 20 }}
       >
-        <div style={{ padding: 20 }}>
-          <p>Danh sách lịch sử theo dõi sẽ được hiển thị ở đây...</p>
+        <div style={{ maxHeight: "70vh", overflowY: "auto", padding: "10px 0" }}>
+          {progressHistory && progressHistory.length > 0 ? (
+            <List
+              dataSource={progressHistory}
+              renderItem={(record) => {
+                const recordDate = dayjs(record.date);
+                const isToday = recordDate.isSame(dayjs(), 'day');
+                const moodEmojis = {
+                  'great': '😄',
+                  'good': '😊',
+                  'okay': '😐',
+                  'bad': '😔',
+                  'terrible': '😢',
+                  '': ''
+                };
+                const moodLabels = {
+                  'great': 'Tuyệt vời',
+                  'good': 'Tốt',
+                  'okay': 'Ổn',
+                  'bad': 'Không tốt',
+                  'terrible': 'Rất tệ',
+                  '': 'Chưa cập nhật'
+                };
+
+                return (
+                  <List.Item style={{ padding: "16px 0", borderBottom: "1px solid #f0f0f0" }}>
+                    <Card
+                      size="small"
+                      style={{
+                        width: "100%",
+                        border: isToday ? "2px solid #F8B602" : "1px solid #e8e8e8",
+                        borderRadius: "8px"
+                      }}
+                    >
+                      <Space direction="vertical" style={{ width: "100%" }} size="small">
+                        {/* Date Header */}
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <Space>
+                            <Icon 
+                              icon={isToday ? "mdi:calendar-star" : "mdi:calendar"} 
+                              style={{ fontSize: "20px", color: isToday ? "#F8B602" : "#595959" }} 
+                            />
+                            <Typography.Text strong style={{ fontSize: "16px" }}>
+                              {isToday ? "Hôm nay" : recordDate.format("dddd, DD/MM/YYYY")}
+                            </Typography.Text>
+                            {isToday && (
+                              <Tag color="gold">Hôm nay</Tag>
+                            )}
+                          </Space>
+                          {record.mood && (
+                            <Tag color="blue" style={{ fontSize: "14px" }}>
+                              {moodEmojis[record.mood]} {moodLabels[record.mood]}
+                            </Tag>
+                          )}
+                        </div>
+
+                        <Divider style={{ margin: "12px 0" }} />
+
+                        {/* Main Metrics */}
+                        <Row gutter={[16, 8]}>
+                          {record.actualWeight && (
+                            <Col xs={12} sm={8}>
+                              <div style={{ textAlign: "center", padding: "8px", background: "#fff5e6", borderRadius: "6px" }}>
+                                <Icon icon="mdi:weight-kilogram" style={{ fontSize: "20px", color: "#F8B602", marginBottom: "4px" }} />
+                                <div style={{ fontSize: "18px", fontWeight: "bold", color: "#F8B602" }}>
+                                  {record.actualWeight} kg
+                                </div>
+                                <div style={{ fontSize: "12px", color: "#8c8c8c" }}>Cân nặng</div>
+                              </div>
+                            </Col>
+                          )}
+                          {record.actualCalories > 0 && (
+                            <Col xs={12} sm={8}>
+                              <div style={{ textAlign: "center", padding: "8px", background: "#fff1f0", borderRadius: "6px" }}>
+                                <Icon icon="mdi:fire" style={{ fontSize: "20px", color: "#ff4d4f", marginBottom: "4px" }} />
+                                <div style={{ fontSize: "18px", fontWeight: "bold", color: "#ff4d4f" }}>
+                                  {record.actualCalories} kcal
+                                </div>
+                                <div style={{ fontSize: "12px", color: "#8c8c8c" }}>Calories</div>
+                              </div>
+                            </Col>
+                          )}
+                          {record.waterIntake > 0 && (
+                            <Col xs={12} sm={8}>
+                              <div style={{ textAlign: "center", padding: "8px", background: "#e6f7ff", borderRadius: "6px" }}>
+                                <Icon icon="mdi:cup-water" style={{ fontSize: "20px", color: "#1890ff", marginBottom: "4px" }} />
+                                <div style={{ fontSize: "18px", fontWeight: "bold", color: "#1890ff" }}>
+                                  {record.waterIntake} cốc
+                                </div>
+                                <div style={{ fontSize: "12px", color: "#8c8c8c" }}>Nước uống</div>
+                              </div>
+                            </Col>
+                          )}
+                        </Row>
+
+                        {/* Macros if available */}
+                        {record.actualMacros && (record.actualMacros.protein > 0 || record.actualMacros.carbs > 0 || record.actualMacros.fat > 0) && (
+                          <div style={{ marginTop: "8px", padding: "8px", background: "#f5f5f5", borderRadius: "6px" }}>
+                            <Typography.Text type="secondary" style={{ fontSize: "12px", display: "block", marginBottom: "4px" }}>
+                              Dinh dưỡng:
+                            </Typography.Text>
+                            <Space size="small">
+                              {record.actualMacros.protein > 0 && (
+                                <Tag color="blue">Protein: {record.actualMacros.protein}g</Tag>
+                              )}
+                              {record.actualMacros.carbs > 0 && (
+                                <Tag color="orange">Carbs: {record.actualMacros.carbs}g</Tag>
+                              )}
+                              {record.actualMacros.fat > 0 && (
+                                <Tag color="purple">Fat: {record.actualMacros.fat}g</Tag>
+                              )}
+                            </Space>
+                          </div>
+                        )}
+
+                        {/* Exercise and Notes */}
+                        <Space direction="vertical" size="small" style={{ width: "100%", marginTop: "8px" }}>
+                          {record.exercised && (
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                              <Icon icon="mdi:run" style={{ fontSize: "18px", color: "#52c41a" }} />
+                              <Typography.Text style={{ color: "#52c41a", fontWeight: 500 }}>
+                                Đã tập luyện
+                              </Typography.Text>
+                              {record.exerciseDuration > 0 && (
+                                <Typography.Text type="secondary">
+                                  ({record.exerciseDuration} phút)
+                                </Typography.Text>
+                              )}
+                              {record.exerciseType && (
+                                <Tag color="green">{record.exerciseType}</Tag>
+                              )}
+                            </div>
+                          )}
+                          {record.notes && (
+                            <div style={{ 
+                              padding: "8px 12px", 
+                              background: "#fafafa", 
+                              borderRadius: "6px",
+                              borderLeft: "3px solid #F8B602"
+                            }}>
+                              <Space>
+                                <Icon icon="mdi:note-text" style={{ fontSize: "16px", color: "#722ed1" }} />
+                                <Typography.Text style={{ fontSize: "14px" }}>
+                                  {record.notes}
+                                </Typography.Text>
+                              </Space>
+                            </div>
+                          )}
+                        </Space>
+
+                        {/* Updated timestamp */}
+                        {record.updatedAt && (
+                          <Typography.Text type="secondary" style={{ fontSize: "11px", display: "block", marginTop: "8px" }}>
+                            Cập nhật lúc: {dayjs(record.updatedAt).format("HH:mm DD/MM/YYYY")}
+                          </Typography.Text>
+                        )}
+                      </Space>
+                    </Card>
+                  </List.Item>
+                );
+              }}
+            />
+          ) : (
+            <Empty
+              description="Chưa có bản ghi nào"
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              style={{ padding: "40px 0" }}
+            />
+          )}
         </div>
       </Modal>
     </SettingLayout>
