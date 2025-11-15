@@ -24,7 +24,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     if (path === "/nutritional-analysis") return "2-2";
     if (path === "/meal-plan") return "2-3";
     if (path === "/progress-tracking") return "2-4";
-    if (path === "/top-meal-plans") return "2-5";
+    if (path === "/recipes/top" || path === "/top-meal-plans") return "2-5";
     if (
       path.startsWith("/ai-") ||
       path.startsWith("/nutritional-") ||

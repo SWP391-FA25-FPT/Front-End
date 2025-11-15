@@ -1,10 +1,12 @@
 import React from "react";
 import { Card, Tag, Avatar, Space, Tooltip } from "antd";
 import { Icon } from "@iconify/react";
+import { useNavigate } from "react-router-dom";
 import blank4x3 from "../../assets/blank4x3.png";
 import guest from "../../assets/guest.png";
 
 const MealPlanListCard = ({ mealPlan, rank }) => {
+  const navigate = useNavigate();
   const getRankBadge = (rank) => {
     const badges = {
       1: { icon: "🥇", color: "#FFD700", label: "Hạng 1" },
@@ -41,8 +43,48 @@ const MealPlanListCard = ({ mealPlan, rank }) => {
     return Number(value) || defaultValue;
   };
 
+  // Safe author name extraction - ensures we always get a string, never an object
+  const getAuthorName = (author, fallback = "Unknown") => {
+    if (!author) return fallback;
+    
+    // If author is a string, return it directly
+    if (typeof author === "string") return author;
+    
+    // If author is an object with a name property
+    if (typeof author === "object" && author !== null) {
+      const name = author.name;
+      
+      // If name is a string, return it
+      if (typeof name === "string") return name;
+      
+      // If name is an object (shouldn't happen, but defensive), try to extract string value
+      if (typeof name === "object" && name !== null) {
+        // Try common object properties that might contain the actual name
+        if (typeof name.value === "string") return name.value;
+        if (typeof name.toString === "function") return name.toString();
+      }
+      
+      // Fallback to string conversion
+      return String(name || fallback);
+    }
+    
+    return fallback;
+  };
+
+  const handleCardClick = () => {
+    const recipeId = mealPlan.id || mealPlan._id;
+    if (recipeId) {
+      navigate(`/recipe/${recipeId}`);
+    }
+  };
+
   return (
-    <Card className="meal-plan-list-card" hoverable>
+    <Card 
+      className="meal-plan-list-card" 
+      hoverable
+      onClick={handleCardClick}
+      style={{ cursor: 'pointer' }}
+    >
       <div className="list-card-content">
         {/* Rank Badge */}
         <div
@@ -182,7 +224,7 @@ const MealPlanListCard = ({ mealPlan, rank }) => {
               <Avatar src={mealPlan.author?.avatar || guest} size={28} />
               <div className="list-author-info">
                 <span className="list-author-name">
-                  {mealPlan.author?.name || "Unknown"}
+                  {getAuthorName(mealPlan.author, "Unknown")}
                 </span>
                 <span className="list-author-date">
                   {formatDate(mealPlan.createdAt)}

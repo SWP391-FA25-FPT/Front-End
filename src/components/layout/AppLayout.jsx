@@ -192,7 +192,7 @@ const AppLayout = ({ children }) => {
                 placement="bottomRight"
                 open={dropdownOpen}
                 onOpenChange={handleDropdownOpenChange}
-                dropdownRender={() => (
+                popupRender={() => (
                   <NotificationList
                     notifications={notifications}
                     loading={loadingNotifications}
