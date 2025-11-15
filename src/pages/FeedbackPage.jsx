@@ -30,7 +30,6 @@ const FeedbackPage = () => {
         type: values.type || "other",
         subject: values.subject,
         message: values.message,
-        priority: values.priority || "medium",
       });
 
       if (response.success) {
@@ -102,18 +101,6 @@ const FeedbackPage = () => {
                 maxLength={200}
                 showCount
               />
-            </Form.Item>
-
-            <Form.Item
-              name="priority"
-              label="Mức độ ưu tiên"
-              initialValue="medium"
-            >
-              <Select>
-                <Option value="low">Thấp</Option>
-                <Option value="medium">Trung bình</Option>
-                <Option value="high">Cao</Option>
-              </Select>
             </Form.Item>
 
             <Form.Item

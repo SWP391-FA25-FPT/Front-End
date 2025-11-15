@@ -24,7 +24,6 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
       return "admin-content-blogs";
     if (path === "/admin/payment") return "admin-payment";
     if (path === "/admin/statistics") return "admin-statistics";
-    if (path === "/admin/report") return "admin-report";
     if (path === "/admin/feedback") return "admin-feedback";
     if (path === "/admin/users") return "admin-users";
     if (path === "/admin/system-settings") return "admin-system-setting";
@@ -74,12 +73,6 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
       icon: <Icon icon="mdi:chart-box-outline" width="24" height="24" />,
       label: "Thống Kê Hệ Thống",
       onClick: () => navigate("/admin/statistics"),
-    },
-    {
-      key: "admin-report",
-      icon: <Icon icon="mdi:flag-outline" width="24" height="24" />,
-      label: "Báo Cáo Hệ Thống",
-      onClick: () => navigate("/admin/report"),
     },
     {
       key: "admin-feedback",

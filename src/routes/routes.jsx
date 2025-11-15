@@ -51,7 +51,6 @@ import NotificationPage from "../pages/NotificationPage";
 import FeedbackPage from "../pages/FeedbackPage";
 import PaymentModule from "../components/admin/PaymentModule";
 import FeedbackModule from "../components/admin/FeedbackModule";
-import ReportModule from "../components/admin/ReportModule";
 import RecipeModerationModule from "../components/admin/RecipeModerationModule";
 import BlogModerationModule from "../components/admin/BlogModerationModule";
 import UserManagementModule from "../components/admin/UserManagementModule";
@@ -222,10 +221,6 @@ const appRoutes = [
       {
         path: "statistics",
         element: <StatisticsModule />,
-      },
-      {
-        path: "report",
-        element: <ReportModule />,
       },
       {
         path: "feedback",

@@ -15,7 +15,11 @@ export default function ChallengeFormModal({ challenge, onClose, onSuccess }) {
     endTime: "",
     hostName: "",
     hostAvatar: "",
-    prizes: [],
+    prizes: [
+      { title: "Giải Nhất", description: "" },
+      { title: "Giải Nhì", description: "" },
+      { title: "Giải Ba", description: "" },
+    ],
     prizeDetails: { note: "", items: "" },
     hashtags: [],
     requirements: [],
@@ -45,6 +49,14 @@ export default function ChallengeFormModal({ challenge, onClose, onSuccess }) {
         return `${hours}:${minutes}`;
       };
 
+      // Ensure prizes array always has exactly 3 items
+      const existingPrizes = challenge.prizes || [];
+      const normalizedPrizes = [
+        { title: "Giải Nhất", description: existingPrizes[0]?.description || "" },
+        { title: "Giải Nhì", description: existingPrizes[1]?.description || "" },
+        { title: "Giải Ba", description: existingPrizes[2]?.description || "" },
+      ];
+
       setFormData({
         title: challenge.title || "",
         description: challenge.description || "",
@@ -55,14 +67,26 @@ export default function ChallengeFormModal({ challenge, onClose, onSuccess }) {
         endTime: formatTimeForInput(challenge.endDate),
         hostName: challenge.host?.name || "",
         hostAvatar: challenge.host?.avatar || "",
-        prizes: challenge.prizes || [],
+        prizes: normalizedPrizes,
         prizeDetails: challenge.prizeDetails || { note: "", items: "" },
         hashtags: challenge.hashtags || [],
         requirements: challenge.requirements || [],
         image: null,
       });
     }
-  }, [challenge]);
+  }, [challenge?._id]);
+
+  // Helper function to create ISO string with local timezone offset
+  const getLocalISOString = (dateStr, timeStr) => {
+    if (!dateStr) return "";
+    const date = new Date(`${dateStr}T${timeStr || "00:00"}`);
+    const offset = -date.getTimezoneOffset(); // in minutes
+    const offsetHours = String(Math.floor(Math.abs(offset) / 60)).padStart(2, '0');
+    const offsetMins = String(Math.abs(offset) % 60).padStart(2, '0');
+    const offsetSign = offset >= 0 ? '+' : '-';
+    const time = timeStr || "00:00";
+    return `${dateStr}T${time}:00${offsetSign}${offsetHours}:${offsetMins}`;
+  };
 
   const validate = () => {
     const newErrors = {};
@@ -123,20 +147,26 @@ export default function ChallengeFormModal({ challenge, onClose, onSuccess }) {
       formDataToSend.append("description", formData.description);
       formDataToSend.append("category", formData.category);
       
-      // Combine date and time for startDate
+      // Combine date and time for startDate with timezone offset
       const startDateTime = formData.startTime 
-        ? `${formData.startDate}T${formData.startTime}:00`
-        : `${formData.startDate}T00:00:00`;
+        ? getLocalISOString(formData.startDate, formData.startTime)
+        : getLocalISOString(formData.startDate, "00:00");
       formDataToSend.append("startDate", startDateTime);
       
-      // Combine date and time for endDate
+      // Combine date and time for endDate with timezone offset
       const endDateTime = formData.endTime 
-        ? `${formData.endDate}T${formData.endTime}:00`
-        : `${formData.endDate}T23:59:59`;
+        ? getLocalISOString(formData.endDate, formData.endTime)
+        : getLocalISOString(formData.endDate, "23:59");
       formDataToSend.append("endDate", endDateTime);
       formDataToSend.append("hostName", formData.hostName);
       formDataToSend.append("hostAvatar", formData.hostAvatar);
-      formDataToSend.append("prizes", JSON.stringify(formData.prizes));
+      
+      // Filter out prizes with empty descriptions before saving
+      const activePrizes = formData.prizes.filter(prize => 
+        prize.description && prize.description.trim() !== ""
+      );
+      formDataToSend.append("prizes", JSON.stringify(activePrizes));
+      
       formDataToSend.append(
         "prizeDetails",
         JSON.stringify(formData.prizeDetails)

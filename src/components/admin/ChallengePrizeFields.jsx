@@ -1,32 +1,63 @@
-import React from "react";
-import { Plus, Trash2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 export default function ChallengePrizeFields({
   prizes,
   prizeDetails,
   setFormData,
 }) {
-  const handleAddPrize = () => {
+  // Prize labels for top 3
+  const prizeLabels = ["Giải Nhất", "Giải Nhì", "Giải Ba"];
+
+  // Detect initial prize count based on prizes with descriptions
+  const getInitialPrizeCount = () => {
+    if (!prizes || prizes.length === 0) return 3;
+    const prizesWithDesc = prizes.filter(p => p.description && p.description.trim() !== "");
+    if (prizesWithDesc.length === 0) return 3; // Default to 3 if all empty
+    return Math.max(1, Math.min(3, prizesWithDesc.length));
+  };
+
+  const [prizeCount, setPrizeCount] = useState(getInitialPrizeCount);
+
+  // Initialize prizes array with proper structure
+  useEffect(() => {
+    if (prizes.length === 0 || prizes.length !== 3) {
+      const newPrizes = [
+        { title: "Giải Nhất", description: prizes[0]?.description || "" },
+        { title: "Giải Nhì", description: prizes[1]?.description || "" },
+        { title: "Giải Ba", description: prizes[2]?.description || "" },
+      ];
+      setFormData((prev) => ({
+        ...prev,
+        prizes: newPrizes,
+      }));
+    }
+  }, []);
+
+  const handlePrizeCountChange = (e) => {
+    const newCount = parseInt(e.target.value);
+    setPrizeCount(newCount);
+    
+    // Update prizes array based on new count
+    const currentPrizes = [...prizes];
+    const updatedPrizes = [
+      { title: "Giải Nhất", description: currentPrizes[0]?.description || "" },
+      { title: "Giải Nhì", description: currentPrizes[1]?.description || "" },
+      { title: "Giải Ba", description: currentPrizes[2]?.description || "" },
+    ];
+    
     setFormData((prev) => ({
       ...prev,
-      prizes: [
-        ...prev.prizes,
-        { title: "", description: "" },
-      ],
+      prizes: updatedPrizes,
     }));
   };
 
-  const handleRemovePrize = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      prizes: prev.prizes.filter((_, i) => i !== index),
-    }));
-  };
-
-  const handlePrizeChange = (index, field, value) => {
+  const handlePrizeChange = (index, value) => {
     setFormData((prev) => {
       const newPrizes = [...prev.prizes];
-      newPrizes[index][field] = value;
+      newPrizes[index] = {
+        title: prizeLabels[index],
+        description: value,
+      };
       return {
         ...prev,
         prizes: newPrizes,
@@ -46,68 +77,55 @@ export default function ChallengePrizeFields({
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h6 className="fw-bold mb-0">Giải Thưởng</h6>
-        <button
-          type="button"
-          className="btn btn-sm btn-outline-primary"
-          onClick={handleAddPrize}
-        >
-          <Plus size={16} className="me-1" />
-          Thêm Giải
-        </button>
+      <div className="mb-3">
+        <h6 className="fw-bold mb-2">Giải Thưởng</h6>
+        <div className="d-flex align-items-center gap-2 mb-2">
+          <label className="form-label small mb-0">Số lượng giải thưởng:</label>
+          <select 
+            className="form-select form-select-sm w-auto"
+            value={prizeCount}
+            onChange={handlePrizeCountChange}
+          >
+            <option value={1}>Chỉ Giải Nhất</option>
+            <option value={2}>Giải Nhất & Nhì</option>
+            <option value={3}>Giải Nhất, Nhì & Ba</option>
+          </select>
+        </div>
+        <p className="text-muted small mb-0">Nhập mô tả cho từng giải thưởng</p>
       </div>
 
-      {prizes.length === 0 ? (
-        <p className="text-muted">Chưa có giải thưởng nào</p>
-      ) : (
-        <div className="mb-3">
-          {prizes.map((prize, index) => (
+      <div className="mb-3">
+        {[0, 1, 2].slice(0, prizeCount).map((index) => {
+          const borderColors = ["#FFD700", "#C0C0C0", "#CD7F32"]; // Gold, Silver, Bronze
+          return (
             <div
               key={index}
               className="card mb-3"
-              style={{ borderLeft: "4px solid #F8B602" }}
+              style={{ borderLeft: `4px solid ${borderColors[index]}` }}
             >
               <div className="card-body">
-                <div className="d-flex justify-content-between align-items-start mb-2">
-                  <h6 className="mb-0">Giải {index + 1}</h6>
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => handleRemovePrize(index)}
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
                 <div className="mb-2">
-                  <label className="form-label small">Tên giải</label>
-                  <input
-                    type="text"
-                    className="form-control form-control-sm"
-                    value={prize.title}
-                    onChange={(e) =>
-                      handlePrizeChange(index, "title", e.target.value)
-                    }
-                    placeholder="Ví dụ: Giải Nhất"
-                  />
-                </div>
-                <div>
-                  <label className="form-label small">Mô tả giải</label>
+                  <h6 className="mb-2 fw-bold">{prizeLabels[index]}</h6>
+                  <label className="form-label small">Mô tả giải thưởng</label>
                   <textarea
                     className="form-control form-control-sm"
-                    rows="2"
-                    value={prize.description}
-                    onChange={(e) =>
-                      handlePrizeChange(index, "description", e.target.value)
-                    }
-                    placeholder="Ví dụ: 5.000.000đ + Chiếc thớt gỗ MBM cao cấp"
+                    rows="3"
+                    value={prizes[index]?.description || ""}
+                    onChange={(e) => handlePrizeChange(index, e.target.value)}
+                    placeholder={`Ví dụ: ${
+                      index === 0
+                        ? "5.000.000đ + Chiếc thớt gỗ MBM cao cấp"
+                        : index === 1
+                        ? "3.000.000đ + Voucher mua sắm"
+                        : "1.000.000đ + Huy hiệu đặc biệt"
+                    }`}
                   />
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
 
       {/* Prize Details */}
       <div className="card" style={{ borderLeft: "4px solid #1890ff" }}>
