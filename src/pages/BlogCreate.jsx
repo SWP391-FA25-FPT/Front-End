@@ -73,9 +73,9 @@ const BlogCreate = () => {
 
       if (response.success) {
         message.success(
-          published ? "Đã xuất bản blog thành công!" : "Đã lưu blog thành công!"
+          "Đã tạo blog thành công! Blog của bạn đang chờ admin duyệt trước khi được hiển thị công khai."
         );
-        navigate(`/blog/${response.data._id}`);
+        navigate("/blog");
       } else {
         message.error(response.error || "Lỗi khi tạo blog");
       }
@@ -128,7 +128,7 @@ const BlogCreate = () => {
             loading={loading}
             onClick={handleSubmit}
           >
-            {published ? "Xuất bản" : "Lưu nháp"}
+            Gửi để kiểm duyệt
           </Button>
         </div>
       </div>

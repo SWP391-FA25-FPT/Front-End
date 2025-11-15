@@ -45,7 +45,6 @@ export const getAllFeedbacksAdmin = async (params = {}) => {
 
     if (params.status) queryParams.append("status", params.status);
     if (params.type) queryParams.append("type", params.type);
-    if (params.priority) queryParams.append("priority", params.priority);
     if (params.page) queryParams.append("page", params.page);
     if (params.limit) queryParams.append("limit", params.limit);
 

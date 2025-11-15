@@ -4,7 +4,7 @@ import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
 import AdminFooter from "./AdminFooter";
 import { Outlet } from "react-router-dom";
-import "./AdminLayout.css";
+import "../../pages/style/AdminLayout.css";
 
 export default function AdminLayout() {
   const { Sider, Content } = Layout;

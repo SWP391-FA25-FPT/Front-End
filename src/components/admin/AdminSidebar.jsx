@@ -5,8 +5,6 @@ import { Icon } from "@iconify/react";
 import Logo from "../Logo/Logo";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../SideBar/index.css";
-
-const { SubMenu } = Menu;
 export default function AdminSidebar({ collapsed, toggleCollapsed }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,10 +24,10 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
       return "admin-content-blogs";
     if (path === "/admin/payment") return "admin-payment";
     if (path === "/admin/statistics") return "admin-statistics";
-    if (path === "/admin/report") return "admin-report";
     if (path === "/admin/feedback") return "admin-feedback";
     if (path === "/admin/users") return "admin-users";
     if (path === "/admin/system-settings") return "admin-system-setting";
+    if (path === "/admin/challenges") return "admin-challenges";
     // Legacy path support
     if (path === "/admin/setting") return "admin-system-setting";
     return "";
@@ -77,12 +75,6 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
       onClick: () => navigate("/admin/statistics"),
     },
     {
-      key: "admin-report",
-      icon: <Icon icon="mdi:flag-outline" width="24" height="24" />,
-      label: "Báo Cáo Hệ Thống",
-      onClick: () => navigate("/admin/report"),
-    },
-    {
       key: "admin-feedback",
       icon: <Icon icon="mdi:comment-outline" width="24" height="24" />,
       label: "Phản Hồi Người Dùng",
@@ -93,6 +85,12 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
       icon: <Icon icon="mdi:account-group-outline" width="24" height="24" />,
       label: "Quản Lý Người Dùng",
       onClick: () => navigate("/admin/users"),
+    },
+    {
+      key: "admin-challenges",
+      icon: <Icon icon="mdi:trophy-outline" width="24" height="24" />,
+      label: "Quản Lý Thử Thách",
+      onClick: () => navigate("/admin/challenges"),
     },
     {
       key: "admin-system-setting",
@@ -159,30 +157,28 @@ export default function AdminSidebar({ collapsed, toggleCollapsed }) {
           mode="inline"
           inlineCollapsed={collapsed}
           style={{ border: "none" }}
-        >
-          {adminItems.map((item) => {
+          items={adminItems.map((item) => {
             if (item.children) {
-              return (
-                <SubMenu key={item.key} icon={item.icon} title={item.label}>
-                  {item.children.map((child) => (
-                    <Menu.Item
-                      key={child.key}
-                      icon={child.icon}
-                      onClick={child.onClick}
-                    >
-                      {child.label}
-                    </Menu.Item>
-                  ))}
-                </SubMenu>
-              );
+              return {
+                key: item.key,
+                icon: item.icon,
+                label: item.label,
+                children: item.children.map((child) => ({
+                  key: child.key,
+                  icon: child.icon,
+                  label: child.label,
+                  onClick: child.onClick,
+                })),
+              };
             }
-            return (
-              <Menu.Item key={item.key} icon={item.icon} onClick={item.onClick}>
-                {item.label}
-              </Menu.Item>
-            );
+            return {
+              key: item.key,
+              icon: item.icon,
+              label: item.label,
+              onClick: item.onClick,
+            };
           })}
-        </Menu>
+        />
       </Container>
     </ConfigProvider>
   );

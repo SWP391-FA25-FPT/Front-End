@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Select, Button, Tag, Modal, Input, message, Spin, Alert, Pagination } from "antd";
+import { Select, Button, Tag, Modal, Input, message, Spin, Alert, Pagination, Tabs } from "antd";
 import { Icon } from "@iconify/react";
 import "../../pages/style/ContentModeration.css";
 import {
@@ -22,6 +22,7 @@ export default function BlogModerationModule() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [processingId, setProcessingId] = useState(null);
+  const [modalAction, setModalAction] = useState(null); // "approve", "reject", or null (view only)
 
   // Filters
   const [filters, setFilters] = useState({
@@ -32,6 +33,7 @@ export default function BlogModerationModule() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const blogsPerPage = 10;
+  const [activeTab, setActiveTab] = useState("pending"); // "pending", "approved", or "rejected"
 
   // Fetch blogs
   const fetchBlogs = useCallback(async () => {
@@ -43,9 +45,19 @@ export default function BlogModerationModule() {
         limit: blogsPerPage,
       };
 
-      if (filters.published !== "all") {
+      // Set published/rejected based on active tab
+      if (activeTab === "pending") {
+        params.published = false;
+        params.rejected = false; // Chưa duyệt và chưa từ chối
+      } else if (activeTab === "approved") {
+        params.published = true;
+        params.rejected = false; // Đã duyệt và không bị từ chối
+      } else if (activeTab === "rejected") {
+        params.rejected = true; // Bị từ chối
+      } else if (filters.published !== "all") {
         params.published = filters.published === "true";
       }
+
       if (filters.search) {
         params.search = filters.search;
       }
@@ -66,7 +78,7 @@ export default function BlogModerationModule() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, filters, blogsPerPage]);
+  }, [currentPage, filters, blogsPerPage, activeTab]);
 
   // Fetch stats
   const fetchStats = useCallback(async () => {
@@ -91,15 +103,15 @@ export default function BlogModerationModule() {
   const handleApprove = async (blogId) => {
     try {
       setProcessingId(blogId);
-      // Use updateBlogAdmin to set published = true
-      // Create a function to update blog status with JSON
-      const response = await updateBlogStatusAdmin(blogId, true);
+      // Set published = true and reset rejected status
+      const response = await updateBlogStatusAdmin(blogId, true, false, "");
       if (response.success) {
         message.success("Đã duyệt blog thành công!");
         await fetchBlogs();
         await fetchStats();
         if (selectedBlog?._id === blogId) {
           setIsModalOpen(false);
+          setModalAction(null);
         }
       }
     } catch (err) {
@@ -116,14 +128,15 @@ export default function BlogModerationModule() {
     }
     try {
       setProcessingId(blogId);
-      // Use updateBlogAdmin to set published = false
-      const response = await updateBlogStatusAdmin(blogId, false);
+      // Set rejected = true and rejectionReason
+      const response = await updateBlogStatusAdmin(blogId, false, true, rejectReason);
       if (response.success) {
         message.success("Đã từ chối blog thành công!");
         setRejectReason("");
         await fetchBlogs();
         await fetchStats();
         setIsModalOpen(false);
+        setModalAction(null);
       }
     } catch (err) {
       message.error(err.message || "Lỗi khi từ chối blog");
@@ -154,18 +167,30 @@ export default function BlogModerationModule() {
     }
   };
 
-  const openModal = (blog) => {
+  const openModal = (blog, action = null) => {
     setSelectedBlog(blog);
     setRejectReason("");
+    setModalAction(action); // "approve", "reject", or null
     setIsModalOpen(true);
   };
 
   // Helper function to update blog status with JSON (not FormData)
-  const updateBlogStatusAdmin = async (blogId, published) => {
+  const updateBlogStatusAdmin = async (blogId, published, rejected = false, rejectionReason = "") => {
     try {
       const token = getCookie("token");
       if (!token) {
         throw new Error("Vui lòng đăng nhập");
+      }
+
+      const body = {};
+      if (published !== undefined) {
+        body.published = published;
+      }
+      if (rejected !== undefined) {
+        body.rejected = rejected;
+      }
+      if (rejectionReason !== undefined) {
+        body.rejectionReason = rejectionReason;
       }
 
       const response = await fetch(`${baseUrl}/api/blogs/admin/${blogId}`, {
@@ -174,7 +199,7 @@ export default function BlogModerationModule() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ published }),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
@@ -212,6 +237,7 @@ export default function BlogModerationModule() {
           <Tag color="blue">Tổng: {stats.total || 0}</Tag>
           <Tag color="green">Đã duyệt: {stats.published || 0}</Tag>
           <Tag color="orange">Chưa duyệt: {stats.unpublished || 0}</Tag>
+          <Tag color="red">Từ chối: {stats.rejected || 0}</Tag>
           <Tag color="purple">Lượt xem: {stats.totalViews || 0}</Tag>
         </div>
       )}
@@ -241,33 +267,93 @@ export default function BlogModerationModule() {
           style={{ minWidth: 150 }}
           options={categories.map(cat => ({ value: cat, label: cat }))}
         />
-
-        <Select
-          placeholder="Trạng thái"
-          allowClear
-          value={filters.published}
-          onChange={(value) => {
-            setFilters({ ...filters, published: value });
-            setCurrentPage(1);
-          }}
-          style={{ minWidth: 150 }}
-          options={[
-            { value: "all", label: "Tất cả" },
-            { value: "true", label: "Đã duyệt" },
-            { value: "false", label: "Chưa duyệt" },
-          ]}
-        />
       </div>
 
+      {/* TABS FOR APPROVED AND PENDING */}
+      <Tabs
+        activeKey={activeTab}
+        onChange={(key) => {
+          setActiveTab(key);
+          setCurrentPage(1);
+        }}
+        items={[
+          {
+            key: "pending",
+            label: (
+              <span>
+                <Icon icon="mdi:clock-outline" width="18" style={{ marginRight: 8 }} />
+                Chưa duyệt
+                {stats && (
+                  <Tag color="orange" style={{ marginLeft: 8 }}>
+                    {stats.unpublished || 0}
+                  </Tag>
+                )}
+              </span>
+            ),
+          },
+          {
+            key: "approved",
+            label: (
+              <span>
+                <Icon icon="mdi:check-circle-outline" width="18" style={{ marginRight: 8 }} />
+                Đã duyệt
+                {stats && (
+                  <Tag color="green" style={{ marginLeft: 8 }}>
+                    {stats.published || 0}
+                  </Tag>
+                )}
+              </span>
+            ),
+          },
+          {
+            key: "rejected",
+            label: (
+              <span>
+                <Icon icon="mdi:close-circle-outline" width="18" style={{ marginRight: 8 }} />
+                Từ chối
+                {stats && (
+                  <Tag color="red" style={{ marginLeft: 8 }}>
+                    {stats.rejected || 0}
+                  </Tag>
+                )}
+              </span>
+            ),
+          },
+        ]}
+        style={{
+          background: "#ffffff",
+          padding: "16px",
+          borderRadius: "12px",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+        }}
+      >
+        {/* Content will be rendered below */}
+      </Tabs>
+
       {/* CARD LIST */}
-      <div className="admin-card-grid">
-        {blogs.length === 0 ? (
+      <div className="admin-card-grid" style={{ marginTop: 24 }}>
+        {loading && blogs.length === 0 ? (
+          <div className="text-center py-5">
+            <Spin size="large" tip="Đang tải dữ liệu..." />
+          </div>
+        ) : blogs.length === 0 ? (
           <div className="text-center py-5 text-muted">
-            Không có blog nào
+            {activeTab === "pending" 
+              ? "Không có blog nào chưa duyệt" 
+              : activeTab === "approved"
+              ? "Không có blog nào đã duyệt"
+              : "Không có blog nào bị từ chối"}
           </div>
         ) : (
           blogs.map((blog) => (
-            <div key={blog._id} className="admin-card-fixed">
+            <div 
+              key={blog._id} 
+              className={`admin-card-fixed ${
+                blog.rejected ? 'card-rejected' : 
+                blog.published ? 'card-approved' : 
+                'card-pending'
+              }`}
+            >
               <div>
                 <div className="admin-card-tags">
                   {blog.category && <Tag color="purple">{blog.category}</Tag>}
@@ -278,11 +364,16 @@ export default function BlogModerationModule() {
 
                 <h4 className="admin-card-title">{blog.title || "Không có tiêu đề"}</h4>
                 <Tag
-                  color={blog.published ? "green" : "orange"}
+                  color={blog.rejected ? "red" : blog.published ? "green" : "orange"}
                   style={{ marginBottom: 8 }}
                 >
-                  {blog.published ? "Đã duyệt" : "Chưa duyệt"}
+                  {blog.rejected ? "Từ chối" : blog.published ? "Đã duyệt" : "Chưa duyệt"}
                 </Tag>
+                {blog.rejectionReason && (
+                  <p style={{ fontSize: "12px", color: "#ff4d4f", marginTop: 4 }}>
+                    <strong>Lý do:</strong> {blog.rejectionReason}
+                  </p>
+                )}
                 <p><strong>Người đăng:</strong> {blog.author || blog.authorId?.name || "Ẩn danh"}</p>
                 <p><small>Lượt xem: {blog.views || 0} | Like: {blog.likes?.length || 0}</small></p>
               </div>
@@ -296,23 +387,18 @@ export default function BlogModerationModule() {
                   Xem chi tiết
                 </Button>
 
-                {!blog.published && (
+                {!blog.published && !blog.rejected && (
                   <div className="admin-approve-reject">
                     <Button
                       type="primary"
-                      onClick={() => handleApprove(blog._id)}
-                      loading={processingId === blog._id}
+                      onClick={() => openModal(blog, "approve")}
                       disabled={processingId !== null}
                     >
                       Duyệt
                     </Button>
                     <Button
                       danger
-                      onClick={() => {
-                        setSelectedBlog(blog);
-                        setRejectReason("");
-                        setIsModalOpen(true);
-                      }}
+                      onClick={() => openModal(blog, "reject")}
                       disabled={processingId !== null}
                     >
                       Từ chối
@@ -320,16 +406,18 @@ export default function BlogModerationModule() {
                   </div>
                 )}
 
-                <Button
-                  danger
-                  type="text"
-                  icon={<Icon icon="mdi:delete-outline" width="18" />}
-                  onClick={() => handleDelete(blog._id)}
-                  loading={processingId === blog._id}
-                  disabled={processingId !== null}
-                >
-                  Xóa
-                </Button>
+                {blog.published && !blog.rejected && (
+                  <Button
+                    danger
+                    type="text"
+                    icon={<Icon icon="mdi:delete-outline" width="18" />}
+                    onClick={() => handleDelete(blog._id)}
+                    loading={processingId === blog._id}
+                    disabled={processingId !== null}
+                  >
+                    Xóa
+                  </Button>
+                )}
               </div>
             </div>
           ))
@@ -355,6 +443,7 @@ export default function BlogModerationModule() {
         onCancel={() => {
           setIsModalOpen(false);
           setRejectReason("");
+          setModalAction(null);
         }}
         footer={null}
         width={650}
@@ -400,43 +489,68 @@ export default function BlogModerationModule() {
               </div>
             )}
 
-            {!selectedBlog.published && (
+            {selectedBlog.rejected && (
+              <div style={{ marginTop: 16, padding: "12px", background: "#fff2f0", border: "1px solid #ffccc7", borderRadius: "8px" }}>
+                <p style={{ margin: 0, color: "#ff4d4f", fontWeight: 500 }}>
+                  <strong>Lý do từ chối:</strong> {selectedBlog.rejectionReason || "Không có lý do"}
+                </p>
+                {selectedBlog.rejectedAt && (
+                  <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#8c8c8c" }}>
+                    Từ chối vào: {new Date(selectedBlog.rejectedAt).toLocaleString("vi-VN")}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {!selectedBlog.published && !selectedBlog.rejected && (
               <div style={{ marginTop: 16 }}>
-                <TextArea
-                  placeholder="Nhập lý do từ chối (nếu có)..."
-                  value={rejectReason}
-                  onChange={(e) => setRejectReason(e.target.value)}
-                  rows={3}
-                  style={{ marginBottom: 12 }}
-                />
+                {/* Chỉ hiển thị TextArea khi action là "reject" */}
+                {modalAction === "reject" && (
+                  <TextArea
+                    placeholder="Nhập lý do từ chối (bắt buộc)..."
+                    value={rejectReason}
+                    onChange={(e) => setRejectReason(e.target.value)}
+                    rows={3}
+                    style={{ marginBottom: 12 }}
+                  />
+                )}
                 <div style={{ textAlign: "right" }}>
-                  <Button
-                    danger
-                    onClick={() => handleDelete(selectedBlog._id)}
-                    loading={processingId === selectedBlog._id}
-                    disabled={processingId !== null}
-                  >
-                    Xóa
-                  </Button>
-                  <Button
-                    danger
-                    onClick={() => handleReject(selectedBlog._id)}
-                    loading={processingId === selectedBlog._id}
-                    disabled={processingId !== null}
-                    style={{ marginLeft: 8 }}
-                  >
-                    Từ chối
-                  </Button>
-                  <Button
-                    type="primary"
-                    onClick={() => handleApprove(selectedBlog._id)}
-                    loading={processingId === selectedBlog._id}
-                    disabled={processingId !== null}
-                    style={{ marginLeft: 8 }}
-                  >
-                    Duyệt
-                  </Button>
+                  {/* Chỉ hiển thị nút "Từ chối" khi action là "reject" */}
+                  {modalAction === "reject" && (
+                    <Button
+                      danger
+                      onClick={() => handleReject(selectedBlog._id)}
+                      loading={processingId === selectedBlog._id}
+                      disabled={processingId !== null}
+                    >
+                      Từ chối
+                    </Button>
+                  )}
+                  {/* Chỉ hiển thị nút "Duyệt" khi action là "approve" */}
+                  {modalAction === "approve" && (
+                    <Button
+                      type="primary"
+                      onClick={() => handleApprove(selectedBlog._id)}
+                      loading={processingId === selectedBlog._id}
+                      disabled={processingId !== null}
+                    >
+                      Duyệt
+                    </Button>
+                  )}
                 </div>
+              </div>
+            )}
+
+            {selectedBlog.published && !selectedBlog.rejected && (
+              <div style={{ marginTop: 16, textAlign: "right" }}>
+                <Button
+                  danger
+                  onClick={() => handleDelete(selectedBlog._id)}
+                  loading={processingId === selectedBlog._id}
+                  disabled={processingId !== null}
+                >
+                  Xóa
+                </Button>
               </div>
             )}
           </>

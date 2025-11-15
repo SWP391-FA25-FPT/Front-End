@@ -1,0 +1,35 @@
+/* Admin Challenge Detail Styles */
+
+.admin-challenge-detail {
+  padding: 24px;
+}
+
+.admin-challenge-header {
+  background: #ffffff;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-challenge-banner {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.admin-challenge-detail .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-challenge-detail .ant-statistic-title {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+}
+
+.admin-challenge-detail .ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+

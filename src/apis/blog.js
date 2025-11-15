@@ -112,16 +112,35 @@ export const createBlog = async (formData) => {
       body: formData, // FormData for file upload
     });
 
-    const data = await response.json();
+    let data;
+    try {
+      const text = await response.text();
+      data = text ? JSON.parse(text) : {};
+    } catch (parseError) {
+      console.error("Failed to parse response:", parseError);
+      throw new Error(`Lỗi khi xử lý phản hồi từ server: ${response.status} ${response.statusText}`);
+    }
 
     if (!response.ok) {
-      throw new Error(data.error || data.message || "Lỗi khi tạo blog");
+      const errorMessage = data.error || data.message || data.details || `Lỗi ${response.status}: ${response.statusText}`;
+      console.error("Create blog API error:", {
+        status: response.status,
+        statusText: response.statusText,
+        responseData: data,
+        errorMessage: errorMessage
+      });
+      throw new Error(errorMessage);
     }
 
     return data;
   } catch (error) {
     console.error("Create blog error:", error);
-    throw error;
+    // Re-throw with original message if it's already an Error
+    if (error instanceof Error) {
+      throw error;
+    }
+    // Otherwise wrap in Error
+    throw new Error(error.message || "Lỗi khi tạo blog");
   }
 };
 
@@ -355,6 +374,8 @@ export const getAllBlogsAdmin = async (params = {}) => {
     if (params.tags) queryParams.append("tags", params.tags);
     if (params.published !== undefined)
       queryParams.append("published", params.published);
+    if (params.rejected !== undefined)
+      queryParams.append("rejected", params.rejected);
     if (params.page) queryParams.append("page", params.page);
     if (params.limit) queryParams.append("limit", params.limit);
     if (params.sortBy) queryParams.append("sortBy", params.sortBy);

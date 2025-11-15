@@ -1,52 +1,79 @@
-import React, { useState, useMemo } from "react";
-import { Row, Col, Empty } from "antd";
+import React, { useState, useEffect } from "react";
+import { Row, Col, Empty, Spin, message } from "antd";
 import AppLayout from "../components/layout/AppLayout";
 import PageHeader from "../components/Challenge/PageHeader";
-import StatsOverview from "../components/Challenge/StatsOverview";
 import FilterBar from "../components/Challenge/FilterBar";
 import ChallengeCard from "../components/Challenge/ChallengeCard";
-import challengesData from "../data/challenges.json";
+import { getAllChallenges } from "../apis/challenge";
 import "./style/Challenge.css";
 
 const Challenge = () => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
   const [category, setCategory] = useState("all");
+  const [challenges, setChallenges] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Filter challenges
-  const filteredChallenges = useMemo(() => {
-    let filtered = [...challengesData.challenges];
+  // Fetch challenges
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-    // Filter by search
-    if (search) {
-      filtered = filtered.filter(
-        (challenge) =>
-          challenge.title.toLowerCase().includes(search.toLowerCase()) ||
-          challenge.description.toLowerCase().includes(search.toLowerCase())
-      );
-    }
+        // Fetch challenges with filters
+        const params = {};
+        if (search) params.search = search;
+        if (status !== "all") params.status = status;
+        if (category !== "all") params.category = category;
 
-    // Filter by status
-    if (status !== "all") {
-      filtered = filtered.filter((challenge) => challenge.status === status);
-    }
+        const challengesResponse = await getAllChallenges(params);
 
-    // Filter by category
-    if (category !== "all") {
-      filtered = filtered.filter(
-        (challenge) => challenge.category === category
-      );
-    }
+        if (challengesResponse.success) {
+          setChallenges(challengesResponse.data || []);
+        }
+      } catch (err) {
+        console.error("Error fetching challenges:", err);
+        setError(err.message || "Lỗi khi tải dữ liệu thử thách");
+        message.error(err.message || "Lỗi khi tải dữ liệu thử thách");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return filtered;
+    fetchData();
   }, [search, status, category]);
+
+  if (loading) {
+    return (
+      <AppLayout>
+        <div className="challenge-page-container">
+          <div style={{ textAlign: "center", padding: "100px 0" }}>
+            <Spin size="large" />
+            <p style={{ marginTop: "16px" }}>Đang tải dữ liệu...</p>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <AppLayout>
+        <div className="challenge-page-container">
+          <div style={{ textAlign: "center", padding: "100px 0" }}>
+            <p style={{ color: "#ff4d4f" }}>{error}</p>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
       <div className="challenge-page-container">
         <PageHeader />
-
-        <StatsOverview stats={challengesData.stats} />
 
         <FilterBar
           search={search}
@@ -59,7 +86,7 @@ const Challenge = () => {
 
         <div className="challenges-section">
           <h2 className="section-title">
-            {filteredChallenges.length} Thử thách{" "}
+            {challenges.length} Thử thách{" "}
             {status === "all"
               ? ""
               : status === "ongoing"
@@ -69,10 +96,10 @@ const Challenge = () => {
               : "đã kết thúc"}
           </h2>
 
-          {filteredChallenges.length > 0 ? (
+          {challenges.length > 0 ? (
             <Row gutter={[24, 24]}>
-              {filteredChallenges.map((challenge) => (
-                <Col xs={24} sm={12} lg={8} xl={6} key={challenge.id}>
+              {challenges.map((challenge) => (
+                <Col xs={24} sm={12} lg={8} xl={6} key={challenge._id}>
                   <ChallengeCard challenge={challenge} />
                 </Col>
               ))}

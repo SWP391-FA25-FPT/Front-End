@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import AppLayout from "../components/layout/AppLayout";
-import { Typography, Row, Col, Card, Button, Modal, Radio, Tag, Spin, message } from "antd";
+import { Typography, Row, Col, Card, Button, Modal, Radio, Tag, Spin, App } from "antd";
 import PayPalScript from "../components/PayPalScript";
 import PayPalButton from "../components/PayPalButton";
 import { capturePayPalOrder } from "../apis/paypal";
@@ -18,6 +18,7 @@ import "./style/Subscription.css";
 const { Title, Text, Paragraph } = Typography;
 
 const Subscription = () => {
+  const { message } = App.useApp();
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -132,7 +133,7 @@ const Subscription = () => {
     // Step 1: Create subscription
     const createResponse = await createSubscription({
       planType: selectedPlan.planType,
-      planDuration: selectedPlan.duration,
+      planDuration: selectedPlan.planDuration,
       paymentMethod,
     });
     if (!createResponse.success) {

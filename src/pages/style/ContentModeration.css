@@ -87,6 +87,31 @@
   opacity: 1;
 }
 
+/* Card styles for approved and pending */
+.card-approved {
+  border-left: 4px solid #22c55e;
+}
+
+.card-approved::before {
+  background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+}
+
+.card-pending {
+  border-left: 4px solid #f97316;
+}
+
+.card-pending::before {
+  background: linear-gradient(90deg, #f97316 0%, #ea580c 100%);
+}
+
+.card-rejected {
+  border-left: 4px solid #ef4444;
+}
+
+.card-rejected::before {
+  background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+}
+
 .admin-card-title {
   font-weight: 700;
   font-size: 18px;

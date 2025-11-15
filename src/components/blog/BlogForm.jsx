@@ -182,13 +182,26 @@ const BlogForm = ({
         />
       </div>
 
-      {/* Published Switch */}
+      {/* Info: Blog cần admin duyệt */}
       <div className="form-section">
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <Switch checked={published} onChange={setPublished} size="large" />
-          <label style={{ fontSize: "16px", fontWeight: 500 }}>
-            {published ? "Xuất bản ngay" : "Lưu nháp"}
-          </label>
+        <div style={{ 
+          padding: "12px 16px", 
+          background: "#E6F7FF", 
+          border: "1px solid #91D5FF",
+          borderRadius: "8px",
+          display: "flex",
+          alignItems: "center",
+          gap: "12px"
+        }}>
+          <Icon icon="mdi:information-outline" width="20" color="#1890FF" />
+          <div>
+            <div style={{ fontSize: "14px", fontWeight: 500, color: "#1890FF", marginBottom: "4px" }}>
+              Lưu ý về kiểm duyệt
+            </div>
+            <div style={{ fontSize: "13px", color: "#595959" }}>
+              Blog của bạn sẽ được gửi để admin kiểm duyệt. Blog chỉ hiển thị công khai sau khi được admin duyệt.
+            </div>
+          </div>
         </div>
       </div>
     </div>

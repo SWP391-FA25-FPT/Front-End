@@ -24,7 +24,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     if (path === "/nutritional-analysis") return "2-2";
     if (path === "/meal-plan") return "2-3";
     if (path === "/progress-tracking") return "2-4";
-    if (path === "/top-meal-plans") return "2-5";
+    if (path === "/recipes/top" || path === "/top-meal-plans") return "2-5";
     if (
       path.startsWith("/ai-") ||
       path.startsWith("/nutritional-") ||
@@ -35,9 +35,10 @@ const Index = ({ collapsed, toggleCollapsed }) => {
       return "2";
 
     if (path === "/challenge" || path.startsWith("/challenge/")) return "3";
-    if (path === "/blog" || path.startsWith("/blog/")) return "4";
+    if (path === "/my-blogs") return "4-2";
+    if (path === "/blog" || path.startsWith("/blog/")) return "4-1";
 
-    if (path.startsWith("/user/")) return "6";
+    if (path.startsWith("/user/")) return "6-1";
     if (path === "/support") return "7";
     // ✅ ADD THIS (phần admin sidebar)
 if (path.startsWith("/admin")) {
@@ -56,6 +57,7 @@ if (path.startsWith("/admin")) {
     if (path === "/profile" || path.startsWith("/profile/")) return "10";
     if (path === "/settings" || path.startsWith("/settings/")) return "6";
 
+    if (path === "/feedback") return "6-2";
     if (path === "/support") return "7";
     // Logic Admin chi tiết
     if (path.startsWith("/admin")) {
@@ -123,7 +125,7 @@ if (path.startsWith("/admin")) {
         {
           key: "2-5",
           icon: <Icon icon="mdi:crown-outline" width="24" height="24" />,
-          label: <a href="/top-meal-plans"> Top Thực Đơn Xem Nhiều Nhất</a>,
+          label: <a href="/recipes/top"> Top Thực Đơn Xem Nhiều Nhất</a>,
         },
       ],
     },
@@ -134,8 +136,20 @@ if (path.startsWith("/admin")) {
     },
     {
       key: "4",
-      icon: <Icon icon="ion:restaurant-outline" width="24" height="24" />,
-      label: <a href="/blog">Blog</a>,
+      icon: <Icon icon="mdi:newspaper-variant-outline" width="24" height="24" />,
+      label: "Blog",
+      children: [
+        {
+          key: "4-1",
+          icon: <Icon icon="mdi:home-outline" width="20" height="20" />,
+          label: <a href="/blog">Trang Chủ Blog</a>,
+        },
+        {
+          key: "4-2",
+          icon: <Icon icon="mdi:book-account-outline" width="20" height="20" />,
+          label: <a href="/my-blogs">Blog Của Tôi</a>,
+        },
+      ],
     },
     {
       key: "5",
@@ -145,14 +159,26 @@ if (path.startsWith("/admin")) {
     {
       key: "6",
       icon: <Icon icon="ic:outline-settings" width="24" height="24" />,
-      label: (
-        <span
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate(profilePath)}
-        >
-          Hồ Sơ Cá Nhân
-        </span>
-      ),
+      label: "Cá Nhân",
+      children: [
+        {
+          key: "6-1",
+          icon: <Icon icon="mdi:account-outline" width="20" height="20" />,
+          label: (
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate(profilePath)}
+            >
+              Hồ Sơ Cá Nhân
+            </span>
+          ),
+        },
+        {
+          key: "6-2",
+          icon: <Icon icon="mdi:message-text-outline" width="20" height="20" />,
+          label: <a href="/feedback">Feedback</a>,
+        },
+      ],
     },
     {
       key: "7",
@@ -265,6 +291,16 @@ if (path.startsWith("/admin")) {
     // Sửa đổi một bản sao của baseItems để tránh ảnh hưởng đến định nghĩa gốc
     baseItems = baseItems.map(item => ({...item, children: item.children ? [...item.children] : item.children}));
     
+    // Blog
+    const blogIndex = baseItems.findIndex((item) => item.key === "4");
+    if (blogIndex !== -1) {
+      baseItems[blogIndex] = {
+        ...baseItems[blogIndex],
+        children: null,
+        onClick: () => navigate("/login"),
+      };
+    }
+
     // Kho Món Ngon
     const khoMonNgonIndex = baseItems.findIndex((item) => item.key === "8");
     if (khoMonNgonIndex !== -1) {
@@ -305,11 +341,11 @@ if (path.startsWith("/admin")) {
       };
     }
 
-    // Thiết Lập
-    const settingsIndex = baseItems.findIndex((item) => item.key === "6");
-    if (settingsIndex !== -1) {
-      baseItems[settingsIndex] = {
-        ...baseItems[settingsIndex],
+    // Cá Nhân (bao gồm Hồ Sơ và Feedback)
+    const personalIndex = baseItems.findIndex((item) => item.key === "6");
+    if (personalIndex !== -1) {
+      baseItems[personalIndex] = {
+        ...baseItems[personalIndex],
         children: null,
         onClick: () => navigate("/login"),
       };
@@ -362,6 +398,12 @@ if (path.startsWith("/admin")) {
     if (selectedKey.startsWith("2-") || selectedKey === "2") {
       return ["2"];
     }
+    if (selectedKey.startsWith("4-") || selectedKey === "4") {
+      return ["4"];
+    }
+    if (selectedKey.startsWith("6-") || selectedKey === "6") {
+      return ["6"];
+    }
     if (selectedKey.startsWith("8-") || selectedKey === "8") {
       return ["8"];
     }
@@ -385,14 +427,14 @@ if (path.startsWith("/admin")) {
 
     if (selectedKey.includes("-")) {
       parentKey = selectedKey.split("-")[0];
-    } else if (selectedKey === "2" || selectedKey === "8" || selectedKey === "9") {
+    } else if (selectedKey === "2" || selectedKey === "4" || selectedKey === "8" || selectedKey === "9") {
       // Nếu đang chọn menu cha, giữ nó mở
       parentKey = selectedKey; 
     }
 
     setOpenKeys((prevKeys) => {
-      // Chỉ quan tâm đến menu Premium (2) và Kho Món Ngon (8)
-      const keysToManage = ["2", "8"];
+      // Quan tâm đến menu Premium (2), Blog (4), Cá Nhân (6) và Kho Món Ngon (8)
+      const keysToManage = ["2", "4", "6", "8"];
       let newKeys = prevKeys.filter(key => !keysToManage.includes(key));
       
       // Mở menu cha nếu đang ở route của nó
