@@ -230,36 +230,13 @@ export default function RecipeModerationModule() {
 
                 <div className="admin-card-actions">
                   <Button
-                    type="text"
+                    type="primary"
                     icon={<Icon icon="mdi:eye-outline" width="18" />}
                     onClick={() => openModal(recipe)}
+                    block
                   >
                     Xem chi tiết
                   </Button>
-
-                  {recipe.status !== "published" && (
-                    <div className="admin-approve-reject">
-                      <Button
-                        type="primary"
-                        onClick={() => handleApprove(recipe._id)}
-                        loading={processingId === recipe._id}
-                        disabled={processingId !== null}
-                      >
-                        Duyệt
-                      </Button>
-                      <Button
-                        danger
-                        onClick={() => {
-                          setSelectedRecipe(recipe);
-                          setRejectReason("");
-                          setIsModalOpen(true);
-                        }}
-                        disabled={processingId !== null}
-                      >
-                        Từ chối
-                      </Button>
-                    </div>
-                  )}
                 </div>
               </div>
             );
