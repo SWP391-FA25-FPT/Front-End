@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  getAllChallenges,
-  deleteChallenge,
-  getChallengeStats,
-} from "../../apis/challenge";
-import { Eye, Trash2, Edit, Search, Plus } from "lucide-react";
+import { message } from "antd";
+import { getAllChallenges, getChallengeStats } from "../../apis/challenge";
+import { Eye, Search, Plus } from "lucide-react";
 import ChallengeFormModal from "./ChallengeFormModal";
 import "../../pages/style/ChallengeManagementModule.css";
 
@@ -20,11 +17,8 @@ export default function ChallengeManagementModule() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pagination, setPagination] = useState({});
-  const [selectedChallenge, setSelectedChallenge] = useState(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
   const [editingChallenge, setEditingChallenge] = useState(null);
-  const [deletingId, setDeletingId] = useState(null);
 
   const challengesPerPage = 10;
 
@@ -78,30 +72,6 @@ export default function ChallengeManagementModule() {
     };
     fetchStatsData();
   }, []);
-
-  const handleDelete = async (challengeId) => {
-    try {
-      setDeletingId(challengeId);
-      await deleteChallenge(challengeId);
-      fetchChallenges();
-      const statsResponse = await getChallengeStats();
-      if (statsResponse.success) {
-        setStats(statsResponse.data);
-      }
-      setShowDeleteConfirm(false);
-      setSelectedChallenge(null);
-    } catch (err) {
-      console.error("Error deleting challenge:", err);
-      alert(err.message || "Lỗi khi xóa thử thách");
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
-  const handleEdit = (challenge) => {
-    setEditingChallenge(challenge);
-    setShowFormModal(true);
-  };
 
   const handleCreate = () => {
     setEditingChallenge(null);
@@ -157,15 +127,8 @@ export default function ChallengeManagementModule() {
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="mb-4">
         <h4 className="fw-bold mb-0">Quản Lý Thử Thách</h4>
-        <button
-          className="btn btn-primary create-challenge-btn"
-          onClick={handleCreate}
-        >
-          <Plus size={18} className="me-2" />
-          Tạo Thử Thách Mới
-        </button>
       </div>
 
       {/* Stats Cards */}
@@ -243,6 +206,13 @@ export default function ChallengeManagementModule() {
           </select>
         </div>
         <div className="col-md-3 text-end">
+          <button
+            className="btn btn-primary create-challenge-btn me-2"
+            onClick={handleCreate}
+          >
+            <Plus size={16} className="me-1" />
+            Tạo Thử Thách Mới
+          </button>
           <button className="btn btn-outline-primary" onClick={fetchChallenges}>
             Refresh
           </button>
@@ -320,34 +290,16 @@ export default function ChallengeManagementModule() {
                   </td>
                   <td>{formatDate(challenge.createdAt)}</td>
                   <td className="text-end">
-                    <div className="btn-group" role="group">
-                      <button
-                        className="btn btn-sm btn-outline-primary"
-                        onClick={() =>
-                          navigate(`/admin/challenges/${challenge._id}`)
-                        }
-                        title="Xem"
-                      >
-                        <Eye size={16} />
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-warning"
-                        onClick={() => handleEdit(challenge)}
-                        title="Sửa"
-                      >
-                        <Edit size={16} />
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => {
-                          setSelectedChallenge(challenge);
-                          setShowDeleteConfirm(true);
-                        }}
-                        title="Xóa"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+                    <button
+                      className="btn btn-sm btn-outline-primary"
+                      onClick={() =>
+                        navigate(`/admin/challenges/${challenge._id}`)
+                      }
+                      title="Xem chi tiết"
+                    >
+                      <Eye size={16} className="me-1" />
+                      Xem chi tiết
+                    </button>
                   </td>
                 </tr>
               ))
@@ -397,62 +349,6 @@ export default function ChallengeManagementModule() {
             </li>
           </ul>
         </nav>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && selectedChallenge && (
-        <div
-          className="modal show modal-backdrop"
-          onClick={() => {
-            setShowDeleteConfirm(false);
-            setSelectedChallenge(null);
-          }}
-        >
-          <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Xác nhận xóa</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => {
-                    setShowDeleteConfirm(false);
-                    setSelectedChallenge(null);
-                  }}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <p>
-                  Bạn có chắc chắn muốn xóa thử thách "{selectedChallenge.title}
-                  "?
-                </p>
-                <p className="text-danger small">
-                  Hành động này không thể hoàn tác!
-                </p>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => {
-                    setShowDeleteConfirm(false);
-                    setSelectedChallenge(null);
-                  }}
-                >
-                  Hủy
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(selectedChallenge._id)}
-                  disabled={deletingId === selectedChallenge._id}
-                >
-                  {deletingId === selectedChallenge._id ? "Đang xóa..." : "Xóa"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
       )}
 
       {/* Form Modal */}
