@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import { App as AntdApp } from "antd";
 import { AuthProvider } from "./context/AuthContext";
 import appRoutes from "./routes/routes";
 
@@ -31,13 +32,15 @@ const renderRoutes = (routes) => {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {renderRoutes(appRoutes)}
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <AntdApp>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            {renderRoutes(appRoutes)}
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </AntdApp>
   );
 }
 
