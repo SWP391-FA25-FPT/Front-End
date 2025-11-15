@@ -1,10 +1,10 @@
 // Development
-export const baseUrl = "http://localhost:7860";
+// export const baseUrl = "http://localhost:7860";
 
 // Production
 export const GOOGLE_CLIENT_ID =
   "32785311427-aau37pa9fo3o20mm66devnqiu6q84t8b.apps.googleusercontent.com";
-// export const baseUrl = "https://toan215-meta-meal.hf.space";
+export const baseUrl = "https://toan215-meta-meal.hf.space";
 
 export const apiUrls = {
   // Auth endpoints
