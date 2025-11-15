@@ -79,25 +79,29 @@ const PageHeader = ({
               </Button>
             </Dropdown>
           )}
-          <Button
-            size="large"
-            icon={<Icon icon="mdi:history" style={{ fontSize: "20px" }} />}
-            onClick={onViewHistory}
-          >
-            Lịch sử
-          </Button>
-          <Button
-            type="primary"
-            size="large"
-            icon={<Icon icon="mdi:plus" style={{ fontSize: "20px" }} />}
-            onClick={onAddRecord}
-            style={{
-              background: "linear-gradient(135deg, #F8B602 0%, #e19a28 100%)",
-              border: "none",
-            }}
-          >
-            Thêm bản ghi
-          </Button>
+          {hasActiveGoal && (
+            <>
+              <Button
+                size="large"
+                icon={<Icon icon="mdi:history" style={{ fontSize: "20px" }} />}
+                onClick={onViewHistory}
+              >
+                Lịch sử
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                icon={<Icon icon="mdi:plus" style={{ fontSize: "20px" }} />}
+                onClick={onAddRecord}
+                style={{
+                  background: "linear-gradient(135deg, #F8B602 0%, #e19a28 100%)",
+                  border: "none",
+                }}
+              >
+                Thêm bản ghi
+              </Button>
+            </>
+          )}
         </Space>
       </div>
     </div>
