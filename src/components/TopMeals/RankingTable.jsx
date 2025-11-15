@@ -15,7 +15,7 @@ const RankingTable = ({ mealPlans }) => {
   const topMealPlans = mealPlans.slice(0, 8);
 
   return (
-    <Card className="ranking-table-card" title="🏆 Bảng xếp hạng Top 5">
+    <Card className="ranking-table-card" title="🏆 Bảng xếp hạng">
       <div className="ranking-list">
         {topMealPlans.map((mealPlan, index) => {
           const rank = index + 1;
