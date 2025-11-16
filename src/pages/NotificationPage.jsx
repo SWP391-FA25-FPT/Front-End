@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-// NOTE: Thêm import AppLayout
 import AppLayout from "../components/layout/AppLayout"; 
 import {
-  Layout,
   Typography,
   Card,
   Tabs,
@@ -21,6 +19,9 @@ import {
   markAllNotificationsRead,
 } from "../apis/notification";
 
+// THÊM: Import component xử lý lời mời kết bạn (Cần phải tạo file này)
+import FriendRequestNotification from "../components/Notifications/FriendRequestNotification"; 
+
 const { Title } = Typography;
 const { TabPane } = Tabs;
 
@@ -31,13 +32,31 @@ const NotificationPage = () => {
   const [markingAll, setMarkingAll] = useState(false);
 
   const resolveNotificationList = (response) => {
+    // Logic trích xuất danh sách thông báo
     if (!response) return [];
-    if (Array.isArray(response)) return response;
-    if (Array.isArray(response.notifications)) return response.notifications;
     if (Array.isArray(response.data)) return response.data;
-    if (Array.isArray(response.items)) return response.items;
+    if (Array.isArray(response.notifications)) return response.notifications;
     return [];
   };
+
+  const findNotificationId = (notification) =>
+    notification?._id || notification?.id;
+
+  const isUnread = (notification) =>
+    !notification?.readAt && !notification?.read;
+    
+  // HÀM MỚI: Xử lý hành động từ các nút (Accept/Decline)
+  const handleNotificationAction = useCallback((notificationId) => {
+    // Logic này sẽ loại bỏ thông báo đã được xử lý ra khỏi danh sách hiển thị
+    // Hoặc đánh dấu nó là đã đọc và force re-render
+    setNotifications(prev => prev.filter(n => findNotificationId(n) !== notificationId));
+    
+    // Nếu ở tab 'unread', cần fetch lại để đảm bảo count đúng
+    if (filter === 'unread') {
+        fetchNotifications();
+    }
+  }, [filter]);
+
 
   const fetchNotifications = useCallback(async () => {
     setLoading(true);
@@ -58,27 +77,19 @@ const NotificationPage = () => {
     fetchNotifications();
   }, [fetchNotifications]);
 
-  const findNotificationId = (notification) =>
-    notification?._id || notification?.id;
-
-  const isUnread = (notification) =>
-    !notification?.readAt && !notification?.read;
 
   const handleMarkAsRead = (id) => {
+    // ... (logic đánh dấu đã đọc giữ nguyên)
     if (!id) return;
 
     const target = notifications.find(
       (notification) => findNotificationId(notification) === id
     );
 
-    if (!target) {
-      return;
-    }
-
-    if (!isUnread(target)) {
-      return;
-    }
-
+    if (!target) return;
+    if (!isUnread(target)) return;
+    
+    // Optimistic update
     setNotifications((prev) =>
       prev.map((notification) =>
         findNotificationId(notification) === id
@@ -106,10 +117,10 @@ const NotificationPage = () => {
   };
 
   const handleMarkAllAsRead = () => {
+    // ... (logic đánh dấu tất cả đã đọc giữ nguyên)
     if (notifications.length === 0) return;
 
     setMarkingAll(true);
-
     const readTimestamp = new Date().toISOString();
 
     setNotifications((prev) =>
@@ -128,8 +139,7 @@ const NotificationPage = () => {
       })
       .catch((error) => {
         console.error("Mark all notifications read error:", error);
-        message.error(error.message || "Không thể đánh dấu tất cả thông báo");
-        // Khôi phục trạng thái cũ nếu thất bại
+        message.error("Không thể đánh dấu tất cả thông báo");
         fetchNotifications();
       })
       .finally(() => setMarkingAll(false));
@@ -140,15 +150,14 @@ const NotificationPage = () => {
     return isUnread(n);
   });
 
+  const unreadCount = notifications.filter((n) => isUnread(n)).length;
+
   const markAllButton = (
     <Button
       type="link"
       onClick={handleMarkAllAsRead}
       disabled={
-        loading ||
-        markingAll ||
-        notifications.length === 0 ||
-        notifications.every((n) => !isUnread(n))
+        loading || markingAll || unreadCount === 0
       }
       loading={markingAll}
     >
@@ -157,7 +166,6 @@ const NotificationPage = () => {
   );
 
   return (
-    // NOTE: Bọc toàn bộ nội dung trong <AppLayout>
     <AppLayout>
       <div style={{ padding: "16px 24px" }}>
         <Card
@@ -168,7 +176,7 @@ const NotificationPage = () => {
           <Tabs activeKey={filter} onChange={(key) => setFilter(key)}>
             <TabPane tab={`Tất cả (${notifications.length})`} key="all" />
             <TabPane
-              tab={`Chưa đọc (${notifications.filter((n) => isUnread(n)).length})`}
+              tab={`Chưa đọc (${unreadCount})`}
               key="unread"
             />
           </Tabs>
@@ -185,23 +193,35 @@ const NotificationPage = () => {
               dataSource={filteredNotifications}
               renderItem={(item) => {
                 const unread = isUnread(item);
-                const iconName = item.icon || "mdi:bell-outline";
-                const bgColor = item.bgColor || (unread ? "#DBEAFE" : "#E5E7EB");
-                const color = item.color || "#1D4ED8";
-                const title =
-                  item.title ||
-                  item.message ||
-                  item.actor?.name ||
-                  "Thông báo";
-                const description = item.description || item.message;
-                const timestamp = item.date || item.createdAt || item.updatedAt;
+                
+                // Logic Icon và màu sắc
+                let iconName = "mdi:bell-outline";
+                let bgColor = unread ? "#DBEAFE" : "#E5E7EB";
+                let color = "#1D4ED8";
+                
+                if (item.type === 'friend_request') {
+                    iconName = "mdi:account-plus";
+                    bgColor = "#FFF3CD"; 
+                    color = "#FFC107"; 
+                }
+                
+                const title = item.title || "Thông báo";
+                const description = item.message;
+                const timestamp = item.createdAt || item.updatedAt;
 
                 return (
-                  <List.Item
-                    onClick={() => handleMarkAsRead(findNotificationId(item))}
+                  // BỌC TRONG DIV ĐỂ FIX LỖI BỐ CỤC CỦA ANTD
+                  <div
+                    key={findNotificationId(item)}
+                    // Chỉ đánh dấu đã đọc khi click nếu nó không phải là lời mời kết bạn 
+                    onClick={item.type !== 'friend_request' ? () => handleMarkAsRead(findNotificationId(item)) : undefined}
                     style={{
                       opacity: unread ? 1 : 0.6,
-                      cursor: unread ? "pointer" : "default",
+                      cursor: unread && item.type !== 'friend_request' ? "pointer" : "default",
+                      padding: '12px 0',
+                      borderBottom: '1px solid #f0f0f0',
+                      display: 'flex',
+                      flexDirection: 'column',
                     }}
                   >
                     <List.Item.Meta
@@ -211,6 +231,7 @@ const NotificationPage = () => {
                           style={{
                             backgroundColor: bgColor,
                             color,
+                            width: '32px', height: '32px', lineHeight: '32px', fontSize: '18px'
                           }}
                         />
                       }
@@ -234,8 +255,21 @@ const NotificationPage = () => {
                           )}
                         </Space>
                       }
+                      style={{ marginBottom: 0 }} 
                     />
-                  </List.Item>
+                    
+                    {/* === LOGIC RENDER NÚT BẤM DỰA TRÊN TYPE (CĂN CHỈNH) === */}
+                    {item.type === 'friend_request' && unread && (
+                        <div style={{ marginLeft: '48px', marginTop: '8px' }}> 
+                            <FriendRequestNotification 
+                                notification={item} 
+                                onAction={handleNotificationAction} 
+                            />
+                        </div>
+                    )}
+                    {/* === END LOGIC RENDER NÚT BẤM === */}
+                    
+                  </div>
                 );
               }}
             />

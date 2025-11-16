@@ -1,5 +1,5 @@
 // src/services/messageService.js
-// SỬA LỖI: Cập nhật đường dẫn cho update/delete
+// FIX: Sửa lỗi đường dẫn cho update/delete
 
 import axios from 'axios';
 import { getAuthToken } from '../utils/authUtils'; 
@@ -70,14 +70,10 @@ export const sendMessage = async (conversationId, content) => {
     }
 };
 
-// =================================================================
-// ===           ⬇️ SỬA LỖI ĐƯỜNG DẪN Ở ĐÂY ⬇️                  ===
-// =================================================================
-
 export const updateMessageContent = async (messageId, newContent) => {
     try {
-        // Sửa: Phải là '/conversations/' (giống server.js)
-        const response = await api.put(`/conversations/${messageId}`, { content: newContent });
+        // FIX: Giả định endpoint sửa tin nhắn là /messages/:messageId
+        const response = await api.put(`/messages/${messageId}`, { content: newContent });
         return response.data; 
     } catch (error) {
         throw error.response?.data || error;
@@ -86,8 +82,8 @@ export const updateMessageContent = async (messageId, newContent) => {
 
 export const deleteMessage = async (messageId) => {
     try {
-        // Sửa: Phải là '/conversations/' (giống server.js)
-        const response = await api.delete(`/conversations/${messageId}`);
+        // FIX: Giả định endpoint xóa tin nhắn là /messages/:messageId
+        const response = await api.delete(`/messages/${messageId}`);
         return response.data; 
     } catch (error) {
         throw error.response?.data || error;

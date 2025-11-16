@@ -2,17 +2,11 @@
 import React, {
   useEffect,
   useState,
-  useRef,
-  useContext, // <--- SỬA LỖI 1: THÊM 'useContext' VÀO ĐÂY
+  // === EM ĐÃ XÓA CÁC IMPORT KHÔNG CẦN THIẾT (useRef, useContext, v.v...) ===
 } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Row, Col } from "antd";
-// -> THÊM IMPORTS MỚI
-import { MessageSquare, ChevronDown } from "lucide-react";
-import { createOrGetConversation } from "../services/messageService";
-import { SocketContext } from "../context/SocketContext";
-import { useAuth } from "../context/useAuth";
-// <- END THÊM IMPORTS MỚI
+// === EM ĐÃ XÓA IMPORT LIÊN QUAN ĐẾN MESSAGE/SOCKET ===
 
 import { getBlogById } from "../apis/blog";
 import { getAllRecipes } from "../apis/recipe";
@@ -23,159 +17,7 @@ import CardRecent from "../components/CardRecent/CardRecent";
 import Layout from "../components/layout/SettingLayout";
 import "../pages/style/blogdetail.css";
 
-// Component nhỏ để xử lý Dropdown và logic Nhắn tin
-const AuthorDropdown = ({ authorId, authorName, authorAvatar }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated, user } = useAuth();
-  // <--- SỬA LỖI 2: DÙNG 'useContext(SocketContext)' THAY VÌ 'SocketContext()'
-  const { setCurrentConversationId } = useContext(SocketContext);
-  const dropdownRef = useRef(null);
-
-  // Xử lý click bên ngoài để đóng dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleStartConversation = async () => {
-    if (!isAuthenticated) {
-      // Thay thế alert bằng console.warn
-      console.warn("Bạn cần đăng nhập để nhắn tin.");
-      return;
-    }
-
-    // Kiểm tra tránh chat với chính mình
-    if (String(authorId) === String(user?._id)) {
-      // Thay thế alert bằng console.warn
-      console.warn("Không thể nhắn tin với chính mình.");
-      setIsOpen(false);
-      return;
-    }
-
-    setIsOpen(false);
-
-    try {
-      // 1. Gọi API tạo/lấy Conversation
-      const conversation = await createOrGetConversation(authorId);
-
-      // 2. Mở cửa sổ chat Widget
-      setCurrentConversationId(conversation._id);
-    } catch (error) {
-      console.error("Lỗi khi tạo/lấy conversation:", error);
-      // Thay thế alert bằng console.warn
-      console.warn(
-        `Lỗi: ${error.message || "Không thể khởi tạo cuộc trò chuyện."}`
-      );
-    }
-  };
-
-  // Nếu không có ID hoặc chưa đăng nhập, chỉ hiển thị thông tin profile tĩnh
-  if (!authorId || !isAuthenticated) {
-    return (
-      <div className="blogdetail-author-profile">
-        <img
-          src={authorAvatar || "https://placehold.co/50x50/c0c0c0/ffffff?text=A"}
-          alt={authorName}
-          className="blogdetail-author-avatar"
-        />
-        <div>
-          <p className="blogdetail-author-name">{authorName}</p>
-          <p className="blogdetail-author-role">Người đóng góp nội dung</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className="relative z-50"
-      ref={dropdownRef}
-      style={{ position: "relative", zIndex: 50 }}
-    >
-      {/* Khu vực kích hoạt Dropdown (Avatar + Name) */}
-      <div
-        className="blogdetail-author-profile cursor-pointer"
-        onClick={() => setIsOpen(!isOpen)}
-        style={{ cursor: "pointer" }}
-      >
-        <img
-          src={authorAvatar || "https://placehold.co/50x50/c0c0c0/ffffff?text=A"}
-          alt={authorName}
-          className="blogdetail-author-avatar"
-        />
-        <div
-          className="flex items-center space-x-1"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.25rem",
-          }}
-        >
-          <p className="blogdetail-author-name m-0">{authorName}</p>
-          <ChevronDown
-            className="w-4 h-4 text-gray-500 transition-transform"
-            style={{
-              width: "1rem",
-              height: "1rem",
-              color: "#6b7280",
-              transition: "transform 0.2s",
-              transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Dropdown Menu */}
-      {isOpen && (
-        <div
-          className="absolute z-50 bg-white border border-gray-200 rounded-lg shadow-xl mt-1 w-48 left-0"
-          style={{
-            position: "absolute",
-            zIndex: 50,
-            background: "white",
-            border: "1px solid #e5e7eb",
-            borderRadius: "0.5rem",
-            boxShadow:
-              "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
-            marginTop: "0.25rem",
-            width: "12rem",
-            left: 0,
-          }}
-        >
-          <div
-            className="flex items-center p-3 text-gray-700 hover:bg-gray-100 cursor-pointer"
-            onClick={handleStartConversation}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "0.75rem",
-              color: "#374151",
-              cursor: "pointer",
-            }}
-            // Thêm hiệu ứng hover nội tuyến cho đơn giản
-            onMouseOver={(e) =>
-              (e.currentTarget.style.backgroundColor = "#f3f4f6")
-            }
-            onMouseOut={(e) =>
-              (e.currentTarget.style.backgroundColor = "white")
-            }
-          >
-            <MessageSquare
-              className="w-4 h-4 mr-2"
-              style={{ width: "1rem", height: "1rem", marginRight: "0.5rem" }}
-            />
-            Nhắn tin
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+// === EM ĐÃ XÓA TOÀN BỘ COMPONENT 'AuthorDropdown' Ở ĐÂY ===
 
 export default function BlogDetail() {
   const { id } = useParams();
@@ -198,15 +40,13 @@ export default function BlogDetail() {
         if (response.success && response.data) {
           setPost(response.data);
 
-          // Fetch related recipes - use blog's relatedRecipes first, then fallback to tags
+          // Fetch related recipes
           if (
             response.data.relatedRecipes &&
             response.data.relatedRecipes.length > 0
           ) {
-            // Blog has directly linked recipes
             setRelatedRecipes(response.data.relatedRecipes);
           } else if (response.data.tags && response.data.tags.length > 0) {
-            // Fallback to recipes based on tags
             const recipesResponse = await getAllRecipes({
               tags: response.data.tags.slice(0, 2).join(","),
               limit: 4,
@@ -215,7 +55,6 @@ export default function BlogDetail() {
               setRelatedRecipes(recipesResponse.data);
             }
           } else {
-            // If no tags, just get random recipes
             const recipesResponse = await getAllRecipes({ limit: 4 });
             if (recipesResponse.success && recipesResponse.data) {
               setRelatedRecipes(recipesResponse.data);
@@ -233,7 +72,7 @@ export default function BlogDetail() {
     };
 
     fetchBlog();
-  }, [id, navigate]); // Thêm navigate vào dependency array nếu getAllRecipes hoặc getBlogById sử dụng nó
+  }, [id, navigate]);
 
   function getTopEmotes(postId) {
     try {
@@ -263,13 +102,10 @@ export default function BlogDetail() {
   React.useEffect(() => {
     function onUpdate(e) {
       if (!e?.detail || String(e.detail.postId) !== String(id)) return;
-      // force re-render by touching state via noop setState with useState dummy
       setTick((t) => t + 1);
     }
-    // Add event listener immediately
     window.addEventListener("reactions:update", onUpdate);
 
-    // Also listen for storage changes as backup
     function onStorageChange(e) {
       if (e.key === `post:${id}:reactions`) {
         setTick((t) => t + 1);
@@ -314,12 +150,22 @@ export default function BlogDetail() {
     );
   }
 
-  console.log("Dữ liệu post nhận được:", post);
+  console.log("Dữ liệu post nhận được:", post); // Dòng này của anh
 
-  // Lấy ID/Name/Avatar của tác giả (Giả định post.authorId hoặc post.author._id là ID)
+  // === THÊM 3 DÒNG NÀY VÀO ===
+  console.log("Kiểm tra post.authorId:", post.authorId);
+  console.log("Kiểm tra post.author:", post.author);
+  // ============================
+
   const authorId = post?.authorId || post?.author?._id;
-  const authorName = post?.author;
-  const authorAvatar = post?.authorAvatar;
+  
+  // === THÊM DÒNG NÀY VÀO ===
+  console.log("=== ID TÁC GIẢ CUỐI CÙNG LÀ:", authorId);
+  // ============================
+  
+  const authorName = post?.author?.name;
+  const authorAvatar = post?.author?.avatar || post?.authorAvatar;
+  
   const currentPostId = post._id || post.id;
 
   return (
@@ -374,15 +220,36 @@ export default function BlogDetail() {
                   : post.date || "N/A"}
               </div>
 
-              {/* START: THAY THẾ KHU VỰC TÁC GIẢ BẰNG AuthorDropdown */}
+              {/* =========================================== */}
+              {/* === START: ĐÂY LÀ KHU VỰC ĐÃ SỬA === */}
+              {/* =========================================== */}
               {post.author && (
-                <AuthorDropdown
-                  authorId={authorId}
-                  authorName={authorName}
-                  authorAvatar={authorAvatar}
-                />
+                <Link
+                  to={`/user/${authorId}`}
+                  // Dùng d-flex để xếp hàng ngang
+                  className="blogdetail-author-profile d-flex align-items-center"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <img
+                    src={authorAvatar || "https://placehold.co/50x50/c0c0c0/ffffff?text=A"}
+                    alt={authorName}
+                    // Thêm class 'rounded-circle' và 'me-3' (margin-right) của Bootstrap
+                    className="blogdetail-author-avatar rounded-circle me-3"
+                    style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                  />
+                  <div>
+                    <p className="blogdetail-author-name fw-bold mb-0" style={{fontSize: '1rem', color: '#1a1a1a'}}>
+                      {authorName}
+                    </p>
+                    <p className="blogdetail-author-role text-muted mb-0" style={{fontSize: '0.85rem'}}>
+                      Người đóng góp nội dung
+                    </p>
+                  </div>
+                </Link>
               )}
-              {/* END: KHU VỰC TÁC GIẢ */}
+              {/* =========================================== */}
+              {/* === END: KHU VỰC ĐÃ SỬA === */}
+              {/* =========================================== */}
 
               <h1 className="blogdetail-title">{post.title}</h1>
               <p className="blogdetail-description">{post.content}</p>

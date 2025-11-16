@@ -12,12 +12,19 @@ import ForgotPassword from "../pages/ForgotPassword.jsx";
 import ResetPassword from "../pages/ResetPassword.jsx";
 import OTPVerification from "../pages/OTPVerification.jsx";
 import TakeSurvey from "../pages/TakeSurvey.jsx";
-import ProfilePage from "../pages/ProfilePage.jsx";
+
+// === KHU VỰC SỬA PROFILE (SỬA LẠI ĐẦY ĐỦ) ===
+import ProfilePage from "../pages/ProfilePage.jsx"; // Trang "SỬA" (My Profile)
+import UserProfilePage from "../pages/UserProfilePage.jsx"; // Trang "XEM"
+// ======================================
+
+// === CÁC IMPORT BỊ THIẾU MÀ EM THÊM LẠI ===
 import SupportPage from "../pages/SupportPage.jsx";
 import SettingsPage from "../pages/SettingsPage.jsx";
 import PinAndRecoveryPage from "../pages/PinAndRecoveryPage.jsx";
 import ChangePasswordPage from "../pages/ChangePasswordPage.jsx";
-import Profile from "../pages/Profile.jsx";
+// =======================================
+
 import BlogCreate from "../pages/BlogCreate.jsx";
 import MyBlogs from "../pages/MyBlogs.jsx";
 import MealPlan from "../pages/MealPlan.jsx";
@@ -42,7 +49,7 @@ import Challenge from "../pages/Challenge.jsx";
 import ChallengeDetail from "../pages/ChallengeDetail.jsx";
 import Blog from "../pages/Blog.jsx";
 import BlogDetail from "../pages/BlogDetail.jsx";
-import MessagesPage from "../pages/MessagesPage.jsx"; // Import mới từ file của bạn
+import MessagesPage from "../pages/MessagesPage.jsx";
 
 // Imports Admin Components
 import PaymentModule from "../components/admin/PaymentModule.jsx";
@@ -158,6 +165,7 @@ const appRoutes = [
       </ProtectedRoute>
     ),
   },
+  // === ROUTE PROFILE (ĐÃ SỬA) ===
   {
     path: "/user/:userId/edit",
     element: (
@@ -170,11 +178,11 @@ const appRoutes = [
     path: "/user/:userId",
     element: (
       <SurveyCheckRoute>
-        <Profile />
+        <UserProfilePage />
       </SurveyCheckRoute>
     ),
   },
-  // Route tin nhắn mới từ file của bạn
+  // ======================
   {
     path: "/messages",
     element: (
@@ -398,7 +406,7 @@ const appRoutes = [
     element: (
       <SurveyCheckRoute>
         <PinAndRecoveryPage />
-      </SurveyCheckRoute>
+      </SurveyCheckRoute> // === ĐÃ SỬA LỖI SYNTAX Ở ĐÂY ===
     ),
   },
   {
