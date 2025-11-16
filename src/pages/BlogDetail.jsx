@@ -1,7 +1,19 @@
 // src/pages/BlogDetail.jsx
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useContext, // <--- SỬA LỖI 1: THÊM 'useContext' VÀO ĐÂY
+} from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Row, Col } from "antd";
+// -> THÊM IMPORTS MỚI
+import { MessageSquare, ChevronDown } from "lucide-react";
+import { createOrGetConversation } from "../services/messageService";
+import { SocketContext } from "../context/SocketContext";
+import { useAuth } from "../context/useAuth";
+// <- END THÊM IMPORTS MỚI
+
 import { getBlogById } from "../apis/blog";
 import { getAllRecipes } from "../apis/recipe";
 import ReactionBar from "../components/blog/ReactionBar";
@@ -10,6 +22,160 @@ import Rating from "../components/blog/Rating";
 import CardRecent from "../components/CardRecent/CardRecent";
 import Layout from "../components/layout/SettingLayout";
 import "../pages/style/blogdetail.css";
+
+// Component nhỏ để xử lý Dropdown và logic Nhắn tin
+const AuthorDropdown = ({ authorId, authorName, authorAvatar }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated, user } = useAuth();
+  // <--- SỬA LỖI 2: DÙNG 'useContext(SocketContext)' THAY VÌ 'SocketContext()'
+  const { setCurrentConversationId } = useContext(SocketContext);
+  const dropdownRef = useRef(null);
+
+  // Xử lý click bên ngoài để đóng dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleStartConversation = async () => {
+    if (!isAuthenticated) {
+      // Thay thế alert bằng console.warn
+      console.warn("Bạn cần đăng nhập để nhắn tin.");
+      return;
+    }
+
+    // Kiểm tra tránh chat với chính mình
+    if (String(authorId) === String(user?._id)) {
+      // Thay thế alert bằng console.warn
+      console.warn("Không thể nhắn tin với chính mình.");
+      setIsOpen(false);
+      return;
+    }
+
+    setIsOpen(false);
+
+    try {
+      // 1. Gọi API tạo/lấy Conversation
+      const conversation = await createOrGetConversation(authorId);
+
+      // 2. Mở cửa sổ chat Widget
+      setCurrentConversationId(conversation._id);
+    } catch (error) {
+      console.error("Lỗi khi tạo/lấy conversation:", error);
+      // Thay thế alert bằng console.warn
+      console.warn(
+        `Lỗi: ${error.message || "Không thể khởi tạo cuộc trò chuyện."}`
+      );
+    }
+  };
+
+  // Nếu không có ID hoặc chưa đăng nhập, chỉ hiển thị thông tin profile tĩnh
+  if (!authorId || !isAuthenticated) {
+    return (
+      <div className="blogdetail-author-profile">
+        <img
+          src={authorAvatar || "https://placehold.co/50x50/c0c0c0/ffffff?text=A"}
+          alt={authorName}
+          className="blogdetail-author-avatar"
+        />
+        <div>
+          <p className="blogdetail-author-name">{authorName}</p>
+          <p className="blogdetail-author-role">Người đóng góp nội dung</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="relative z-50"
+      ref={dropdownRef}
+      style={{ position: "relative", zIndex: 50 }}
+    >
+      {/* Khu vực kích hoạt Dropdown (Avatar + Name) */}
+      <div
+        className="blogdetail-author-profile cursor-pointer"
+        onClick={() => setIsOpen(!isOpen)}
+        style={{ cursor: "pointer" }}
+      >
+        <img
+          src={authorAvatar || "https://placehold.co/50x50/c0c0c0/ffffff?text=A"}
+          alt={authorName}
+          className="blogdetail-author-avatar"
+        />
+        <div
+          className="flex items-center space-x-1"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.25rem",
+          }}
+        >
+          <p className="blogdetail-author-name m-0">{authorName}</p>
+          <ChevronDown
+            className="w-4 h-4 text-gray-500 transition-transform"
+            style={{
+              width: "1rem",
+              height: "1rem",
+              color: "#6b7280",
+              transition: "transform 0.2s",
+              transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div
+          className="absolute z-50 bg-white border border-gray-200 rounded-lg shadow-xl mt-1 w-48 left-0"
+          style={{
+            position: "absolute",
+            zIndex: 50,
+            background: "white",
+            border: "1px solid #e5e7eb",
+            borderRadius: "0.5rem",
+            boxShadow:
+              "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
+            marginTop: "0.25rem",
+            width: "12rem",
+            left: 0,
+          }}
+        >
+          <div
+            className="flex items-center p-3 text-gray-700 hover:bg-gray-100 cursor-pointer"
+            onClick={handleStartConversation}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "0.75rem",
+              color: "#374151",
+              cursor: "pointer",
+            }}
+            // Thêm hiệu ứng hover nội tuyến cho đơn giản
+            onMouseOver={(e) =>
+              (e.currentTarget.style.backgroundColor = "#f3f4f6")
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.backgroundColor = "white")
+            }
+          >
+            <MessageSquare
+              className="w-4 h-4 mr-2"
+              style={{ width: "1rem", height: "1rem", marginRight: "0.5rem" }}
+            />
+            Nhắn tin
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function BlogDetail() {
   const { id } = useParams();
@@ -67,7 +233,7 @@ export default function BlogDetail() {
     };
 
     fetchBlog();
-  }, [id]);
+  }, [id, navigate]); // Thêm navigate vào dependency array nếu getAllRecipes hoặc getBlogById sử dụng nó
 
   function getTopEmotes(postId) {
     try {
@@ -148,6 +314,14 @@ export default function BlogDetail() {
     );
   }
 
+  console.log("Dữ liệu post nhận được:", post);
+
+  // Lấy ID/Name/Avatar của tác giả (Giả định post.authorId hoặc post.author._id là ID)
+  const authorId = post?.authorId || post?.author?._id;
+  const authorName = post?.author;
+  const authorAvatar = post?.authorAvatar;
+  const currentPostId = post._id || post.id;
+
   return (
     <React.Fragment>
       <Layout>
@@ -160,6 +334,7 @@ export default function BlogDetail() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                style={{ width: "1.25rem", height: "1.25rem" }}
               >
                 <path
                   strokeLinecap="round"
@@ -198,6 +373,17 @@ export default function BlogDetail() {
                     })
                   : post.date || "N/A"}
               </div>
+
+              {/* START: THAY THẾ KHU VỰC TÁC GIẢ BẰNG AuthorDropdown */}
+              {post.author && (
+                <AuthorDropdown
+                  authorId={authorId}
+                  authorName={authorName}
+                  authorAvatar={authorAvatar}
+                />
+              )}
+              {/* END: KHU VỰC TÁC GIẢ */}
+
               <h1 className="blogdetail-title">{post.title}</h1>
               <p className="blogdetail-description">{post.content}</p>
             </div>
@@ -211,9 +397,9 @@ export default function BlogDetail() {
               />
 
               {/* Emote Display Below Image */}
-              {getTopEmotes(post._id || post.id).length > 0 && (
+              {getTopEmotes(currentPostId).length > 0 && (
                 <div className="blogdetail-emote-overlay">
-                  {getTopEmotes(post._id || post.id).map((e) => (
+                  {getTopEmotes(currentPostId).map((e) => (
                     <div
                       key={`${e.key}-${tick}`}
                       className="blogdetail-emote-item"
@@ -229,17 +415,17 @@ export default function BlogDetail() {
 
           {/* Reaction Bar */}
           <div className="blogdetail-reaction-section">
-            <ReactionBar postId={post._id || post.id} />
+            <ReactionBar postId={currentPostId} />
           </div>
 
           {/* Rating Section */}
           <div className="blogdetail-rating-section">
-            <Rating postId={post._id || post.id} />
+            <Rating postId={currentPostId} />
           </div>
 
           {/* Comments Section */}
           <div className="blogdetail-comments-section">
-            <Comments postId={post._id || post.id} />
+            <Comments postId={currentPostId} />
           </div>
 
           {/* Related Recipes Section */}

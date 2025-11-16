@@ -1,18 +1,24 @@
+// src/components/SideBar/SideBar.jsx
 import React, { useState, useEffect } from "react";
 import Logo from "../Logo/Logo";
 import { Container } from "react-bootstrap";
-import { Button, ConfigProvider, Menu } from "antd";
+// THÊM: Import 'Badge'
+import { Button, ConfigProvider, Menu, Badge } from "antd";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/useAuth";
+// THÊM: Import 'useSocket' (sửa đường dẫn nếu cần)
+import { useSocket } from "../../context/useSocket.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./index.css";
 
 const Index = ({ collapsed, toggleCollapsed }) => {
   const { user } = useAuth();
+  // THÊM: Lấy unreadCount từ Socket Context
+  const { unreadCount } = useSocket();
   const location = useLocation();
   const navigate = useNavigate();
+  const profilePath = user?._id ? `/user/${user._id}` : "/";
 
-  // Thêm quyền Admin vào menu chính (key: 9) cho mục đích hiển thị/chuyển hướng cơ bản
   const IS_ADMIN = user && user.role === "admin";
 
   const getSelectedKey = () => {
@@ -36,9 +42,30 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     if (path === "/challenge" || path.startsWith("/challenge/")) return "3";
     if (path === "/blog" || path.startsWith("/blog/")) return "4";
 
-    if (path === "/notifications" || path.startsWith("/notifications/"))
-      return "5";
+    // -> THÊM LOGIC CHO TIN NHẮN
+    if (path === "/messages" || path.startsWith("/messages/")) return "5-1";
 
+    if (path === "/notifications" || path.startsWith("/notifications/"))
+      return "5-2";
+    
+    // Key cha cho Thông Báo và Tin Nhắn
+    if (path.startsWith("/notifications") || path.startsWith("/messages"))
+      return "5";
+    // <- END THÊM LOGIC CHO TIN NHẮN
+
+    if (path.startsWith("/user/")) return "6-1";
+    if (path === "/support") return "7";
+    // ✅ ADD THIS (phần admin sidebar)
+if (path.startsWith("/admin")) {
+  if (path === "/admin/dashboard") return "admin-dashboard";
+  if (path === "/admin/content-moderation") return "admin-content";
+  if (path === "/admin/payment") return "admin-payment";
+  if (path === "/admin/statistics") return "admin-statistics";
+  if (path === "/admin/report") return "admin-report";
+  if (path === "/admin/feedback") return "admin-feedback";
+  if (path === "/admin/users") return "admin-users";
+  if (path === "/admin/setting") return "admin-system-setting";
+}
     if (path === "/profile" || path.startsWith("/profile/")) return "10";
     if (path === "/settings" || path.startsWith("/settings/")) return "6";
 
@@ -73,6 +100,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
       icon: <Icon icon="ion:restaurant-outline" width="24" height="24" />,
       label: <a href="/">Trang Chủ</a>,
     },
+    // ... giữ nguyên mục Premium (key 2)
     {
       key: "2",
       icon: (
@@ -113,21 +141,40 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         },
       ],
     },
+    // ... giữ nguyên mục Thử Thách (key 3)
     {
       key: "3",
       icon: <Icon icon="mdi:trophy-outline" width="24" height="24" />,
       label: <a href="/challenge">Thử Thách</a>,
     },
+    // ... giữ nguyên mục Blog (key 4)
     {
       key: "4",
       icon: <Icon icon="ion:restaurant-outline" width="24" height="24" />,
       label: <a href="/blog">Blog</a>,
     },
+    // -> SỬA MỤC THÔNG BÁO THÀNH MỤC CHUNG (key 5)
     {
       key: "5",
-      icon: <Icon icon="mdi:bell-outline" width="24" height="24" />,
-      label: <a href="/notifications">Thông Báo</a>,
+      icon: <Icon icon="mdi:email-outline" width="24" height="24" />, // Đổi icon thành icon tin nhắn
+      label: "Hộp thư",
+      children: [
+        {
+          key: "5-1",
+          icon: <Icon icon="mdi:message-text-outline" width="20" height="20" />, // Icon Tin Nhắn
+          // ĐỂ NGUYÊN <a href> Ở ĐÂY, VÒNG LẶP SẼ XỬ LÝ BADGE
+          label: <a href="/messages">Tin Nhắn</a>, 
+        },
+        {
+          key: "5-2",
+          icon: <Icon icon="mdi:bell-outline" width="20" height="20" />, // Icon Thông báo
+          label: <a href="/notifications">Thông Báo</a>,
+        },
+      ],
     },
+    // <- END SỬA MỤC THÔNG BÁO
+
+    // ... giữ nguyên mục Cá Nhân (key 6)
     {
       key: "10",
       icon: <Icon icon="mdi:account-circle-outline" width="24" height="24" />,
@@ -136,8 +183,28 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     {
       key: "6",
       icon: <Icon icon="ic:outline-settings" width="24" height="24" />,
-      label: <a href="/settings">Thiết Lập</a>, 
+      label: "Cá Nhân",
+      children: [
+        {
+          key: "6-1",
+          icon: <Icon icon="mdi:account-outline" width="20" height="20" />,
+          label: (
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate(profilePath)}
+            >
+              Hồ Sơ Cá Nhân
+            </span>
+          ),
+        },
+        {
+          key: "6-2",
+          icon: <Icon icon="mdi:comment-text-outline" width="20" height="20" />, // Sửa icon cho Feedback
+          label: <a href="/feedback">Feedback</a>,
+        },
+      ],
     },
+    // ... giữ nguyên các mục còn lại (Hỗ Trợ, Kho Món Ngon)
     {
       key: "7",
       icon: <Icon icon="mdi:help-circle-outline" width="24" height="24" />,
@@ -185,7 +252,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     },
   ];
 
-  // Chi tiết menu Admin
+  // ... giữ nguyên adminMenuItems ...
   const adminMenuItems = [
     {
       key: "admin-dashboard",
@@ -253,7 +320,17 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     // Sửa đổi một bản sao của baseItems để tránh ảnh hưởng đến định nghĩa gốc
     baseItems = baseItems.map(item => ({...item, children: item.children ? [...item.children] : item.children}));
     
-    // Kho Món Ngon
+    // Blog (key 4)
+    const blogIndex = baseItems.findIndex((item) => item.key === "4");
+    if (blogIndex !== -1) {
+      baseItems[blogIndex] = {
+        ...baseItems[blogIndex],
+        children: null,
+        onClick: () => navigate("/login"),
+      };
+    }
+
+    // Kho Món Ngon (key 8)
     const khoMonNgonIndex = baseItems.findIndex((item) => item.key === "8");
     if (khoMonNgonIndex !== -1) {
       baseItems[khoMonNgonIndex] = {
@@ -263,7 +340,7 @@ const Index = ({ collapsed, toggleCollapsed }) => {
       };
     }
 
-    // Premium
+    // Premium (key 2)
     const premiumIndex = baseItems.findIndex((item) => item.key === "2");
     if (premiumIndex !== -1 && baseItems[premiumIndex].children) {
       // Hợp nhất logic chuyển hướng cho menu Premium
@@ -272,32 +349,22 @@ const Index = ({ collapsed, toggleCollapsed }) => {
         childItem.onClick = () => navigate("/login");
       });
     }
-
-    // Thông Báo
-    const notificationIndex = baseItems.findIndex((item) => item.key === "5");
-    if (notificationIndex !== -1) {
-      baseItems[notificationIndex] = {
-        ...baseItems[notificationIndex],
+    
+    // Hộp thư (key 5 - bao gồm Thông Báo và Tin Nhắn)
+    const inboxIndex = baseItems.findIndex((item) => item.key === "5");
+    if (inboxIndex !== -1) {
+      baseItems[inboxIndex] = {
+        ...baseItems[inboxIndex],
         children: null,
         onClick: () => navigate("/login"),
       };
     }
 
-    // Hồ Sơ
-    const profileIndex = baseItems.findIndex((item) => item.key === "10");
-    if (profileIndex !== -1) {
-      baseItems[profileIndex] = {
-        ...baseItems[profileIndex],
-        children: null,
-        onClick: () => navigate("/login"),
-      };
-    }
-
-    // Thiết Lập
-    const settingsIndex = baseItems.findIndex((item) => item.key === "6");
-    if (settingsIndex !== -1) {
-      baseItems[settingsIndex] = {
-        ...baseItems[settingsIndex],
+    // Cá Nhân (key 6 - bao gồm Hồ Sơ và Feedback)
+    const personalIndex = baseItems.findIndex((item) => item.key === "6");
+    if (personalIndex !== -1) {
+      baseItems[personalIndex] = {
+        ...baseItems[personalIndex],
         children: null,
         onClick: () => navigate("/login"),
       };
@@ -326,7 +393,20 @@ const Index = ({ collapsed, toggleCollapsed }) => {
           child.label.type === "a"
         ) {
           const href = child.label.props.href;
-          child.label = child.label.props.children;
+          let labelContent = child.label.props.children; // Lấy nội dung text (ví dụ: "Tin Nhắn")
+
+          // SỬA ĐỔI: Thêm Badge vào 'Tin Nhắn' (key 5-1)
+          if (child.key === "5-1" && unreadCount > 0) {
+            child.label = (
+              <Badge count={unreadCount} overflowCount={9} offset={[10, 0]}>
+                {labelContent}
+              </Badge>
+            );
+          } else {
+            child.label = labelContent;
+          }
+          // KẾT THÚC SỬA ĐỔI
+
           if (!child.onClick) {
             child.onClick = () => navigate(href);
           }
@@ -349,6 +429,17 @@ const Index = ({ collapsed, toggleCollapsed }) => {
     const selectedKey = getSelectedKey();
     if (selectedKey.startsWith("2-") || selectedKey === "2") {
       return ["2"];
+    }
+    if (selectedKey.startsWith("4-") || selectedKey === "4") {
+      return ["4"];
+    }
+    // -> THÊM logic cho Hộp thư (key 5)
+    if (selectedKey.startsWith("5-") || selectedKey === "5") {
+      return ["5"];
+    }
+    // <- END THÊM logic cho Hộp thư (key 5)
+    if (selectedKey.startsWith("6-") || selectedKey === "6") {
+      return ["6"];
     }
     if (selectedKey.startsWith("8-") || selectedKey === "8") {
       return ["8"];
@@ -373,14 +464,14 @@ const Index = ({ collapsed, toggleCollapsed }) => {
 
     if (selectedKey.includes("-")) {
       parentKey = selectedKey.split("-")[0];
-    } else if (selectedKey === "2" || selectedKey === "8" || selectedKey === "9") {
-      // Nếu đang chọn menu cha, giữ nó mở
+    } else if (selectedKey === "2" || selectedKey === "4" || selectedKey === "5" || selectedKey === "8" || selectedKey === "9") {
+      // Cập nhật key 5 vào danh sách menu cha
       parentKey = selectedKey; 
     }
 
     setOpenKeys((prevKeys) => {
-      // Chỉ quan tâm đến menu Premium (2) và Kho Món Ngon (8)
-      const keysToManage = ["2", "8"];
+      // Quan tâm đến menu Premium (2), Blog (4), Hộp thư (5), Cá Nhân (6) và Kho Món Ngon (8)
+      const keysToManage = ["2", "4", "5", "6", "8"];
       let newKeys = prevKeys.filter(key => !keysToManage.includes(key));
       
       // Mở menu cha nếu đang ở route của nó

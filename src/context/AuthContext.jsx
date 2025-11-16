@@ -1,9 +1,13 @@
-import React, { createContext, useEffect, useState } from "react";
-import { getCookie, setCookie, removeCookie } from "../utils/cookie";
-import apiHelper from "../utils/apiHelper";
-import { apiUrls } from "../utils/constants";
+// src/context/AuthContext.jsx
+import React, { createContext, useContext, useEffect, useState } from "react"; 
+import { getCookie, setCookie, removeCookie } from "../utils/cookie"; 
+import apiHelper from "../utils/apiHelper"; 
+import { apiUrls } from "../utils/constants"; 
 
 const AuthContext = createContext(null);
+
+// FIX: ĐÃ XÓA export const useAuth = () => useContext(AuthContext); 
+// (Vì bạn đã có file useAuth.js riêng, gây ra lỗi HMR)
 
 export const AuthProvider = ({ children }) => {
 
@@ -24,7 +28,6 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-
         const response = await apiHelper.get(apiUrls.getMe);
         
         if (response.success && response.data) {
@@ -32,7 +35,6 @@ export const AuthProvider = ({ children }) => {
           setToken(currentToken);
           localStorage.setItem("user", JSON.stringify(response.data));
         } else {
-
           throw new Error("Invalid token");
         }
       } catch (error) {
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     setUser(newUser);
     if (newToken) {
       localStorage.setItem("token", newToken);
-      setCookie("token", newToken, { path: "/" });
+      setCookie("token", newToken, { path: "/" }); 
     }
     if (newUser) localStorage.setItem("user", JSON.stringify(newUser));
   };
@@ -87,7 +89,8 @@ export const AuthProvider = ({ children }) => {
     return null;
   };
 
-  const isAuthenticated = () => Boolean(token);
+  // HÀM GỐC: Trả về boolean
+  const isAuthenticated = () => Boolean(token); 
 
   return (
     <AuthContext.Provider
@@ -99,13 +102,14 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateUser,
         refreshUser,
-        isAuthenticated,
+        isAuthenticated, // Cung cấp hàm isAuthenticated()
       }}
     >
 
-      {children}
+      {!loading && children} 
     </AuthContext.Provider>
   );
 };
 
+// FIX: Thêm lại default export để khắc phục lỗi HMR "export removed"
 export default AuthContext;

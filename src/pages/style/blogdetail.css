@@ -490,3 +490,40 @@
 .blogdetail-fade-in {
   animation: fadeInUp 0.6s ease-out;
 }
+
+blogdetail-author-profile {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem; /* Tăng khoảng cách dưới profile */
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background-color: #fdfdfd; /* Nền trắng sáng */
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.blogdetail-author-avatar {
+  width: 50px; /* Kích thước lớn hơn */
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+  border: 3px solid #f8b602; /* Border màu nhấn */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8), 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.blogdetail-author-name {
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.blogdetail-author-role {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
