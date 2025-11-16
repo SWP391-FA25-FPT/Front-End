@@ -1,47 +1,36 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/layout/SettingLayout";
-import { useTheme } from "../context/ThemeContext"; // BỔ SUNG: Import useTheme
+import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/useAuth";
 import { isPremium } from "../utils/premium";
 import PremiumNotice from "../components/PremiumNotice";
-import { Button } from "antd";
 import "./style/MealPlan.css";
 import {
   getMealPlans,
   generateMealPlan,
   regenerateMealPlan,
-  deleteMealPlan as deleteMealPlanAPI,
-  generateWeeklyMealPlan,
 } from "../apis/mealplan";
-
-// Thay thế window.confirm bằng alert/message (Do yêu cầu không dùng window.confirm)
-const customConfirm = (message) => {
-  // Trong môi trường thực tế, cần dùng Antd Modal. Ở đây dùng tạm console log để tránh lỗi window.confirm
-  console.log(`CONFIRMATION: ${message}`);
-  return true; // Giả sử người dùng đồng ý
-};
 
 export default function MealPlan() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const { themeMode } = useTheme();
+  const shoppingListRef = useRef(null);
+  
   const [premiumNoticeVisible, setPremiumNoticeVisible] = useState(false);
   const [mealPlanData, setMealPlanData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showNutritionModal, setShowNutritionModal] = useState(false);
-  const navigate = useNavigate();
-  const { themeMode } = useTheme(); // BỔ SUNG: Lấy themeMode
-  const shoppingListRef = useRef(null); // Ref for shopping list section
 
-  // Auto-show premium notice on mount if not premium
   useEffect(() => {
     if (user && !isPremium(user)) {
       setPremiumNoticeVisible(true);
     }
   }, [user]);
 
-  // Helper function to normalize date to YYYY-MM-DD string
   const normalizeDate = (date) => {
     if (!date) return null;
     if (typeof date === 'string') {
@@ -53,7 +42,6 @@ export default function MealPlan() {
     return null;
   };
 
-  // Helper function to get meal plan from localStorage by date
   const getMealPlanFromStorage = (date) => {
     const dateStr = date.toISOString().split("T")[0];
     const storageKey = `mealPlan_${dateStr}`;
@@ -61,7 +49,6 @@ export default function MealPlan() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Ensure date is normalized to string format
         if (parsed && !parsed.date) {
           parsed.date = dateStr;
         } else if (parsed && parsed.date) {
@@ -76,25 +63,20 @@ export default function MealPlan() {
     return null;
   };
 
-  // Helper function to save meal plan to localStorage by date
   const saveMealPlanToStorage = (date, data) => {
     const dateStr = date.toISOString().split("T")[0];
     const storageKey = `mealPlan_${dateStr}`;
     if (data) {
-      // Normalize date to string format before saving
       const dataToSave = {
         ...data,
         date: normalizeDate(data.date) || dateStr
       };
       localStorage.setItem(storageKey, JSON.stringify(dataToSave));
-      console.log('💾 Saved to localStorage:', storageKey);
     } else {
       localStorage.removeItem(storageKey);
-      console.log('🗑️ Removed from localStorage:', storageKey);
     }
   };
 
-  // Load meal plan from localStorage on mount
   useEffect(() => {
     const savedDate = localStorage.getItem('mealPlanSelectedDate');
     if (savedDate) {
@@ -103,58 +85,40 @@ export default function MealPlan() {
         setSelectedDate(parsedDate);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Save selected date to localStorage
   useEffect(() => {
     localStorage.setItem('mealPlanSelectedDate', selectedDate.toISOString());
   }, [selectedDate]);
 
-  // Save meal plan to localStorage when it changes (by date)
   useEffect(() => {
     if (mealPlanData) {
-      // Ensure meal plan has correct date
       const mealPlanWithDate = {
         ...mealPlanData,
         date: mealPlanData.date || selectedDate.toISOString().split("T")[0]
       };
       saveMealPlanToStorage(selectedDate, mealPlanWithDate);
-      console.log('💾 Saved meal plan to localStorage for date:', selectedDate.toISOString().split("T")[0]);
     }
   }, [mealPlanData, selectedDate]);
 
-  // Check for meal plan on mount and when date changes
   useEffect(() => {
-    // Clear meal plan immediately when date changes (to avoid showing wrong day's plan)
     setMealPlanData(null);
     setLoading(true);
     
     const loadMealPlan = async () => {
       const selectedDateStr = selectedDate.toISOString().split("T")[0];
-      console.log('📅 Loading meal plan for date:', selectedDateStr);
-      
-      // First, try to load from localStorage for this specific date
       const savedMealPlan = getMealPlanFromStorage(selectedDate);
-      console.log('💾 Saved meal plan from localStorage:', savedMealPlan ? 'Found' : 'Not found');
       
       if (savedMealPlan) {
-        // Check if saved meal plan date matches selected date
         const savedDateStr = normalizeDate(savedMealPlan.date);
         
-        console.log('📆 Saved date:', savedDateStr, 'Selected date:', selectedDateStr);
-        
         if (savedDateStr && savedDateStr === selectedDateStr) {
-          // Set from localStorage first (instant display)
-          console.log('✅ Restoring meal plan from localStorage');
           setMealPlanData(savedMealPlan);
           setLoading(false);
           
-          // Then check server in background to sync (but don't clear if server has no data)
           try {
             const response = await getMealPlans({ date: selectedDateStr });
             if (response.success && response.data && response.data.length > 0) {
-              // Server has data, update with server version
               const serverMealPlan = response.data[0];
               const mealPlanWithDate = {
                 ...serverMealPlan,
@@ -162,51 +126,35 @@ export default function MealPlan() {
               };
               saveMealPlanToStorage(selectedDate, mealPlanWithDate);
               setMealPlanData(mealPlanWithDate);
-              console.log('🔄 Updated with server data');
-            } else {
-              console.log('ℹ️ Server has no data, keeping localStorage version');
             }
-            // If server has no data, keep the localStorage version
           } catch (err) {
             console.error("Error syncing meal plan from server:", err);
-            // Keep localStorage version on error
           }
           return;
-        } else {
-          console.log('⚠️ Date mismatch, ignoring saved meal plan');
         }
       }
       
-      // If no saved meal plan for this date, load from server
-      console.log('🌐 Loading from server...');
       await checkMealPlanForDate();
     };
     
     loadMealPlan();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
 
-  // Check if we need to refresh when day changes
   useEffect(() => {
     const checkDayChange = setInterval(() => {
       const now = new Date();
       const currentDateStr = now.toISOString().split("T")[0];
       const selectedDateStr = selectedDate.toISOString().split("T")[0];
 
-      // If selected date is not today, don't auto-refresh
       if (selectedDateStr !== currentDateStr) return;
 
-      // Check if meal plan date is different from today
       if (mealPlanData) {
-        const mealPlanDateStr = new Date(mealPlanData.date)
-          .toISOString()
-          .split("T")[0];
+        const mealPlanDateStr = new Date(mealPlanData.date).toISOString().split("T")[0];
         if (mealPlanDateStr !== currentDateStr) {
-          // New day, clear meal plan
           setMealPlanData(null);
         }
       }
-    }, 60000); // Check every minute
+    }, 60000);
 
     return () => clearInterval(checkDayChange);
   }, [mealPlanData, selectedDate]);
@@ -219,49 +167,27 @@ export default function MealPlan() {
 
       if (response.success && response.data && response.data.length > 0) {
         const serverMealPlan = response.data[0];
-        // Verify the meal plan is for the correct date
         const mealPlanDateStr = normalizeDate(serverMealPlan.date);
         if (mealPlanDateStr === dateStr) {
-          // Update localStorage with server data (in case it's newer)
           saveMealPlanToStorage(selectedDate, serverMealPlan);
           setMealPlanData(serverMealPlan);
-          console.log('✅ Loaded meal plan from server for date:', dateStr);
         } else {
-          // Meal plan date doesn't match, don't use it
-          console.log('⚠️ Server meal plan date mismatch:', mealPlanDateStr, 'vs', dateStr);
           setMealPlanData(null);
         }
       } else {
-        // Server doesn't have data for this date - show empty state
-        // Check localStorage one more time (in case it was saved after initial check)
         const savedMealPlan = getMealPlanFromStorage(selectedDate);
-        if (savedMealPlan) {
-          const savedDateStr = normalizeDate(savedMealPlan.date);
-          if (savedDateStr === dateStr) {
-            setMealPlanData(savedMealPlan);
-            console.log('✅ Restored meal plan from localStorage for date:', dateStr);
-          } else {
-            console.log('⚠️ LocalStorage meal plan date mismatch:', savedDateStr, 'vs', dateStr);
-            setMealPlanData(null);
-          }
+        if (savedMealPlan && normalizeDate(savedMealPlan.date) === dateStr) {
+          setMealPlanData(savedMealPlan);
         } else {
-          console.log('ℹ️ No meal plan found for date:', dateStr);
           setMealPlanData(null);
         }
       }
     } catch (err) {
       console.error("Error loading meal plan:", err);
-      // On error, try to use saved meal plan
       const savedMealPlan = getMealPlanFromStorage(selectedDate);
-      if (savedMealPlan) {
-        const savedDateStr = normalizeDate(savedMealPlan.date);
-        const selectedDateStr = selectedDate.toISOString().split("T")[0];
-        if (savedDateStr === selectedDateStr) {
-          setMealPlanData(savedMealPlan);
-          console.log('✅ Restored meal plan from localStorage on error');
-        } else {
-          setMealPlanData(null);
-        }
+      const selectedDateStr = selectedDate.toISOString().split("T")[0];
+      if (savedMealPlan && normalizeDate(savedMealPlan.date) === selectedDateStr) {
+        setMealPlanData(savedMealPlan);
       } else {
         setMealPlanData(null);
       }
@@ -270,12 +196,10 @@ export default function MealPlan() {
     }
   };
 
-  // Get all unique ingredients from meal plan
   const getAllIngredients = useMemo(() => {
     if (!mealPlanData || !mealPlanData.meals) return [];
 
     const ingredientMap = new Map();
-
     mealPlanData.meals.forEach((meal) => {
       if (meal.ingredients) {
         meal.ingredients.forEach((ingredient) => {
@@ -346,16 +270,24 @@ export default function MealPlan() {
         ? await regenerateMealPlan(dateStr)
         : await generateMealPlan(dateStr);
 
+      // Check if response indicates error (400, 500, etc.)
+      if (!response.success) {
+        setError(
+          response.error ||
+          response.details ||
+          "Không thể tạo kế hoạch bữa ăn. Vui lòng hoàn thiện hồ sơ của bạn."
+        );
+        console.error("API Error:", response);
+        return;
+      }
+
       if (response.success && response.data) {
-        // Ensure the meal plan has the correct date
         const mealPlanWithDate = {
           ...response.data,
           date: response.data.date || dateStr
         };
         setMealPlanData(mealPlanWithDate);
-        // Explicitly save to localStorage
         saveMealPlanToStorage(selectedDate, mealPlanWithDate);
-        console.log('✅ Meal plan saved for date:', dateStr);
       }
     } catch (err) {
       console.error("Error generating meal plan:", err);
@@ -363,51 +295,6 @@ export default function MealPlan() {
         err.message ||
           "Không thể tạo kế hoạch bữa ăn. Vui lòng hoàn thiện hồ sơ của bạn."
       );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGenerateWeeklyPlan = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const dateStr = selectedDate.toISOString().split("T")[0];
-      const response = await generateWeeklyMealPlan(dateStr);
-
-      if (response.success && response.data) {
-        setMealPlanData(response.data[0]);
-        console.log("Đã tạo kế hoạch bữa ăn cho 7 ngày thành công!");
-      }
-    } catch (err) {
-      console.error("Error generating weekly meal plan:", err);
-      setError(err.message || "Không thể tạo kế hoạch bữa ăn tuần.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDeletePlan = async () => {
-    if (!mealPlanData || !mealPlanData._id) {
-      return;
-    }
-
-    if (!customConfirm("Bạn có chắc muốn xóa kế hoạch bữa ăn này?")) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      await deleteMealPlanAPI(mealPlanData._id);
-      // Remove from localStorage
-      saveMealPlanToStorage(selectedDate, null);
-      setMealPlanData(null);
-    } catch (err) {
-      console.error("Error deleting meal plan:", err);
-      setError(err.message || "Không thể xóa kế hoạch bữa ăn");
     } finally {
       setLoading(false);
     }
@@ -431,34 +318,21 @@ export default function MealPlan() {
   };
 
   const macroData = useMemo(() => {
-    const total =
-      (mealPlanData?.totalMacros?.protein || 0) +
-      (mealPlanData?.totalMacros?.carbs || 0) +
-      (mealPlanData?.totalMacros?.fat || 0);
+    const total = (mealPlanData?.totalMacros?.protein || 0) +
+                  (mealPlanData?.totalMacros?.carbs || 0) +
+                  (mealPlanData?.totalMacros?.fat || 0);
 
     if (total === 0) return { total: 0, macros: [] };
 
+    const macros = [
+      { name: "Fat", value: mealPlanData.totalMacros?.fat || 0, color: "var(--mealplan-color-fat)" },
+      { name: "Carbs", value: mealPlanData.totalMacros?.carbs || 0, color: "var(--mealplan-color-carbs)" },
+      { name: "Protein", value: mealPlanData.totalMacros?.protein || 0, color: "var(--mealplan-color-protein)" },
+    ];
+
     return {
-      total: total,
-      macros: [
-        {
-          name: "Fat",
-          value: mealPlanData.totalMacros?.fat || 0,
-          color: "var(--mealplan-color-fat)",
-        },
-        {
-          name: "Carbs",
-          value: mealPlanData.totalMacros?.carbs || 0,
-          color: "var(--mealplan-color-carbs)",
-        },
-        {
-          name: "Protein",
-          value: mealPlanData.totalMacros?.protein || 0,
-          color: "var(--mealplan-color-protein)",
-        },
-      ]
-        .filter((m) => m.value > 0)
-        .sort((a, b) => b.value - a.value),
+      total,
+      macros: macros.filter((m) => m.value > 0).sort((a, b) => b.value - a.value),
     };
   }, [mealPlanData]);
 
@@ -483,7 +357,6 @@ export default function MealPlan() {
     );
   };
 
-  // Block access if not premium - show empty page with modal
   if (user && !isPremium(user)) {
     return (
       <Layout>
