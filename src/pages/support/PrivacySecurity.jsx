@@ -96,7 +96,7 @@ const PrivacySecurity = () => {
                 </Paragraph>
                 <ul className="ps-4">
                   <li><Text strong>Quyền truy cập & chỉnh sửa:</Text> Bạn có thể xem và
-                  chỉnh sửa thông tin hồ sơ của mình bất cứ lúc nào tại trang <Text code>/profile</Text>.</li>
+                  chỉnh sửa thông tin hồ sơ của mình bất cứ lúc nào tại trang <Text code>/user/:id/edit</Text>.</li>
                   <li><Text strong>Quyền xóa bỏ:</Text> Bạn có quyền yêu cầu xóa hoàn toàn
                   tài khoản và tất cả dữ liệu liên quan. Vui lòng liên hệ bộ phận hỗ trợ
                   (trang <Text code>/support</Text>) để thực hiện việc này.</li>

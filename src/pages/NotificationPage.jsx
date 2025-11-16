@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 // NOTE: Thêm import AppLayout
 import AppLayout from "../components/layout/AppLayout"; 
 import {
@@ -12,90 +12,145 @@ import {
   Space,
   Empty,
   Spin,
+  message,
 } from "antd";
 import { Icon } from "@iconify/react";
+import {
+  getNotifications,
+  markNotificationRead,
+  markAllNotificationsRead,
+} from "../apis/notification";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
-
-// --- DỮ LIỆU GIẢ (MOCK DATA) ---
-const MOCK_NOTIFICATIONS = [
-  {
-    id: 1,
-    icon: "mdi:file-document-outline",
-    title: "Cập nhật tài liệu",
-    description: 'Tài liệu "Món Nháp" đã được cập nhật.',
-    color: "#1D4ED8",
-    bgColor: "#DBEAFE",
-    read: false,
-    date: "2025-11-06T10:30:00Z",
-  },
-  {
-    id: 2,
-    icon: "mdi:trophy-outline",
-    title: "Thử thách mới!",
-    description: 'Bạn đã tham gia "Thử thách 7 ngày Keto".',
-    color: "#059669",
-    bgColor: "#D1FAE5",
-    read: false,
-    date: "2025-11-05T14:00:00Z",
-  },
-  {
-    id: 3,
-    icon: "mdi:comment-outline",
-    title: "Bình luận mới",
-    description: 'Khoale đã bình luận về món "Cá Hồi Nướng".',
-    color: "#D97706",
-    bgColor: "#FEF3C7",
-    read: true,
-    date: "2025-11-04T09:15:00Z",
-  },
-];
-// ---------------------------------
 
 const NotificationPage = () => {
   const [notifications, setNotifications] = useState([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
+  const [markingAll, setMarkingAll] = useState(false);
+
+  const resolveNotificationList = (response) => {
+    if (!response) return [];
+    if (Array.isArray(response)) return response;
+    if (Array.isArray(response.notifications)) return response.notifications;
+    if (Array.isArray(response.data)) return response.data;
+    if (Array.isArray(response.items)) return response.items;
+    return [];
+  };
+
+  const fetchNotifications = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = filter === "unread" ? { unreadOnly: true } : {};
+      const data = await getNotifications(params);
+      setNotifications(resolveNotificationList(data));
+    } catch (error) {
+      console.error("Fetch notifications error:", error);
+      message.error(error.message || "Lỗi khi tải thông báo");
+      setNotifications([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [filter]);
 
   useEffect(() => {
-    setLoading(true);
-    // TODO: Gọi API (fetch) để lấy thông báo từ back-end
-    setTimeout(() => {
-      setNotifications(MOCK_NOTIFICATIONS);
-      setLoading(false);
-    }, 1000);
-  }, []);
+    fetchNotifications();
+  }, [fetchNotifications]);
+
+  const findNotificationId = (notification) =>
+    notification?._id || notification?.id;
+
+  const isUnread = (notification) =>
+    !notification?.readAt && !notification?.read;
 
   const handleMarkAsRead = (id) => {
-    const item = notifications.find((n) => n.id === id);
-    if (item && item.read) {
-      console.log(`Notification ${id} is already read.`);
+    if (!id) return;
+
+    const target = notifications.find(
+      (notification) => findNotificationId(notification) === id
+    );
+
+    if (!target) {
       return;
     }
+
+    if (!isUnread(target)) {
+      return;
+    }
+
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+      prev.map((notification) =>
+        findNotificationId(notification) === id
+          ? {
+              ...notification,
+              read: true,
+              readAt: notification.readAt || new Date().toISOString(),
+            }
+          : notification
+      )
     );
-    console.log(`Marked notification ${id} as read (API call)`);
+
+    markNotificationRead(id).catch((error) => {
+      console.error("Mark notification read error:", error);
+      message.error(error.message || "Không thể đánh dấu thông báo");
+      // Khôi phục trạng thái chưa đọc nếu API lỗi
+      setNotifications((prev) =>
+        prev.map((notification) =>
+          findNotificationId(notification) === id
+            ? { ...notification, read: false, readAt: null }
+            : notification
+        )
+      );
+    });
   };
 
   const handleMarkAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-    console.log("Marked all as read (API call)");
+    if (notifications.length === 0) return;
+
+    setMarkingAll(true);
+
+    const readTimestamp = new Date().toISOString();
+
+    setNotifications((prev) =>
+      prev.map((notification) => ({
+        ...notification,
+        read: true,
+        readAt: notification.readAt || readTimestamp,
+      }))
+    );
+
+    markAllNotificationsRead()
+      .then(() => {
+        if (filter === "unread") {
+          fetchNotifications();
+        }
+      })
+      .catch((error) => {
+        console.error("Mark all notifications read error:", error);
+        message.error(error.message || "Không thể đánh dấu tất cả thông báo");
+        // Khôi phục trạng thái cũ nếu thất bại
+        fetchNotifications();
+      })
+      .finally(() => setMarkingAll(false));
   };
 
   const filteredNotifications = notifications.filter((n) => {
-    if (filter === "unread") {
-      return !n.read;
-    }
-    return true;
+    if (filter !== "unread") return true;
+    return isUnread(n);
   });
 
   const markAllButton = (
     <Button
       type="link"
       onClick={handleMarkAllAsRead}
-      disabled={loading || notifications.every((n) => n.read)}
+      disabled={
+        loading ||
+        markingAll ||
+        notifications.length === 0 ||
+        notifications.every((n) => !isUnread(n))
+      }
+      loading={markingAll}
     >
       Đánh dấu tất cả là đã đọc
     </Button>
@@ -113,7 +168,7 @@ const NotificationPage = () => {
           <Tabs activeKey={filter} onChange={(key) => setFilter(key)}>
             <TabPane tab={`Tất cả (${notifications.length})`} key="all" />
             <TabPane
-              tab={`Chưa đọc (${notifications.filter((n) => !n.read).length})`}
+              tab={`Chưa đọc (${notifications.filter((n) => isUnread(n)).length})`}
               key="unread"
             />
           </Tabs>
@@ -128,36 +183,61 @@ const NotificationPage = () => {
             <List
               itemLayout="horizontal"
               dataSource={filteredNotifications}
-              renderItem={(item) => (
-                <List.Item
-                  onClick={() => handleMarkAsRead(item.id)}
-                  style={{
-                    opacity: item.read ? 0.6 : 1,
-                    cursor: item.read ? "default" : "pointer",
-                  }}
-                >
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        icon={<Icon icon={item.icon} />}
-                        style={{
-                          backgroundColor: item.bgColor,
-                          color: item.color,
-                        }}
-                      />
-                    }
-                    title={
-                      <span style={{ fontWeight: item.read ? 400 : 600 }}>
-                        {item.title}
-                      </span>
-                    }
-                    description={item.description}
-                  />
-                  <div style={{ color: "#9CA3AF", fontSize: "12px" }}>
-                    {new Date(item.date).toLocaleDateString("vi-VN")}
-                  </div>
-                </List.Item>
-              )}
+              renderItem={(item) => {
+                const unread = isUnread(item);
+                const iconName = item.icon || "mdi:bell-outline";
+                const bgColor = item.bgColor || (unread ? "#DBEAFE" : "#E5E7EB");
+                const color = item.color || "#1D4ED8";
+                const title =
+                  item.title ||
+                  item.message ||
+                  item.actor?.name ||
+                  "Thông báo";
+                const description = item.description || item.message;
+                const timestamp = item.date || item.createdAt || item.updatedAt;
+
+                return (
+                  <List.Item
+                    onClick={() => handleMarkAsRead(findNotificationId(item))}
+                    style={{
+                      opacity: unread ? 1 : 0.6,
+                      cursor: unread ? "pointer" : "default",
+                    }}
+                  >
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar
+                          icon={<Icon icon={iconName} />}
+                          style={{
+                            backgroundColor: bgColor,
+                            color,
+                          }}
+                        />
+                      }
+                      title={
+                        <span style={{ fontWeight: unread ? 600 : 400 }}>
+                          {title}
+                        </span>
+                      }
+                      description={
+                        <Space direction="vertical" size={2}>
+                          {description && <span>{description}</span>}
+                          {timestamp && (
+                            <span
+                              style={{
+                                color: "#9CA3AF",
+                                fontSize: "12px",
+                              }}
+                            >
+                              {new Date(timestamp).toLocaleString("vi-VN")}
+                            </span>
+                          )}
+                        </Space>
+                      }
+                    />
+                  </List.Item>
+                );
+              }}
             />
           )}
         </Card>

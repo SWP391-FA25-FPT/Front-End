@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, ConfigProvider, Avatar } from "antd";
-import blank4x3 from "../../assets/blank4x3.png";
+import blank4x3 from "../../assets/guest.png";
 import guest from "../../assets/guest.png";
 
 const Index = ({ title, src, avatar, userName, subtitle }) => {

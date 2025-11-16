@@ -220,7 +220,7 @@ const HomePage = () => {
                           <CardRecent
                             title={recipe.name}
                             src={recipe.image}
-                            avatar={recipe.image}
+                            avatar={recipe.authorAvatar}
                             userName={recipe.author}
                           />
                         </div>

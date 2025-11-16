@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PaymentModule from "../../components/admin/PaymentModule";
 import FeedbackModule from "../../components/admin/FeedbackModule";
-import ReportModule from "../../components/admin/ReportModule";
-import ContentModerationModule from "../../components/admin/ContentModerationModule";
+import RecipeModerationModule from "../../components/admin/RecipeModerationModule";
 import UserManagementModule from "../../components/admin/UserManagementModule";
 import AIControlModule from "../../components/admin/AIControlModule";
 import StatisticsModule from "../../components/admin/StatisticsModule";
@@ -19,8 +18,7 @@ export default function AdminPage() {
     blogs: { component: BlogManagementModule, label: "Blogs" },
     payment: { component: PaymentModule, label: "Plans & Billing" },
     feedback: { component: FeedbackModule, label: "Feedback" },
-    report: { component: ReportModule, label: "Report" },
-    content: { component: ContentModerationModule, label: "Content" },
+    content: { component: RecipeModerationModule, label: "Content" },
     users: { component: UserManagementModule, label: "Users" },
     ai: { component: AIControlModule, label: "AI Control" },
     stats: { component: StatisticsModule, label: "Statistics" }

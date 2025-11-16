@@ -1,0 +1,57 @@
+/* Challenge Management Module Styles */
+
+/* Create Button - Override Bootstrap */
+.btn.btn-primary.create-challenge-btn {
+  white-space: nowrap !important;
+  padding: 6px 10px !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.btn.btn-primary.create-challenge-btn:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Stats Cards */
+.stats-card-ongoing {
+  border-left: 4px solid #198754;
+  background: #d1e7dd;
+}
+
+.stats-card-upcoming {
+  border-left: 4px solid #0dcaf0;
+  background: #cff4fc;
+}
+
+.stats-card-ended {
+  border-left: 4px solid #6c757d;
+  background: #e9ecef;
+}
+
+.stats-card-participants {
+  border-left: 4px solid #ffc107;
+  background: #fff3cd;
+}
+
+/* Challenge Image */
+.challenge-image {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Challenge Description */
+.challenge-description {
+  font-size: 0.85rem;
+}
+
+/* Modal Backdrop */
+.modal-backdrop {
+  display: block;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+

@@ -105,6 +105,21 @@
   gap: 10px;
 }
 
+.profile-stat-clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.profile-stat-clickable:hover {
+  transform: translateY(-2px);
+}
+
+.profile-stat-clickable:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(248, 182, 2, 0.3);
+  border-radius: 8px;
+}
+
 .profile-stats-bar .icon {
   font-size: 20px; /* To hơn 1 chút */
   color: #888;

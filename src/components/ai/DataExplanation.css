@@ -1,0 +1,111 @@
+.data-explanation-card {
+  margin: 0.75rem 0;
+  border: 1px solid var(--color-primary-faded);
+  border-radius: 8px;
+  background: var(--color-bg-elevated);
+}
+
+.data-explanation-title {
+  margin: 0 0 0.75rem 0 !important;
+  color: var(--color-text-primary);
+  font-size: 1rem;
+}
+
+.nutrition-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.nutrition-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: var(--color-bg-container);
+  border-radius: 6px;
+  border: 1px solid var(--color-primary-faded);
+}
+
+.nutrition-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.info-icon {
+  color: var(--color-primary);
+  cursor: help;
+  font-size: 0.75rem;
+}
+
+.nutrition-value {
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: var(--color-bg-container);
+  border-radius: 6px;
+  border: 1px solid var(--color-primary-faded);
+}
+
+.progress-label {
+  font-size: 0.85rem;
+}
+
+.progress-value {
+  font-size: 1rem;
+  color: var(--color-text-primary);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.data-table {
+  font-size: 0.9rem;
+}
+
+.data-table .ant-table-thead > tr > th {
+  background: var(--color-primary-faded);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.data-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--color-primary-faded);
+  color: var(--color-text-primary);
+}
+
+.data-table .ant-table-tbody > tr:hover > td {
+  background: var(--color-primary-faded);
+}
+
+[data-theme="dark"] .nutrition-item,
+[data-theme="dark"] .progress-item {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .data-table .ant-table-thead > tr > th {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .data-table .ant-table-tbody > tr:hover > td {
+  background: rgba(0, 0, 0, 0.2);
+}
+

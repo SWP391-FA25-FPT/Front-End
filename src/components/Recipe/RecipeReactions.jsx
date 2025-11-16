@@ -1,53 +1,90 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Space, message } from "antd";
 import { Icon } from "@iconify/react";
 import { addRecipeReaction } from "../../apis/recipe";
+import { useAuth } from "../../context/useAuth";
 import "./Recipe.css";
 
-const RecipeReactions = ({ recipeId, initialReactions = [], onUpdate }) => {
-  const [reactions, setReactions] = useState(initialReactions);
+const REACTION_TYPES = ["delicious", "love", "fire"];
+
+const reactionConfig = {
+  delicious: {
+    icon: "noto:fork-and-knife-with-plate",
+    label: "Ngon",
+    color: "#ff9500",
+  },
+  love: {
+    icon: "noto:red-heart",
+    label: "Yêu thích",
+    color: "#ff3b30",
+  },
+  fire: {
+    icon: "noto:fire",
+    label: "Tuyệt vời",
+    color: "#ff6600",
+  },
+};
+
+const normalizeReactions = (reactionList = []) =>
+  REACTION_TYPES.map((type) => {
+    const match = reactionList.find((reaction) => reaction.type === type);
+    return {
+      type,
+      count: match?.count || 0,
+    };
+  });
+
+const RecipeReactions = ({
+  recipeId,
+  initialReactions = [],
+  initialUserReaction = null,
+  onUpdate,
+}) => {
+  const { user } = useAuth();
+  const [reactions, setReactions] = useState(normalizeReactions(initialReactions));
+  const [userReaction, setUserReaction] = useState(initialUserReaction);
   const [loading, setLoading] = useState({});
 
-  // Map reaction types to icons and colors
-  const reactionConfig = {
-    delicious: {
-      icon: "noto:fork-and-knife-with-plate",
-      label: "Ngon",
-      color: "#ff9500",
-    },
-    love: {
-      icon: "noto:red-heart",
-      label: "Yêu thích",
-      color: "#ff3b30",
-    },
-    fire: {
-      icon: "noto:fire",
-      label: "Tuyệt vời",
-      color: "#ff6600",
-    },
-  };
+  useEffect(() => {
+    setReactions(normalizeReactions(initialReactions));
+  }, [initialReactions]);
+
+  useEffect(() => {
+    setUserReaction(initialUserReaction || null);
+  }, [initialUserReaction]);
 
   const handleReaction = async (type) => {
+    if (!user) {
+      message.warning("Vui lòng đăng nhập để phản hồi");
+      return;
+    }
+
+    if (loading[type]) {
+      return;
+    }
+
     try {
-      setLoading({ ...loading, [type]: true });
-      
+      setLoading((prev) => ({ ...prev, [type]: true }));
+
       const response = await addRecipeReaction(recipeId, type);
-      
+
       if (response.success) {
-        // Update local state
-        setReactions(response.data);
-        
-        // Call parent callback if provided
+        const normalized = normalizeReactions(response.data?.reactions || []);
+        const updatedUserReaction = response.data?.userReaction || null;
+
+        setReactions(normalized);
+        setUserReaction(updatedUserReaction);
+
         if (onUpdate) {
-          onUpdate(response.data);
+          onUpdate(normalized, updatedUserReaction);
         }
-        
-        message.success("Cảm ơn bạn đã phản hồi!");
+
+        message.success(response.message || "Đã cập nhật phản hồi");
       }
     } catch (error) {
-      message.error(error.message || "Lỗi khi thêm phản hồi");
+      message.error(error.message || "Lỗi khi cập nhật phản hồi");
     } finally {
-      setLoading({ ...loading, [type]: false });
+      setLoading((prev) => ({ ...prev, [type]: false }));
     }
   };
 
@@ -78,18 +115,13 @@ const RecipeReactions = ({ recipeId, initialReactions = [], onUpdate }) => {
               height: "36px",
               padding: "0 14px",
               borderRadius: "18px",
-              border: "1.5px solid #f0f0f0",
-              backgroundColor: "#fff",
+              border: `1.5px solid ${
+                userReaction === type ? config.color : "#f0f0f0"
+              }`,
+              backgroundColor:
+                userReaction === type ? `${config.color}10` : "#fff",
               cursor: "pointer",
               transition: "all 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = config.color;
-              e.currentTarget.style.backgroundColor = `${config.color}10`;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#f0f0f0";
-              e.currentTarget.style.backgroundColor = "#fff";
             }}
           >
             <Icon icon={config.icon} width="20" height="20" />

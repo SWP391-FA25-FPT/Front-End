@@ -1,46 +1,75 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect, useCallback } from "react"; 
+import { useParams, useNavigate } from "react-router-dom";
+import { message } from "antd";
 import Layout from "../components/layout/SettingLayout";
 import ProfileForm from "../components/User/ProfileForm"; 
 import { getProfile, updateProfile } from "../apis/user";
-import { useTheme } from "../context/ThemeContext";
 import "./style/ProfilePage.css"; 
+import { useAuth } from "../context/useAuth";
+
 
 const ProfilePage = () => {
+  const { user } = useAuth();
+  const { userId } = useParams();
+  const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { themeMode } = useTheme(); // <--- BỔ SUNG
+
+  const fetchUserProfile = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const targetId = userId || user?._id;
+
+      if (!targetId) {
+        setError("Không xác định được người dùng");
+        return;
+      }
+
+      if (user && userId && user._id !== userId) {
+        message.error("Bạn không có quyền chỉnh sửa hồ sơ này");
+        navigate(`/user/${userId}`, { replace: true });
+        return;
+      }
+
+      if (!userId && targetId) {
+        navigate(`/user/${targetId}/edit`, { replace: true });
+        return;
+      }
+
+      const response = await getProfile(targetId);
+      if (response?.user) {
+        setUserProfile(response.user);
+      } else if (response) {
+        setUserProfile(response);
+      } else {
+        setError("Failed to fetch profile");
+      }
+    } catch (err) {
+      console.error("Error fetching user profile:", err);
+      setError("Failed to fetch user profile");
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, user, userId]);
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        setLoading(true);
-        const response = await getProfile();
-        if (response) {
-          setUserProfile(response);
-        } else {
-          setError("Failed to fetch profile");
-        }
-      } catch (err) {
-        console.error("Error fetching user profile:", err);
-        setError("Failed to fetch user profile");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserProfile();
-  }, []);
+  }, [fetchUserProfile]);
 
   const handleProfileUpdate = async (updatedData) => {
     try {
-      const response = await updateProfile(updatedData);
-      if (response) {
-        setUserProfile(response);
+      const response = await updateProfile(userId, updatedData);
+      if (response?.user) {
+        setUserProfile(response.user);
         return { success: true, message: "Profile updated successfully" };
-      } else {
-        return { success: false, message: "Failed to update profile" };
       }
+      if (response?.success) {
+        await fetchUserProfile();
+        return { success: true, message: "Profile updated successfully" };
+      }
+      return { success: false, message: "Failed to update profile" };
     } catch (err) {
       console.error("Error updating profile:", err);
       return { success: false, message: "Failed to update profile" };

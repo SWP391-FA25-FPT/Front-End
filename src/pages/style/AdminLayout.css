@@ -312,12 +312,13 @@
 }
 
 .ant-btn-primary {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  border: none;
+  background: #F5C542 !important;
+  border-color: #F5C542 !important;
 }
 
 .ant-btn-primary:hover {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: #e0b633 !important;
+  border-color: #e0b633 !important;
 }
 
 /* Inputs */
@@ -377,3 +378,4 @@
   font-weight: 500;
   border: none;
 }
+

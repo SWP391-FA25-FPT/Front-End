@@ -1,10 +1,20 @@
+// Development
 // export const baseUrl = "http://localhost:7860";
-export const baseUrl = "https://toan215-Meta-Meal.hf.space";
+
+// Production
+export const GOOGLE_CLIENT_ID =
+  "32785311427-aau37pa9fo3o20mm66devnqiu6q84t8b.apps.googleusercontent.com";
+export const baseUrl = "https://toan215-meta-meal.hf.space";
 
 export const apiUrls = {
   // Auth endpoints
   login: "/api/auth/login",
   register: "/api/auth/register",
+  verifyOTP: "/api/auth/verify-otp",
+  resendOTP: "/api/auth/resend-otp",
+  googleLogin: "/api/auth/google",
+  forgotPassword: "/api/auth/forgot-password",
+  resetPassword: "/api/auth/reset-password",
   getMe: "/api/auth/me",
 
   // User endpoints
@@ -19,6 +29,7 @@ export const apiUrls = {
   updateRecipe: "/api/recipes",
   deleteRecipe: "/api/recipes",
   searchRecipes: "/api/recipes/search",
+  updateRecipeStatus: "/api/recipes",
 
   // Comment endpoints
   getCommentsByRecipeId: "/api/recipes/:recipeId/comments",
@@ -74,4 +85,20 @@ export const apiUrls = {
   getBlogStats: "/api/blogs/admin/stats",
   updateBlogAdmin: "/api/blogs/admin",
   deleteBlogAdmin: "/api/blogs/admin",
+
+  // Notification endpoints
+  notifications: "/api/notifications",
+  notificationsMarkAll: "/api/notifications/read-all",
+  notificationsAdmin: "/api/notifications/admin",
+
+  // Challenge endpoints
+  getAllChallenges: "/api/challenges",
+  getChallengeById: "/api/challenges",
+  createChallenge: "/api/challenges",
+  updateChallenge: "/api/challenges",
+  deleteChallenge: "/api/challenges",
+  joinChallenge: "/api/challenges",
+  submitEntry: "/api/challenges",
+  getChallengeStats: "/api/challenges/stats",
+  likeEntry: "/api/challenges",
 };

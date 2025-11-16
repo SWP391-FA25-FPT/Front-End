@@ -7,10 +7,16 @@ import "./style.css";
 
 const { Title, Text } = Typography;
 
-const SearchFilter = () => {
+const SearchFilter = ({ 
+  onFilterChange
+}) => {
   const navigate = useNavigate();
   const [trendingTags, setTrendingTags] = useState([]);
   const [loadingTags, setLoadingTags] = useState(true);
+  const [includeInput, setIncludeInput] = useState("");
+  const [excludeInput, setExcludeInput] = useState("");
+  const [trustScoreEnabled, setTrustScoreEnabled] = useState(false);
+  const [stepImagesEnabled, setStepImagesEnabled] = useState(false);
 
   // Fetch trending tags for "Tìm kiếm tương tự"
   useEffect(() => {
@@ -33,6 +39,56 @@ const SearchFilter = () => {
 
   const handleTagClick = (tagName) => {
     navigate(`/search?q=${encodeURIComponent(tagName)}`);
+  };
+
+  const handleIncludeChange = (e) => {
+    const value = e.target.value;
+    setIncludeInput(value);
+  };
+
+  const handleIncludeBlur = () => {
+    const ingredients = includeInput.split(',').map(ing => ing.trim()).filter(ing => ing);
+    if (onFilterChange) {
+      onFilterChange({ includeIngredients: ingredients });
+    }
+  };
+
+  const handleIncludeKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.target.blur(); // Trigger blur which will call handleIncludeBlur
+    }
+  };
+
+  const handleExcludeChange = (e) => {
+    const value = e.target.value;
+    setExcludeInput(value);
+  };
+
+  const handleExcludeBlur = () => {
+    const ingredients = excludeInput.split(',').map(ing => ing.trim()).filter(ing => ing);
+    if (onFilterChange) {
+      onFilterChange({ excludeIngredients: ingredients });
+    }
+  };
+
+  const handleExcludeKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.target.blur(); // Trigger blur which will call handleExcludeBlur
+    }
+  };
+
+  const handleTrustScoreToggle = (checked) => {
+    setTrustScoreEnabled(checked);
+    if (onFilterChange) {
+      onFilterChange({ minTrustScore: checked ? 70 : null });
+    }
+  };
+
+  const handleStepImagesToggle = (checked) => {
+    setStepImagesEnabled(checked);
+    if (onFilterChange) {
+      onFilterChange({ hasStepImages: checked });
+    }
   };
 
   return (
@@ -81,10 +137,13 @@ const SearchFilter = () => {
               Hiển thị các món với:
             </Text>
             <Input
-              placeholder="Gõ vào tên các nguyên liệu..."
+              placeholder="Gõ vào tên các nguyên liệu (phân cách bằng dấu phẩy)..."
               prefix={<Icon icon="mdi:magnify" width="16" />}
               className="filter-input"
-              disabled
+              value={includeInput}
+              onChange={handleIncludeChange}
+              onBlur={handleIncludeBlur}
+              onKeyPress={handleIncludeKeyPress}
               style={{ marginTop: "8px" }}
             />
           </div>
@@ -94,10 +153,13 @@ const SearchFilter = () => {
               Hiển thị các món không có:
             </Text>
             <Input
-              placeholder="Gõ vào tên các nguyên liệu..."
+              placeholder="Gõ vào tên các nguyên liệu (phân cách bằng dấu phẩy)..."
               prefix={<Icon icon="mdi:close-circle-outline" width="16" />}
               className="filter-input"
-              disabled
+              value={excludeInput}
+              onChange={handleExcludeChange}
+              onBlur={handleExcludeBlur}
+              onKeyPress={handleExcludeKeyPress}
               style={{ marginTop: "8px" }}
             />
           </div>
@@ -123,14 +185,20 @@ const SearchFilter = () => {
                 </Text>
               </div>
             </div>
-            <Switch disabled />
+            <Switch 
+              checked={stepImagesEnabled}
+              onChange={handleStepImagesToggle}
+            />
           </div>
 
           <div className="d-flex justify-content-between align-items-center">
             <div style={{ flex: 1 }}>
               <Text className="filter-label">Món được Tin Cậy Cao</Text>
             </div>
-            <Switch disabled />
+            <Switch 
+              checked={trustScoreEnabled}
+              onChange={handleTrustScoreToggle}
+            />
           </div>
         </Space>
 

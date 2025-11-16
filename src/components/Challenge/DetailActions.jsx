@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Space, message } from "antd";
 import { Icon } from "@iconify/react";
 
-const DetailActions = ({ status, onSubmit, onShare }) => {
+const DetailActions = ({ status, onSubmit, onShare, isLoggedIn }) => {
   const handleSubmit = () => {
     if (status === "ended") {
       message.warning("Thử thách đã kết thúc!");
@@ -20,6 +20,11 @@ const DetailActions = ({ status, onSubmit, onShare }) => {
     message.success("Đã sao chép link thử thách!");
     if (onShare) onShare();
   };
+
+  // Don't show actions if user is not logged in
+  if (!isLoggedIn) {
+    return null;
+  }
 
   return (
     <div className="detail-actions">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, InputNumber, Checkbox, Input, Button, Space, Progress, Typography, Divider } from "antd";
+import { Modal, Form, InputNumber, Checkbox, Input, Button, Space, Progress, Typography, Divider, Radio } from "antd";
 import { Icon } from "@iconify/react";
 import dayjs from "dayjs";
 
@@ -27,7 +27,8 @@ const DailyCheckInModal = ({
         waterIntake: initialWater,
         exercised: todayProgress?.exercised || false,
         calories: todayProgress?.actualCalories || null,
-        notes: todayProgress?.notes || ''
+        notes: todayProgress?.notes || '',
+        mood: todayProgress?.mood || ''
       });
       setCurrentWeight(initialWeight);
       setWaterIntake(initialWater);
@@ -333,6 +334,36 @@ const DailyCheckInModal = ({
             min={0}
             size="large"
           />
+        </Form.Item>
+
+        <Form.Item
+          label={
+            <span>
+              <Icon icon="mdi:emoticon-happy" style={{ marginRight: "6px", color: "#722ed1" }} />
+              Tâm trạng hôm nay (tùy chọn)
+            </span>
+          }
+          name="mood"
+        >
+          <Radio.Group size="large" style={{ width: "100%" }}>
+            <Space direction="vertical" style={{ width: "100%" }}>
+              <Radio value="great" style={{ fontSize: "15px" }}>
+                😄 Tuyệt vời
+              </Radio>
+              <Radio value="good" style={{ fontSize: "15px" }}>
+                😊 Tốt
+              </Radio>
+              <Radio value="okay" style={{ fontSize: "15px" }}>
+                😐 Ổn
+              </Radio>
+              <Radio value="bad" style={{ fontSize: "15px" }}>
+                😔 Không tốt
+              </Radio>
+              <Radio value="terrible" style={{ fontSize: "15px" }}>
+                😢 Rất tệ
+              </Radio>
+            </Space>
+          </Radio.Group>
         </Form.Item>
 
         <Form.Item

@@ -2,14 +2,54 @@ import apiHelper from "../utils/apiHelper";
 import { apiUrls, baseUrl } from "../utils/constants";
 import { getCookie } from "../utils/cookie";
 
-export async function getProfile() {
-  const response = await apiHelper.get(apiUrls.getProfile);
-  return response.data;
+const extractSuccessData = (response) => {
+  if (response?.success) {
+    return response.data;
+  }
+  if (response?.data?.success) {
+    return response.data.data;
+  }
+  if (response?.data) {
+    return response.data;
+  }
+  return null;
+};
+
+const extractErrorMessage = (response) =>
+  response?.error || response?.detail || "Đã xảy ra lỗi";
+
+export async function getProfile(userId) {
+  const endpoint = userId
+    ? `${apiUrls.getProfile}/${userId}`
+    : apiUrls.getProfile;
+  const response = await apiHelper.get(endpoint);
+  const data = extractSuccessData(response);
+
+  if (data) {
+    return data;
+  }
+
+  throw new Error(extractErrorMessage(response));
 }
 
-export async function updateProfile(data) {
-  const response = await apiHelper.put(apiUrls.updateProfile, data);
-  return response.data;
+export async function updateProfile(userId, data) {
+  const endpoint = userId
+    ? `${apiUrls.updateProfile}/${userId}`
+    : apiUrls.updateProfile;
+
+  let response;
+  if (data instanceof FormData) {
+    response = await apiHelper.putFormData(endpoint, data);
+  } else {
+    response = await apiHelper.put(endpoint, data);
+  }
+
+  const payload = extractSuccessData(response);
+  if (payload) {
+    return payload;
+  }
+
+  throw new Error(extractErrorMessage(response));
 }
 
 export async function completeOnboarding() {

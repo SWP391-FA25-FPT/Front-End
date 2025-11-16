@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, Rate, Button, message, Statistic, Row, Col, Progress } from "antd";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/useAuth";
@@ -21,17 +21,15 @@ const RecipeRating = ({ recipeId, onRatingUpdate }) => {
   });
   const [hoverValue, setHoverValue] = useState(0);
 
-  useEffect(() => {
-    fetchRatings();
-  }, [recipeId]);
-
-  const fetchRatings = async () => {
+  const fetchRatings = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getRatingsByRecipeId(recipeId);
-      setRatingData(response.data);
+      const parsedData = response?.data ?? response;
+      setRatingData(parsedData);
+      setHoverValue(0);
       if (onRatingUpdate) {
-        onRatingUpdate(response.data);
+        onRatingUpdate(parsedData);
       }
     } catch (error) {
       console.error("Fetch ratings error:", error);
@@ -39,9 +37,17 @@ const RecipeRating = ({ recipeId, onRatingUpdate }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [recipeId, onRatingUpdate]);
+
+  useEffect(() => {
+    fetchRatings();
+  }, [fetchRatings]);
 
   const handleRatingChange = async (value) => {
+    if (!value || value < 1 || value > 5) {
+      message.warning("Vui lòng chọn mức từ 1 đến 5 sao");
+      return;
+    }
     if (!user) {
       message.warning("Vui lòng đăng nhập để đánh giá");
       return;
@@ -49,9 +55,10 @@ const RecipeRating = ({ recipeId, onRatingUpdate }) => {
 
     try {
       setSubmitting(true);
-      await createOrUpdateRating(recipeId, value);
+      const response = await createOrUpdateRating(recipeId, value);
       message.success(
-        ratingData.userRating ? "Cập nhật đánh giá thành công" : "Đánh giá thành công"
+        response.message ||
+          (ratingData.userRating ? "Cập nhật đánh giá thành công" : "Đánh giá thành công")
       );
       await fetchRatings();
     } catch (error) {
@@ -67,8 +74,8 @@ const RecipeRating = ({ recipeId, onRatingUpdate }) => {
 
     try {
       setSubmitting(true);
-      await deleteUserRating(recipeId);
-      message.success("Xóa đánh giá thành công");
+      const response = await deleteUserRating(recipeId);
+      message.success(response.message || "Xóa đánh giá thành công");
       await fetchRatings();
     } catch (error) {
       console.error("Clear rating error:", error);
@@ -84,7 +91,7 @@ const RecipeRating = ({ recipeId, onRatingUpdate }) => {
   };
 
   return (
-    <Card title="Đánh giá" style={{ marginBottom: "24px" }}>
+    <Card title="Đánh giá" style={{ marginBottom: "24px" }} loading={loading}>
       <Row gutter={[24, 24]}>
         {/* Left: Overall Rating */}
         <Col xs={24} md={10}>
@@ -156,6 +163,7 @@ const RecipeRating = ({ recipeId, onRatingUpdate }) => {
               value={ratingData.userRating || hoverValue}
               onChange={handleRatingChange}
               onHoverChange={setHoverValue}
+              allowClear={false}
               disabled={submitting}
               style={{ fontSize: "28px" }}
             />

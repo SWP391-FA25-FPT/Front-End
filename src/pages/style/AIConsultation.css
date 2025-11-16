@@ -147,12 +147,28 @@
 
 .message-text {
   margin: 0 !important;
-  line-height: 1.5;
+  line-height: 1.6;
   color: var(--color-text-primary);
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .message.user .message-text {
   color: var(--color-text-primary);
+  white-space: pre-wrap;
+}
+
+/* Markdown message styling within message bubble */
+.message-bubble .markdown-message {
+  margin: 0;
+}
+
+.message-bubble .markdown-message:first-child {
+  margin-top: 0;
+}
+
+.message-bubble .markdown-message:last-child {
+  margin-bottom: 0;
 }
 
 .message-time {
@@ -519,4 +535,8 @@
   .chat-messages::-webkit-scrollbar-track {
     background: var(--color-bg-elevated);
   }
+}
+.tips-card .ant-card-head {
+  background: #F5A623 !important; 
+  color: white !important;
 }
