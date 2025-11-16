@@ -35,6 +35,8 @@ import MarkdownMessage from "../components/ai/MarkdownMessage";
 import DataExplanation from "../components/ai/DataExplanation";
 import DecisionSupport from "../components/ai/DecisionSupport";
 import SmartNavigation from "../components/ai/SmartNavigation";
+import RecipeQuickLinks from "../components/ai/RecipeQuickLinks";
+import { processRecipeIds } from "../components/ai/RecipeIdLink";
 import {
   getPersonalizedContext,
   generatePersonalizedQuickActions,
@@ -408,6 +410,12 @@ Hãy đưa ra lời khuyên cá nhân hóa dựa trên thông tin này.`;
                       ? extractStructuredData(message.content)
                       : null;
 
+                  // Process recipe IDs in AI messages to make them clickable
+                  const processedContent =
+                    message.type === "ai"
+                      ? processRecipeIds(message.content)
+                      : message.content;
+
                   return (
                     <div key={message.id} className={`message ${message.type}`}>
                       <div className="message-avatar">
@@ -428,7 +436,7 @@ Hãy đưa ra lời khuyên cá nhân hóa dựa trên thông tin này.`;
                           {message.type === "ai" ? (
                             <>
                               <MarkdownMessage
-                                content={message.content}
+                                content={processedContent}
                                 className="message-text"
                               />
                               {structuredData &&
@@ -454,6 +462,7 @@ Hãy đưa ra lời khuyên cá nhân hóa dựa trên thông tin này.`;
                                 )}
                               <DecisionSupport message={message.content} />
                               <SmartNavigation content={message.content} />
+                              <RecipeQuickLinks content={message.content} />
                             </>
                           ) : (
                             <Text

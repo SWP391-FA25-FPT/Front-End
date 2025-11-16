@@ -4,6 +4,8 @@ import { useAuth } from "../context/useAuth";
 import Logo from "../components/Logo/Logo";
 import "./style/TakeSurvey.css";
 import { useNavigate } from "react-router-dom";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
 
 function TakeSurvey() {
   const { updateUser } = useAuth();
@@ -19,7 +21,7 @@ function TakeSurvey() {
       weight: "",
       height: "",
       gender: "",
-      age: "",
+      dateOfBirth: null, // Changed from age to dateOfBirth
       workHabits: "",
       eatingHabits: "",
       diet: "",
@@ -125,8 +127,8 @@ function TakeSurvey() {
           setError("Vui lòng chọn giới tính!");
           return false;
         }
-        if (!profileData.profile.age) {
-          setError("Vui lòng nhập tuổi!");
+          if (!profileData.profile.dateOfBirth) {
+          setError("Vui lòng chọn ngày sinh!");
           return false;
         }
         break;
@@ -198,6 +200,7 @@ function TakeSurvey() {
         ? [...baseMeals, "snack"]
         : baseMeals;
 
+      // Send dateOfBirth to backend (backend will calculate age from it)
       // Convert string numbers to actual numbers
       const profilePayload = {
         weight: profileData.profile.weight
@@ -206,9 +209,7 @@ function TakeSurvey() {
         height: profileData.profile.height
           ? Number(profileData.profile.height)
           : undefined,
-        age: profileData.profile.age
-          ? Number(profileData.profile.age)
-          : undefined,
+        dateOfBirth: profileData.profile.dateOfBirth || undefined, // Send dateOfBirth (ISO string)
         allergies: processedAllergies,
         meals: finalMeals, // Ensure meals always have the 3 main meals
         gender: profileData.profile.gender,
@@ -313,18 +314,20 @@ function TakeSurvey() {
             </div>
             <div className="form-group">
               <label>
-                Tuổi <span className="required">*</span>
+                Ngày sinh <span className="required">*</span>
               </label>
-              <input
-                type="number"
-                value={profileData.profile.age}
-                onChange={(e) =>
-                  handleInputChange("profile.age", e.target.value)
-                }
-                placeholder="Nhập tuổi"
-                min="1"
-                max="120"
-                required
+              <DatePicker
+                value={profileData.profile.dateOfBirth ? dayjs(profileData.profile.dateOfBirth) : null}
+                onChange={(date) => {
+                  handleInputChange("profile.dateOfBirth", date ? date.toISOString() : null);
+                }}
+                placeholder="Chọn ngày sinh"
+                format="DD/MM/YYYY"
+                style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
+                disabledDate={(current) => {
+                  // Disable future dates
+                  return current && current > dayjs().endOf('day');
+                }}
               />
             </div>
           </div>

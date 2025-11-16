@@ -40,13 +40,24 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
   // Khi userProfile thay đổi → cập nhật form
   useEffect(() => {
     if (userProfile) {
+      // Get dateOfBirth from profile, format as YYYY-MM-DD for input type="date"
+      let birthdateValue = "";
+      if (userProfile.profile?.dateOfBirth) {
+        // dateOfBirth can be a Date object or ISO string
+        const date = new Date(userProfile.profile.dateOfBirth);
+        if (!isNaN(date.getTime())) {
+          // Format as YYYY-MM-DD using local date to avoid timezone issues
+          // Use local date methods instead of toISOString() to prevent -1 day issue
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          birthdateValue = `${year}-${month}-${day}`;
+        }
+      }
+      
       setFormData({
         name: userProfile.name || "",
-        birthdate: userProfile.profile?.age
-          ? new Date(new Date().getFullYear() - userProfile.profile.age, 0, 1)
-              .toISOString()
-              .split("T")[0]
-          : "2025-01-01",
+        birthdate: birthdateValue,
         gender:
           userProfile.profile?.gender === "male"
             ? "Nam"
@@ -98,10 +109,7 @@ const ProfileForm = ({ userProfile, onProfileUpdate }) => {
             : formData.gender === "Nữ"
             ? "female"
             : "other",
-        age: formData.birthdate
-          ? new Date().getFullYear() -
-            new Date(formData.birthdate).getFullYear()
-          : undefined,
+        dateOfBirth: formData.birthdate || undefined, // Send dateOfBirth (YYYY-MM-DD format, backend will convert)
         workHabits: formData.workHabits || undefined,
         eatingHabits: formData.eatingHabits || undefined,
         diet: formData.diet || undefined,
