@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom"; 
 import { getProfile } from "../apis/user"; // Giả định getProfile trả về friendshipStatus
 import FriendActionButton from "../components/User/FriendActionButton";
-import Layout from "../components/layout/Applayout"; // Giả định Applayout là layout chính
+import Layout from "../components/layout/AppLayout"; 
 import { useAuth } from "../context/useAuth"; 
 import { createOrGetConversation } from "../services/messageService";
 import { message } from "antd"; // Sử dụng Antd message thay vì alert
