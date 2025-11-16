@@ -1,65 +1,69 @@
 import React from "react";
-import ProtectedRoute from "../components/auth/ProtectedRoute";
-import SurveyCheckRoute from "../components/auth/SurveyCheckRoute";
-import AdminProtectedRoute from "../components/auth/AdminProtectedRoute";
+import ProtectedRoute from "../components/auth/ProtectedRoute.jsx";
+import SurveyCheckRoute from "../components/auth/SurveyCheckRoute.jsx";
+import AdminProtectedRoute from "../components/auth/AdminProtectedRoute.jsx";
 import { Navigate } from "react-router-dom";
 
-import HomePage from "../pages/HomePage";
-import Login from "../pages/Login";
-import AdminLogin from "../pages/AdminLogin";
-import ForgotPassword from "../pages/ForgotPassword";
-import ResetPassword from "../pages/ResetPassword";
-import OTPVerification from "../pages/OTPVerification";
-import TakeSurvey from "../pages/TakeSurvey";
-import ProfilePage from "../pages/ProfilePage";
-import SupportPage from "../pages/SupportPage";
-import SettingsPage from "../pages/SettingsPage";
-import PinAndRecoveryPage from "../pages/PinAndRecoveryPage";
-import ChangePasswordPage from "../pages/ChangePasswordPage";
-import Profile from "../pages/Profile";
+// Imports Pages
+import HomePage from "../pages/HomePage.jsx";
+import Login from "../pages/Login.jsx";
+import AdminLogin from "../pages/AdminLogin.jsx";
+import ForgotPassword from "../pages/ForgotPassword.jsx";
+import ResetPassword from "../pages/ResetPassword.jsx";
+import OTPVerification from "../pages/OTPVerification.jsx";
+import TakeSurvey from "../pages/TakeSurvey.jsx";
+import ProfilePage from "../pages/ProfilePage.jsx";
+import SupportPage from "../pages/SupportPage.jsx";
+import SettingsPage from "../pages/SettingsPage.jsx";
+import PinAndRecoveryPage from "../pages/PinAndRecoveryPage.jsx";
+import ChangePasswordPage from "../pages/ChangePasswordPage.jsx";
+import Profile from "../pages/Profile.jsx";
+import BlogCreate from "../pages/BlogCreate.jsx";
+import MyBlogs from "../pages/MyBlogs.jsx";
+import MealPlan from "../pages/MealPlan.jsx";
+import AIConsultation from "../pages/AIConsultation.jsx";
+import NutritionalAnalysis from "../pages/NutritionalAnalysis.jsx";
+import ProgressTracking from "../pages/ProgressTracking.jsx";
+import TopRecipes from "../pages/TopRecipes.jsx";
+import SearchingPage from "../pages/SearchingPage.jsx";
+import RecipeDetail from "../pages/RecipeDetail.jsx";
+import RecipeCreate from "../pages/RecipeCreate.jsx";
+import RecipeUpdate from "../pages/RecipeUpdate.jsx";
+import MyRecipes from "../pages/MyRecipes.jsx";
+import AllRecipes from "../pages/AllRecipes.jsx";
+import DraftRecipes from "../pages/DraftRecipes.jsx";
+import PrivateRecipes from "../pages/PrivateRecipes.jsx";
+import PublishedRecipes from "../pages/PublishedRecipes.jsx";
+import SavedRecipes from "../pages/SavedRecipes.jsx";
+import Subscription from "../pages/Subscription.jsx";
+import NotificationPage from "../pages/NotificationPage.jsx";
+import FeedbackPage from "../pages/FeedbackPage.jsx";
+import Challenge from "../pages/Challenge.jsx";
+import ChallengeDetail from "../pages/ChallengeDetail.jsx";
+import Blog from "../pages/Blog.jsx";
+import BlogDetail from "../pages/BlogDetail.jsx";
+import MessagesPage from "../pages/MessagesPage.jsx"; // Import mới từ file của bạn
 
-import GettingStarted from "../pages/support/GettingStarted";
-import NutritionTracking from "../pages/support/NutritionTracking";
-import MealPlanner from "../pages/support/MealPlanner";
-import AccountBilling from "../pages/support/AccountBilling";
-import ChallengesCommunity from "../pages/support/ChallengesCommunity";
-import PrivacySecurity from "../pages/support/PrivacySecurity";
+// Imports Admin Components
+import PaymentModule from "../components/admin/PaymentModule.jsx";
+import FeedbackModule from "../components/admin/FeedbackModule.jsx";
+import RecipeModerationModule from "../components/admin/RecipeModerationModule.jsx";
+import BlogModerationModule from "../components/admin/BlogModerationModule.jsx";
+import UserManagementModule from "../components/admin/UserManagementModule.jsx";
+import StatisticsModule from "../components/admin/StatisticsModule.jsx";
+import DashboardModule from "../components/admin/DashboardModule.jsx";
+import SystemSettingsModule from "../components/admin/SystemSettingsModule.jsx";
+import ChallengeManagementModule from "../components/admin/ChallengeManagementModule.jsx";
+import AdminChallengeDetail from "../components/admin/AdminChallengeDetail.jsx";
+import AdminLayout from "../components/admin/AdminLayout.jsx";
 
-import Challenge from "../pages/Challenge";
-import ChallengeDetail from "../pages/ChallengeDetail";
-import Blog from "../pages/Blog";
-import BlogDetail from "../pages/BlogDetail";
-import BlogCreate from "../pages/BlogCreate";
-import MyBlogs from "../pages/MyBlogs";
-import MealPlan from "../pages/MealPlan";
-import AIConsultation from "../pages/AIConsultation";
-import NutritionalAnalysis from "../pages/NutritionalAnalysis";
-import ProgressTracking from "../pages/ProgressTracking";
-import TopRecipes from "../pages/TopRecipes";
-import SearchingPage from "../pages/SearchingPage";
-import RecipeDetail from "../pages/RecipeDetail";
-import RecipeCreate from "../pages/RecipeCreate";
-import RecipeUpdate from "../pages/RecipeUpdate";
-import MyRecipes from "../pages/MyRecipes";
-import AllRecipes from "../pages/AllRecipes";
-import DraftRecipes from "../pages/DraftRecipes";
-import PrivateRecipes from "../pages/PrivateRecipes";
-import PublishedRecipes from "../pages/PublishedRecipes";
-import SavedRecipes from "../pages/SavedRecipes";
-import Subscription from "../pages/Subscription";
-import NotificationPage from "../pages/NotificationPage";
-import FeedbackPage from "../pages/FeedbackPage";
-import PaymentModule from "../components/admin/PaymentModule";
-import FeedbackModule from "../components/admin/FeedbackModule";
-import RecipeModerationModule from "../components/admin/RecipeModerationModule";
-import BlogModerationModule from "../components/admin/BlogModerationModule";
-import UserManagementModule from "../components/admin/UserManagementModule";
-import StatisticsModule from "../components/admin/StatisticsModule";
-import DashboardModule from "../components/admin/DashboardModule";
-import SystemSettingsModule from "../components/admin/SystemSettingsModule";
-import ChallengeManagementModule from "../components/admin/ChallengeManagementModule";
-import AdminChallengeDetail from "../components/admin/AdminChallengeDetail";
-import AdminLayout from "../components/admin/AdminLayout";
+// Imports Support Pages
+import GettingStarted from "../pages/support/GettingStarted.jsx";
+import NutritionTracking from "../pages/support/NutritionTracking.jsx";
+import MealPlanner from "../pages/support/MealPlanner.jsx";
+import AccountBilling from "../pages/support/AccountBilling.jsx";
+import ChallengesCommunity from "../pages/support/ChallengesCommunity.jsx";
+import PrivacySecurity from "../pages/support/PrivacySecurity.jsx";
 
 const appRoutes = [
   {
@@ -167,6 +171,15 @@ const appRoutes = [
     element: (
       <SurveyCheckRoute>
         <Profile />
+      </SurveyCheckRoute>
+    ),
+  },
+  // Route tin nhắn mới từ file của bạn
+  {
+    path: "/messages",
+    element: (
+      <SurveyCheckRoute>
+        <MessagesPage />
       </SurveyCheckRoute>
     ),
   },
@@ -403,4 +416,3 @@ const appRoutes = [
 ];
 
 export default appRoutes;
-

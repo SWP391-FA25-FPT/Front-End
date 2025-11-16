@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -6,9 +7,10 @@ import {
 } from "react-router-dom";
 import { App as AntdApp } from "antd";
 import { AuthProvider } from "./context/AuthContext";
+import { SocketProvider } from "./context/SocketContext"; 
 import appRoutes from "./routes/routes";
 
-// Helper function để render routes từ mảng appRoutes
+
 const renderRoutes = (routes) => {
   return routes.map((route, index) => {
     if (route.children && route.children.length > 0) {
@@ -18,7 +20,6 @@ const renderRoutes = (routes) => {
         </Route>
       );
     }
-    // Xử lý route index (path rỗng)
     if (route.path === "") {
       return (
         <Route key={index} index element={route.element} />
@@ -34,11 +35,13 @@ function App() {
   return (
     <AntdApp>
       <AuthProvider>
-        <Router>
-          <Routes>
-            {renderRoutes(appRoutes)}
-          </Routes>
-        </Router>
+        <SocketProvider>
+          <Router>
+            <Routes>
+              {renderRoutes(appRoutes)}
+            </Routes>
+          </Router>
+        </SocketProvider>
       </AuthProvider>
     </AntdApp>
   );
