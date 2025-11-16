@@ -1,0 +1,80 @@
+.recipe-id-link {
+  padding: 2px 8px;
+  height: auto;
+  font-size: 12px;
+  margin-left: 8px;
+  vertical-align: middle;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.recipe-id-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
+}
+
+.recipe-id-link .anticon {
+  font-size: 12px;
+}
+
+/* Recipe cards in AI response */
+.recipe-quick-links {
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border-left: 3px solid var(--color-primary);
+}
+
+.recipe-quick-links-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recipe-quick-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recipe-quick-link-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-primary);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+}
+
+.recipe-quick-link-item:hover {
+  background: var(--color-primary-faded);
+  border-color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+.recipe-quick-link-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.recipe-quick-link-action {
+  display: flex;
+  gap: 8px;
+}
+
+.recipe-quick-link-btn {
+  padding: 4px 12px;
+  height: auto;
+  font-size: 12px;
+}
+
