@@ -1,13 +1,10 @@
-// src/routes/routes.jsx
-
 import React from "react";
-// FIX: Thêm .jsx rõ ràng cho tất cả imports
 import ProtectedRoute from "../components/auth/ProtectedRoute.jsx";
 import SurveyCheckRoute from "../components/auth/SurveyCheckRoute.jsx";
 import AdminProtectedRoute from "../components/auth/AdminProtectedRoute.jsx";
 import { Navigate } from "react-router-dom";
 
-// --- Imports Pages (Đã thêm .jsx) ---
+// Imports Pages
 import HomePage from "../pages/HomePage.jsx";
 import Login from "../pages/Login.jsx";
 import AdminLogin from "../pages/AdminLogin.jsx";
@@ -45,8 +42,9 @@ import Challenge from "../pages/Challenge.jsx";
 import ChallengeDetail from "../pages/ChallengeDetail.jsx";
 import Blog from "../pages/Blog.jsx";
 import BlogDetail from "../pages/BlogDetail.jsx";
+import MessagesPage from "../pages/MessagesPage.jsx"; // Import mới từ file của bạn
 
-// --- Imports Admin Components (Đã thêm .jsx) ---
+// Imports Admin Components
 import PaymentModule from "../components/admin/PaymentModule.jsx";
 import FeedbackModule from "../components/admin/FeedbackModule.jsx";
 import RecipeModerationModule from "../components/admin/RecipeModerationModule.jsx";
@@ -59,17 +57,13 @@ import ChallengeManagementModule from "../components/admin/ChallengeManagementMo
 import AdminChallengeDetail from "../components/admin/AdminChallengeDetail.jsx";
 import AdminLayout from "../components/admin/AdminLayout.jsx";
 
-// --- Imports Support Pages (Đã thêm .jsx) ---
+// Imports Support Pages
 import GettingStarted from "../pages/support/GettingStarted.jsx";
 import NutritionTracking from "../pages/support/NutritionTracking.jsx";
 import MealPlanner from "../pages/support/MealPlanner.jsx";
 import AccountBilling from "../pages/support/AccountBilling.jsx";
 import ChallengesCommunity from "../pages/support/ChallengesCommunity.jsx";
 import PrivacySecurity from "../pages/support/PrivacySecurity.jsx";
-
-// --- Import Trang Message MỚI ---
-import MessagesPage from "../pages/MessagesPage.jsx"; // Đổi tên từ ChatPage
-
 
 const appRoutes = [
   {
@@ -180,8 +174,7 @@ const appRoutes = [
       </SurveyCheckRoute>
     ),
   },
-  
-  // --- ROUTE TIN NHẮN MỚI (MANDATORY) ---
+  // Route tin nhắn mới từ file của bạn
   {
     path: "/messages",
     element: (
@@ -190,8 +183,6 @@ const appRoutes = [
       </SurveyCheckRoute>
     ),
   },
-  // --- END ROUTE TIN NHẮN MỚI ---
-  
   {
     path: "/blog/create",
     element: (
